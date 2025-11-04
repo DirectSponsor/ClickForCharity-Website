@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surf Ads – Click for Charity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+        <aside class="sidebar" id="site-navigation">
+            <div class="logo">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="active"><a href="ptc.html">Surf Ads</a></li>
+                    <li><a href="#">Surveys</a></li>
+                    <li><a href="#">Offers</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            <div class="user-select-container">
+                <p class="user-mode-info">Guest Mode (Demo)</p>
+                <p class="user-mode-hint">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>Surf Ads</h1>
+                <div class="user-stats">
+                    <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
+                </div>
+            </header>
+            <section class="task-list-container">
+                <h2>Available Tasks</h2>
+                <div id="task-list" class="task-list">
+                    <!-- Ads will be dynamically inserted here by JavaScript -->
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
