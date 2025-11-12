@@ -4,7 +4,7 @@
 class AuthSystem {
     constructor() {
         this.authUrl = 'https://auth.directsponsor.org';
-        this.sessionKey = 'clickforcharity_session';
+        this.sessionKey = 'directsponsor_session'; // Shared across all DirectSponsor sites
         this.sessionDuration = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
     }
     

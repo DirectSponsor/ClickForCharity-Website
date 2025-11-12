@@ -27,7 +27,7 @@ class UnifiedBalanceSystem {
     
     getValidUsername() {
         try {
-            const sessionData = localStorage.getItem('clickforcharity_session');
+            const sessionData = localStorage.getItem('directsponsor_session');
             if (sessionData) {
                 const data = JSON.parse(sessionData);
                 if (data.expires && Date.now() > data.expires) {
@@ -43,7 +43,7 @@ class UnifiedBalanceSystem {
     
     getUserIdFromToken() {
         try {
-            const sessionData = localStorage.getItem('clickforcharity_session');
+            const sessionData = localStorage.getItem('directsponsor_session');
             if (sessionData) {
                 const data = JSON.parse(sessionData);
                 if (data.expires && Date.now() > data.expires) {
@@ -60,7 +60,7 @@ class UnifiedBalanceSystem {
     getCombinedUserIdFromToken() {
         // Get combined userID for API access (userID-username format)
         try {
-            const sessionData = localStorage.getItem('clickforcharity_session');
+            const sessionData = localStorage.getItem('directsponsor_session');
             if (sessionData) {
                 const data = JSON.parse(sessionData);
                 if (data.expires && Date.now() > data.expires) {
