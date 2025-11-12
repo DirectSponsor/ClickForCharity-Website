@@ -45,9 +45,9 @@ class AuthSystem {
     }
     
     login() {
-        // Redirect to auth.directsponsor.org login with return URL
-        const returnUrl = encodeURIComponent(window.location.href);
-        window.location.href = `${this.authUrl}/jwt-login.php?return_url=${returnUrl}`;
+        // Redirect to auth.directsponsor.org login with redirect_uri
+        const redirectUri = encodeURIComponent(window.location.origin + window.location.pathname);
+        window.location.href = `${this.authUrl}/jwt-login.php?redirect_uri=${redirectUri}`;
     }
     
     logout() {
@@ -61,36 +61,58 @@ class AuthSystem {
         window.location.reload();
     }
     
+    parseJWT(token) {
+        try {
+            // JWT has 3 parts separated by dots: header.payload.signature
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            console.error('Error parsing JWT:', error);
+            return null;
+        }
+    }
+    
     handleAuthCallback() {
-        // Check URL for auth parameters from DirectSponsor auth
+        // Check URL for JWT token from DirectSponsor auth
         const urlParams = new URLSearchParams(window.location.search);
-        const userId = urlParams.get('user_id');
-        const username = urlParams.get('username');
+        const jwtToken = urlParams.get('jwt');
         
-        if (userId && username) {
-            // Create session
-            const combinedUserId = `${userId}-${username}`;
-            const sessionData = {
-                user_id: userId,
-                username: username,
-                combined_user_id: combinedUserId,
-                expires: Date.now() + this.sessionDuration,
-                created: Date.now()
-            };
+        if (jwtToken) {
+            // Decode JWT to get user info
+            const payload = this.parseJWT(jwtToken);
             
-            localStorage.setItem(this.sessionKey, JSON.stringify(sessionData));
-            
-            // Also set individual items for backward compatibility
-            localStorage.setItem('user_id', userId);
-            localStorage.setItem('username', username);
-            localStorage.setItem('combined_user_id', combinedUserId);
-            
-            console.log('✅ Login successful:', username);
-            
-            // Clean URL and refresh to show logged-in state
-            const cleanUrl = window.location.pathname;
-            window.history.replaceState({}, document.title, cleanUrl);
-            window.location.reload();
+            if (payload && payload.sub && payload.username) {
+                const userId = payload.sub;
+                const username = payload.username;
+                const combinedUserId = `${userId}-${username}`;
+                
+                // Create session
+                const sessionData = {
+                    user_id: userId,
+                    username: username,
+                    combined_user_id: combinedUserId,
+                    expires: Date.now() + this.sessionDuration,
+                    created: Date.now()
+                };
+                
+                localStorage.setItem(this.sessionKey, JSON.stringify(sessionData));
+                
+                // Also set individual items for backward compatibility
+                localStorage.setItem('user_id', userId);
+                localStorage.setItem('username', username);
+                localStorage.setItem('combined_user_id', combinedUserId);
+                
+                console.log('✅ Login successful:', username);
+                
+                // Clean URL and refresh to show logged-in state
+                const cleanUrl = window.location.pathname;
+                window.history.replaceState({}, document.title, cleanUrl);
+                window.location.reload();
+            }
         }
     }
 }
