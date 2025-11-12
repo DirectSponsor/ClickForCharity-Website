@@ -47,7 +47,7 @@ class AuthSystem {
     login() {
         // Redirect to auth.directsponsor.org login with return URL
         const returnUrl = encodeURIComponent(window.location.href);
-        window.location.href = `${this.authUrl}/?return_url=${returnUrl}`;
+        window.location.href = `${this.authUrl}/jwt-login.php?return_url=${returnUrl}`;
     }
     
     logout() {
