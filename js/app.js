@@ -59,8 +59,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function renderBalance() {
         const balance = await window.UnifiedBalance.getBalance();
         const terms = window.UnifiedBalance.getTerminology();
-        userBalanceEl.textContent = balance;
-        userBalanceLabelEl.textContent = terms.plural.toLowerCase();
+        userBalanceEl.textContent = Math.floor(balance);
+        userBalanceLabelEl.textContent = terms.currency;
     }
 
     function renderTasks() {
@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const terms = window.UnifiedBalance.getTerminology();
-        const rewardLabel = terms.plural.toLowerCase();
+        const rewardLabel = terms.currency;
 
         ads.forEach(ad => {
             const taskItem = document.createElement('div');
