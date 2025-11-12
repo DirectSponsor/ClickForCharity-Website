@@ -307,15 +307,37 @@ class UnifiedBalanceSystem {
         };
     }
     
+    // Task completion tracking (for PTC ads)
+    markTaskCompleted(taskId) {
+        const completedTasks = this.getCompletedTasks();
+        completedTasks[taskId] = new Date().toISOString();
+        localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+        console.log('✅ Task marked complete:', taskId);
+    }
+    
+    isTaskCompleted(taskId) {
+        const completedTasks = this.getCompletedTasks();
+        return !!completedTasks[taskId];
+    }
+    
+    getCompletedTasks() {
+        const stored = localStorage.getItem('completed_tasks');
+        return stored ? JSON.parse(stored) : {};
+    }
+    
     // Clear all guest data (for testing)
     clearGuestData() {
         localStorage.removeItem('guest_transactions');
+        localStorage.removeItem('completed_tasks');
         console.log('🗑️ Guest data cleared');
     }
 }
 
 // Global instance
 window.unifiedBalance = new UnifiedBalanceSystem();
+
+// Also expose as window.UnifiedBalance for compatibility with app.js
+window.UnifiedBalance = window.unifiedBalance;
 
 // Global function to update all balance displays
 window.updateBalanceDisplays = async () => {
