@@ -24,9 +24,33 @@
                     <li><a href="admin.html">Admin</a></li>
                 </ul>
             </nav>
+            <!-- User Menu Area (bottom of sidebar) -->
             <div class="user-select-container">
-                <p class="user-mode-info">Guest Mode (Demo)</p>
-                <p class="user-mode-hint">Sign up to save your earnings!</p>
+                <!-- Login Button (shown when not logged in) -->
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <!-- User Menu (shown when logged in) -->
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <!-- Dropdown Menu (pops upward) -->
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <!-- Guest Mode Notice -->
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
         </aside>
         <main class="main-content" data-menu-target>
@@ -45,6 +69,7 @@
         </main>
     </div>
     <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/app.js"></script>
 </body>

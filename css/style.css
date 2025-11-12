@@ -101,11 +101,7 @@ body {
 .user-select-container {
     margin-top: auto;
     font-size: 12px;
-}
-#user-select {
-    width: 100%;
-    padding: 5px;
-    margin-top: 5px;
+    position: relative;
 }
 
 .user-mode-info {
@@ -115,9 +111,119 @@ body {
 }
 
 .user-mode-hint {
-    font-size: 12px;
+    font-size: 11px;
     color: #666;
     margin: 0;
+}
+
+/* Login Button */
+.btn-login {
+    width: 100%;
+    padding: 10px 15px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s;
+}
+
+.btn-login:hover {
+    background: var(--accent-hover);
+}
+
+/* User Menu */
+.user-menu {
+    width: 100%;
+}
+
+.user-menu-header {
+    padding: 10px;
+    background: #f5f5f5;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+.user-menu-header:hover {
+    background: #e8e8e8;
+}
+
+.user-avatar {
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.user-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.user-info .username {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-info .user-balance {
+    font-size: 11px;
+    color: #666;
+}
+
+.dropdown-arrow {
+    font-size: 10px;
+    color: #666;
+    transition: transform 0.2s;
+}
+
+/* User Dropdown (pops upward) */
+.user-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    margin-bottom: 5px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    overflow: hidden;
+    z-index: 100;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-size: 13px;
+    transition: background 0.2s;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item:hover {
+    background: #f5f5f5;
 }
 
 
