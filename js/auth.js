@@ -106,6 +106,13 @@ class AuthSystem {
                 localStorage.setItem('username', username);
                 localStorage.setItem('combined_user_id', combinedUserId);
                 
+                // Clear old completed tasks cache when user changes
+                localStorage.removeItem('completed_tasks');
+                
+                // Clear old balance cache when user changes
+                localStorage.removeItem('guest_transactions');
+                localStorage.removeItem('last_balance_fetch');
+                
                 console.log('✅ Login successful:', username);
                 
                 // Clean URL and refresh to show logged-in state
