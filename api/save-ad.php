@@ -26,7 +26,7 @@ if (!$data || !isset($data['title'], $data['instructions'], $data['url'], $data[
     exit;
 }
 
-$adsDir = __DIR__ . '/../../data/ads';
+$adsDir = __DIR__ . '/../../../clickforcharity-data/ads';
 
 if (!is_dir($adsDir)) {
     mkdir($adsDir, 0755, true);

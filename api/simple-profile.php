@@ -73,7 +73,7 @@ function fetchProfileFromAuthServer($userId) {
  * @return string Path to profile .txt file
  */
 function getProfileFilePath($userId) {
-    return __DIR__ . '/../../data/userdata/profiles/' . $userId . '.txt';
+    return __DIR__ . '/../../../clickforcharity-data/userdata/profiles/' . $userId . '.txt';
 }
 
 /**
@@ -82,7 +82,7 @@ function getProfileFilePath($userId) {
  * @return string Path to balance .txt file
  */
 function getBalanceFilePath($userId) {
-    return __DIR__ . '/../../data/userdata/balances/' . $userId . '.txt';
+    return __DIR__ . '/../../../clickforcharity-data/userdata/balances/' . $userId . '.txt';
 }
 
 /**

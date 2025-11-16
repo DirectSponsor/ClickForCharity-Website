@@ -37,7 +37,7 @@ if (!preg_match('/^[0-9]+-[a-zA-Z0-9_-]+$/', $userId)) {
     exit;
 }
 
-$balanceFile = __DIR__ . '/../../data/userdata/balances/' . $userId . '.txt';
+$balanceFile = __DIR__ . '/../../../clickforcharity-data/userdata/balances/' . $userId . '.txt';
 
 if (!file_exists($balanceFile)) {
     // User doesn't exist yet - return 0 balance

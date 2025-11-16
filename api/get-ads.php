@@ -2,7 +2,7 @@
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
-$adsDir = __DIR__ . '/../../data/ads';
+$adsDir = __DIR__ . '/../../../clickforcharity-data/ads';
 
 if (!is_dir($adsDir)) {
     echo json_encode([]);
