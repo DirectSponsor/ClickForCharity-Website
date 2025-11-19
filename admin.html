@@ -76,6 +76,10 @@
                 
                 <h2 id="manage-tasks" style="margin-top: 60px;">Manage Existing Tasks</h2>
                 <p class="description">View and delete existing surf ad tasks.</p>
+                <div style="margin-bottom: 20px;">
+                    <button id="reset-completed-btn" class="btn secondary">Reset Completed Tasks (for testing)</button>
+                    <span id="reset-feedback" style="margin-left: 10px; color: #27ae60;"></span>
+                </div>
                 <div id="task-management-list" class="task-management-list">
                     <p class="loading-state">Loading tasks...</p>
                 </div>
@@ -231,6 +235,28 @@
 
             // Load tasks on page load
             loadTasks();
+        })();
+
+        // Reset completed tasks
+        (function() {
+            const resetBtn = document.getElementById('reset-completed-btn');
+            const feedbackEl = document.getElementById('reset-feedback');
+
+            resetBtn.addEventListener('click', () => {
+                if (!confirm('Clear all completed tasks from localStorage? This will let you test tasks again.')) return;
+
+                try {
+                    localStorage.removeItem('completed_tasks');
+                    feedbackEl.textContent = '✓ Completed tasks reset!';
+                    setTimeout(() => {
+                        feedbackEl.textContent = '';
+                    }, 3000);
+                } catch (error) {
+                    console.error('Reset error:', error);
+                    feedbackEl.textContent = 'Error resetting tasks';
+                    feedbackEl.style.color = '#c0392b';
+                }
+            });
         })();
     </script>
 </body>

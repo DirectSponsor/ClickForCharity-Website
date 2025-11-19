@@ -24,10 +24,10 @@ function read_json_files($dir) {
 
 if ($type === 'ads') {
     // The data directory is two levels above this script's location (src/api)
-    $ads_data = read_json_files(__DIR__ . '/../../../clickforcharity-data/ads');
+    $ads_data = read_json_files('/var/clickforcharity-data/ads');
     echo json_encode($ads_data);
 } elseif ($type === 'user' && !empty($userId)) {
-    $user_file = __DIR__ . '/../../../clickforcharity-data/users/' . $userId . '.json';
+    $user_file = '/var/clickforcharity-data/users/' . $userId . '.json';
     if (file_exists($user_file)) {
         echo file_get_contents($user_file);
     } else {

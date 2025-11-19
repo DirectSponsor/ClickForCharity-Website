@@ -25,7 +25,7 @@ if (!$data || !isset($data['id'])) {
 }
 
 $adId = (int)$data['id'];
-$adsDir = __DIR__ . '/../../../clickforcharity-data/ads';
+$adsDir = '/var/clickforcharity-data/ads';
 $filePath = $adsDir . '/' . $adId . '.json';
 
 if (!file_exists($filePath)) {

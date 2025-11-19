@@ -75,7 +75,7 @@ function createUserFromAuthServer($userId) {
     }
     
     // Create profile file
-    $profileFile = __DIR__ . '/../../../clickforcharity-data/userdata/profiles/' . $userId . '.txt';
+    $profileFile = '/var/clickforcharity-data/userdata/profiles/' . $userId . '.txt';
     $profileDir = dirname($profileFile);
     if (!is_dir($profileDir)) {
         mkdir($profileDir, 0755, true);
@@ -108,7 +108,7 @@ function createUserFromAuthServer($userId) {
     file_put_contents($profileFile, json_encode($profileData, JSON_PRETTY_PRINT));
     
     // Create balance file
-    $balanceFile = __DIR__ . '/../../../clickforcharity-data/userdata/balances/' . $userId . '.txt';
+    $balanceFile = '/var/clickforcharity-data/userdata/balances/' . $userId . '.txt';
     $balanceDir = dirname($balanceFile);
     if (!is_dir($balanceDir)) {
         mkdir($balanceDir, 0755, true);
@@ -126,7 +126,7 @@ function createUserFromAuthServer($userId) {
 }
 
 // Main balance update logic
-$balance_file_path = __DIR__ . '/../../../clickforcharity-data/userdata/balances/' . $userId . '.txt';
+$balance_file_path = '/var/clickforcharity-data/userdata/balances/' . $userId . '.txt';
 
 // LAZY LOADING: Create user from auth server if they don't exist
 if (!file_exists($balance_file_path)) {
