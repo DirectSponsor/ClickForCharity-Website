@@ -380,4 +380,31 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🔧 Unified Balance System ready for ClickForCharity!');
 });
 
+// Tab visibility detection - refresh balance when user returns to tab
+document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+        // User switched back to this tab - refresh balance
+        console.log('👁️ Tab visible again - refreshing balance');
+        
+        // Refresh login status first (in case they logged in/out on another tab)
+        if (window.unifiedBalance) {
+            window.unifiedBalance.refreshLoginStatus();
+        }
+        
+        // Then update balance displays
+        setTimeout(updateBalanceDisplays, 100);
+    } else {
+        console.log('👁️ Tab hidden');
+    }
+});
+
+// Also refresh balance when window regains focus (backup for older browsers)
+window.addEventListener('focus', () => {
+    console.log('🔍 Window focused - refreshing balance');
+    if (window.unifiedBalance) {
+        window.unifiedBalance.refreshLoginStatus();
+    }
+    setTimeout(updateBalanceDisplays, 100);
+});
+
 console.log('🔧 ClickForCharity Unified Balance System loaded!');
