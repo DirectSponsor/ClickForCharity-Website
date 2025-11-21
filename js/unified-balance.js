@@ -141,7 +141,17 @@ class UnifiedBalanceSystem {
             this.flushNetChange('timer');
         }, 120000);
         
-        // 2. Blur - flush when window loses focus
+        // 2. Visibility change - flush when tab becomes hidden AND update last active site
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                // Mark that we're leaving this site (more reliable than blur)
+                localStorage.setItem('last_active_site', this.siteId);
+                console.log(`👋 Leaving site, marked last_active_site = ${this.siteId}`);
+                this.flushNetChange('visibility-hidden');
+            }
+        });
+        
+        // Also keep blur as backup
         window.addEventListener('blur', () => {
             this.flushNetChange('blur');
         });
@@ -161,20 +171,19 @@ class UnifiedBalanceSystem {
             const lastActiveSite = localStorage.getItem('last_active_site');
             const currentSite = this.siteId;
             
-            // Update current site
-            localStorage.setItem('last_active_site', currentSite);
-            
-            // Check if switching from different site
+            // Check if switching from different site BEFORE updating
             if (lastActiveSite && lastActiveSite !== currentSite) {
-                // Cross-site switch - need full sync with lock
-                console.log(`🔄 Detected site switch: ${lastActiveSite} → ${currentSite}`);
+                // Cross-site switch - need sync
+                console.log(`🔄 Detected site switch on focus: ${lastActiveSite} → ${currentSite}`);
                 await this.syncFromOtherSite();
             } else {
-                // Same site - just refresh balance without lock
+                // Same site - just refresh balance
                 console.log(`🔄 Refreshing balance on focus (same site)`);
                 await this.getBalance();
                 this.updateBalanceDisplaysSync();
             }
+            
+            // Don't update last_active_site here - it gets updated on blur
         });
         
         // Listen for localStorage changes from other tabs
@@ -186,7 +195,7 @@ class UnifiedBalanceSystem {
             }
         });
         
-        // Set initial site
+        // Set initial site on page load
         localStorage.setItem('last_active_site', this.siteId);
     }
     
@@ -508,6 +517,25 @@ class UnifiedBalanceSystem {
     clearGuestData() {
         localStorage.removeItem('guest_transactions');
         console.log('🗑️ Guest data cleared');
+    }
+    
+    // ========== TASK TRACKING (CFC-SPECIFIC) ==========
+    
+    getCompletedTasks() {
+        const stored = localStorage.getItem('completed_tasks');
+        return stored ? JSON.parse(stored) : {};
+    }
+    
+    isTaskCompleted(taskId) {
+        const completedTasks = this.getCompletedTasks();
+        return !!completedTasks[taskId];
+    }
+    
+    markTaskCompleted(taskId) {
+        const completedTasks = this.getCompletedTasks();
+        completedTasks[taskId] = new Date().toISOString();
+        localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+        console.log('✅ Task marked complete:', taskId);
     }
 }
 
