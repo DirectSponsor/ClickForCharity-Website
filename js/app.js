@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `Completed: ${ad.title}`
             );
             window.UnifiedBalance.markTaskCompleted(ad.id);
-            await renderBalance();
+            // No need to renderBalance() - addBalance() already updated display optimistically
             notifyAdReady(taskItemEl);
         } catch (error) {
             console.error('Failed to update balance:', error);

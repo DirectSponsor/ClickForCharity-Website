@@ -1,29 +1,388 @@
-// ClickForCharity Unified Balance System
-// Seamlessly handles both guest users (tokens in localStorage) and members (coins on server)
+// ClickForCharity Unified Balance System - File-Based Sync
+// Simple architecture: track running total, flush to local file, Syncthing handles cross-site sync
+// CFC-specific: No balance locking needed (tasks take 10+ seconds anyway)
 
 class UnifiedBalanceSystem {
     constructor() {
-        // Check login status with localStorage expiration
+        // Check login status
         this.isLoggedIn = !!this.getValidUsername();
         this.userId = this.isLoggedIn ? this.getUserIdFromToken() : 'guest';
-        this.balance = 0;
+        this.siteId = 'cfc'; // ClickForCharity identifier
+        
+        // Balance state
+        this.fileBalance = 0; // Balance from file
+        this.netChange = 0; // Running total of changes since last flush
+        this.consecutiveFailures = 0;
+        this.isFlushing = false; // Guard flag to prevent double flush
         
         console.log(`💰 ClickForCharity Balance System initialized for ${this.isLoggedIn ? 'member' : 'guest'} user`);
         
-        // Update currency display immediately
+        // Update currency display
         this.updateCurrencyDisplay();
+        
+        // Setup for logged-in users
+        if (this.isLoggedIn) {
+            // Only load netChange if this is a page refresh (not navigation)
+            // Navigation should start with netChange = 0 (old page flushes on blur)
+            if (performance.navigation.type === 1) {
+                // Type 1 = reload (F5)
+                this.loadNetChange();
+            } else {
+                // Type 0 = normal navigation - start fresh
+                console.log('📊 Normal navigation - starting with netChange = 0');
+                this.resetNetChange();
+            }
+            this.setupFlushTriggers();
+            this.setupCrossSiteSync();
+        }
     }
     
-    updateCurrencyDisplay() {
-        const currency = this.isLoggedIn ? 'coins' : 'tokens';
-        console.log(`💱 Updating currency display to: ${currency}`);
-        
-        // Update all currency display elements
-        const currencyElements = document.querySelectorAll('.currency, [data-currency]');
-        currencyElements.forEach(element => {
-            element.textContent = currency;
-        });
+    // ========== NET CHANGE MANAGEMENT ==========
+    
+    getNetChangeKey() {
+        return `balance_net_change:${this.getCombinedUserIdFromToken()}`;
     }
+    
+    loadNetChange() {
+        const stored = localStorage.getItem(this.getNetChangeKey());
+        this.netChange = stored ? parseFloat(stored) : 0;
+        console.log(`📊 Loaded net change: ${this.netChange}`);
+    }
+    
+    saveNetChange() {
+        localStorage.setItem(this.getNetChangeKey(), this.netChange.toString());
+    }
+    
+    resetNetChange() {
+        this.netChange = 0;
+        this.saveNetChange();
+    }
+    
+    addToNetChange(amount, source, description) {
+        this.netChange += amount;
+        this.saveNetChange();
+        
+        // Update display optimistically
+        this.updateBalanceDisplaysSync();
+        
+        console.log(`📝 Net change: ${this.netChange > 0 ? '+' : ''}${amount} from ${source || 'unknown'} (total: ${this.netChange})`);
+    }
+    
+    // ========== FLUSH TO LOCAL FILE ==========
+    
+    async flushNetChange(trigger = 'manual') {
+        if (!this.isLoggedIn) return;
+        if (this.netChange === 0) {
+            console.log('✅ No net change to flush');
+            return;
+        }
+        
+        // Prevent double flush
+        if (this.isFlushing) {
+            console.log(`⏭️ Flush already in progress, skipping ${trigger}`);
+            return;
+        }
+        
+        const combinedUserId = this.getCombinedUserIdFromToken();
+        if (combinedUserId === 'guest') return;
+        
+        this.isFlushing = true;
+        console.log(`📤 Flushing net change: ${this.netChange > 0 ? '+' : ''}${this.netChange} (${trigger})`);
+        
+        try {
+            const response = await fetch('/api/write_balance.php', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    user_id: combinedUserId,
+                    net_change: this.netChange
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                // Update file balance and reset net change
+                this.fileBalance = result.balance;
+                this.resetNetChange();
+                
+                console.log('✅ Flush successful, new balance:', result.balance);
+                
+                // Track last write for cross-site detection
+                localStorage.setItem('last_write_site', this.siteId);
+                localStorage.setItem('last_write_time', Date.now().toString());
+                
+                this.consecutiveFailures = 0;
+                this.hideHubWarning();
+            } else {
+                throw new Error(result.error || 'Flush failed');
+            }
+        } catch (error) {
+            console.error('❌ Flush error:', error);
+            this.consecutiveFailures++;
+            
+            if (this.consecutiveFailures >= 3) {
+                this.showHubWarning(this.consecutiveFailures >= 10);
+            }
+        } finally {
+            this.isFlushing = false;
+        }
+    }
+    
+    // ========== FLUSH TRIGGERS ==========
+    
+    setupFlushTriggers() {
+        // 1. Timer - flush every 120 seconds
+        this.flushInterval = setInterval(() => {
+            this.flushNetChange('timer');
+        }, 120000);
+        
+        // 2. Blur - flush when window loses focus
+        window.addEventListener('blur', () => {
+            this.flushNetChange('blur');
+        });
+        
+        // 3. Beforeunload - flush before closing tab/window
+        window.addEventListener('beforeunload', () => {
+            this.flushNetChange('beforeunload');
+        });
+        
+        console.log('⏱️ Flush triggers setup: timer (120s), blur, beforeunload');
+    }
+    
+    // ========== CROSS-SITE SYNC LOGIC ==========
+    
+    setupCrossSiteSync() {
+        window.addEventListener('focus', async () => {
+            const lastActiveSite = localStorage.getItem('last_active_site');
+            const currentSite = this.siteId;
+            
+            // Update current site
+            localStorage.setItem('last_active_site', currentSite);
+            
+            // Check if switching from different site
+            if (lastActiveSite && lastActiveSite !== currentSite) {
+                // Cross-site switch - need full sync with lock
+                console.log(`🔄 Detected site switch: ${lastActiveSite} → ${currentSite}`);
+                await this.syncFromOtherSite();
+            } else {
+                // Same site - just refresh balance without lock
+                console.log(`🔄 Refreshing balance on focus (same site)`);
+                await this.getBalance();
+                this.updateBalanceDisplaysSync();
+            }
+        });
+        
+        // Listen for localStorage changes from other tabs
+        window.addEventListener('storage', (e) => {
+            if (e.key === this.getNetChangeKey() || e.key === 'last_write_time') {
+                console.log('🔄 Balance updated in another tab, refreshing...');
+                this.loadNetChange();
+                this.updateBalanceDisplaysSync();
+            }
+        });
+        
+        // Set initial site
+        localStorage.setItem('last_active_site', this.siteId);
+    }
+    
+    async syncFromOtherSite() {
+        // CFC: No locking needed - tasks take 10+ seconds, sync will finish before task completes
+        console.log('🔄 Syncing balance from other site (no lock needed)');
+        
+        // Wait 10 seconds for Syncthing
+        await new Promise(resolve => setTimeout(resolve, 10000));
+        
+        // Read balance from file
+        await this.getBalance();
+        this.updateBalanceDisplaysSync();
+        
+        console.log('✅ Cross-site sync completed');
+    }
+    
+    
+    // ========== WARNING BANNERS ==========
+    
+    showHubWarning(isBlocking = false) {
+        this.hideHubWarning();
+        
+        const banner = document.createElement('div');
+        banner.id = 'hub-warning-banner';
+        banner.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: ${isBlocking ? '#dc3545' : '#ff9800'};
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 10000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        `;
+        
+        if (isBlocking) {
+            banner.innerHTML = `
+                ❌ Unable to sync balance from other site.
+                Network issue detected. Earning activities disabled until resolved.
+                <button onclick="window.unifiedBalance.syncFromOtherSite()" 
+                        style="margin-left: 10px; padding: 5px 10px; background: white; color: #dc3545; border: none; border-radius: 3px; cursor: pointer; font-weight: bold;">
+                    Retry Now
+                </button>
+            `;
+        } else {
+            banner.innerHTML = `
+                ⚠️ Connection issue - your earnings are being saved and will sync when reconnected.
+                <button onclick="window.unifiedBalance.hideHubWarning()" 
+                        style="margin-left: 10px; padding: 5px 10px; background: white; color: #ff9800; border: none; border-radius: 3px; cursor: pointer;">
+                    Dismiss
+                </button>
+            `;
+        }
+        
+        document.body.insertBefore(banner, document.body.firstChild);
+    }
+    
+    hideHubWarning() {
+        const banner = document.getElementById('hub-warning-banner');
+        if (banner) banner.remove();
+    }
+    
+    // CFC: No sync notifications needed (simpler UX, tasks are slow anyway)
+    // But we still need warning banners for failures!
+    
+    showSyncNotification() {
+        // CFC: Skip sync notifications (tasks are slow, don't need the spinner)
+    }
+    
+    hideSyncNotification() {
+        // CFC: Skip sync notifications
+    }
+    
+    // ========== BALANCE OPERATIONS ==========
+    
+    async getBalance() {
+        if (this.isLoggedIn) {
+            return await this.getRealBalance();
+        } else {
+            return this.getGuestBalance();
+        }
+    }
+    
+    async getRealBalance() {
+        try {
+            const combinedUserId = this.getCombinedUserIdFromToken();
+            if (combinedUserId === 'guest') {
+                return this.getGuestBalance();
+            }
+            
+            const response = await fetch(`/api/get_balance.php?user_id=${combinedUserId}`, {
+                method: 'GET',
+                cache: 'no-cache'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success) {
+                    this.fileBalance = parseFloat(data.balance) || 0;
+                    // Always add net change for consistent display
+                    const displayBalance = this.fileBalance + this.netChange;
+                    console.log(`✅ Balance loaded: ${this.fileBalance} (file) + ${this.netChange} (pending) = ${displayBalance}`);
+                    return displayBalance;
+                }
+            }
+            
+            this.fileBalance = 0;
+            return this.netChange;
+        } catch (error) {
+            console.warn('⚠️ Balance API error:', error);
+            return this.netChange;
+        }
+    }
+    
+    getGuestBalance() {
+        const transactions = this.getGuestTransactions();
+        this.fileBalance = transactions.reduce((total, tx) => {
+            return total + (tx.type === 'spend' ? -tx.amount : tx.amount);
+        }, 0);
+        
+        console.log('👤 Guest balance calculated:', this.fileBalance);
+        return this.fileBalance;
+    }
+    
+    async addBalance(amount, source, description) {
+        // CFC: No balance locking - tasks take 10+ seconds anyway
+        if (this.isLoggedIn) {
+            this.addToNetChange(amount, source, description);
+            return { success: true, balance: this.fileBalance + this.netChange };
+        } else {
+            return this.addGuestBalance(amount, source, description);
+        }
+    }
+    
+    async subtractBalance(amount, source, description) {
+        // CFC: No balance locking - tasks take 10+ seconds anyway
+        if (this.isLoggedIn) {
+            this.addToNetChange(-amount, source, description);
+            return { success: true, balance: this.fileBalance + this.netChange };
+        } else {
+            return this.subtractGuestBalance(amount, source, description);
+        }
+    }
+    
+    // ========== GUEST BALANCE METHODS ==========
+    
+    getGuestTransactions() {
+        const stored = localStorage.getItem('guest_transactions');
+        return stored ? JSON.parse(stored) : [];
+    }
+    
+    saveGuestTransaction(type, amount, source, description) {
+        const transactions = this.getGuestTransactions();
+        const transaction = {
+            id: Date.now().toString(),
+            type: type,
+            amount: amount,
+            source: source,
+            description: description,
+            timestamp: new Date().toISOString()
+        };
+        
+        transactions.push(transaction);
+        localStorage.setItem('guest_transactions', JSON.stringify(transactions));
+        
+        console.log('📝 Guest transaction saved:', transaction);
+        return transaction;
+    }
+    
+    addGuestBalance(amount, source, description) {
+        this.saveGuestTransaction('earn', amount, source, description);
+        this.fileBalance += amount;
+        this.updateBalanceDisplaysSync();
+        
+        console.log('🎁 Guest balance added:', amount);
+        return { success: true, balance: this.fileBalance };
+    }
+    
+    subtractGuestBalance(amount, source, description) {
+        if (this.fileBalance < amount) {
+            return { success: false, error: 'Insufficient balance' };
+        }
+        
+        this.saveGuestTransaction('spend', amount, source, description);
+        this.fileBalance -= amount;
+        this.updateBalanceDisplaysSync();
+        
+        console.log('💸 Guest balance subtracted:', amount);
+        return { success: true, balance: this.fileBalance };
+    }
+    
+    // ========== USER MANAGEMENT ==========
     
     getValidUsername() {
         try {
@@ -31,7 +390,7 @@ class UnifiedBalanceSystem {
             if (sessionData) {
                 const data = JSON.parse(sessionData);
                 if (data.expires && Date.now() > data.expires) {
-                    return null; // Expired
+                    return null;
                 }
                 return data.username;
             }
@@ -58,7 +417,6 @@ class UnifiedBalanceSystem {
     }
     
     getCombinedUserIdFromToken() {
-        // Get combined userID for API access (userID-username format)
         try {
             const sessionData = localStorage.getItem('directsponsor_session');
             if (sessionData) {
@@ -67,12 +425,10 @@ class UnifiedBalanceSystem {
                     return 'guest';
                 }
                 
-                // If combined_user_id exists, use it
                 if (data.combined_user_id) {
                     return data.combined_user_id;
                 }
                 
-                // Otherwise construct from user_id and username
                 if (data.user_id && data.username) {
                     return `${data.user_id}-${data.username}`;
                 }
@@ -80,13 +436,9 @@ class UnifiedBalanceSystem {
                 return 'guest';
             }
             
-            // Try direct localStorage access
             const storedCombined = localStorage.getItem('combined_user_id');
-            if (storedCombined) {
-                return storedCombined;
-            }
+            if (storedCombined) return storedCombined;
             
-            // Fall back to constructing from individual items
             const userId = localStorage.getItem('user_id');
             const username = localStorage.getItem('username');
             if (userId && username) {
@@ -95,208 +447,32 @@ class UnifiedBalanceSystem {
             
             return 'guest';
         } catch (error) {
-            console.error('Error getting combined user ID:', error);
             return 'guest';
         }
     }
     
-    async getBalance() {
-        if (this.isLoggedIn) {
-            return await this.getRealBalance();
-        } else {
-            return this.getGuestBalance();
-        }
+    // ========== UI UPDATES ==========
+    
+    updateCurrencyDisplay() {
+        const currency = this.isLoggedIn ? 'coins' : 'tokens';
+        const currencyElements = document.querySelectorAll('.currency, [data-currency]');
+        currencyElements.forEach(element => {
+            element.textContent = currency;
+        });
     }
     
-    async getRealBalance() {
-        try {
-            const combinedUserId = this.getCombinedUserIdFromToken();
-            if (combinedUserId === 'guest') {
-                return this.getGuestBalance();
-            }
-            
-            // Fetch from ClickForCharity profile API (which uses lazy loading)
-            const response = await fetch(`/api/simple-profile.php?action=profile&user_id=${combinedUserId}&_t=` + Date.now(), {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                cache: 'no-cache'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success && data.user) {
-                    // Profile gives us user info, now get balance from balance API
-                    return await this.getBalanceFromAPI(combinedUserId);
-                } else {
-                    throw new Error(data.error || 'API returned error');
-                }
-            } else {
-                throw new Error('API request failed');
-            }
-        } catch (error) {
-            console.error('💥 Balance fetch error:', error);
-            throw error;
-        }
-    }
-    
-    async getBalanceFromAPI(combinedUserId) {
-        try {
-            // Read balance file directly via a simple balance API endpoint
-            // For now, we'll need to create a get_balance.php endpoint
-            const response = await fetch(`/api/get_balance.php?user_id=${combinedUserId}`, {
-                method: 'GET',
-                cache: 'no-cache'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.balance = parseFloat(data.balance) || 0;
-                    console.log('✅ Balance loaded:', this.balance);
-                    return this.balance;
-                }
-            }
-            
-            // If endpoint doesn't exist yet, default to 0
-            this.balance = 0;
-            return this.balance;
-        } catch (error) {
-            console.warn('⚠️ Balance API not available, defaulting to 0');
-            this.balance = 0;
-            return this.balance;
-        }
-    }
-    
-    getGuestBalance() {
-        const transactions = this.getGuestTransactions();
-        this.balance = transactions.reduce((total, tx) => {
-            return total + (tx.type === 'spend' ? -tx.amount : tx.amount);
-        }, 0);
+    updateBalanceDisplaysSync() {
+        const balance = this.fileBalance + this.netChange;
+        const terminology = this.getTerminology();
         
-        console.log('👤 Guest balance calculated:', this.balance);
-        return this.balance;
-    }
-    
-    getGuestTransactions() {
-        const stored = localStorage.getItem('guest_transactions');
-        return stored ? JSON.parse(stored) : [];
-    }
-    
-    saveGuestTransaction(type, amount, source, description) {
-        const transactions = this.getGuestTransactions();
-        const transaction = {
-            id: Date.now().toString(),
-            type: type,
-            amount: amount,
-            source: source,
-            description: description,
-            timestamp: new Date().toISOString()
-        };
+        const balanceElements = document.querySelectorAll('.balance, #user-balance, #balance-display');
+        balanceElements.forEach(element => {
+            const formattedBalance = Math.floor(balance);
+            element.textContent = formattedBalance;
+            element.title = `${formattedBalance} ${terminology.fullName}`;
+        });
         
-        transactions.push(transaction);
-        localStorage.setItem('guest_transactions', JSON.stringify(transactions));
-        
-        console.log('📝 Guest transaction saved:', transaction);
-        return transaction;
-    }
-    
-    async addBalance(amount, source, description) {
-        if (this.isLoggedIn) {
-            return await this.addRealBalance(amount, source, description);
-        } else {
-            return this.addGuestBalance(amount, source, description);
-        }
-    }
-    
-    async addRealBalance(amount, source, description) {
-        try {
-            const combinedUserId = this.getCombinedUserIdFromToken();
-            if (combinedUserId === 'guest') {
-                return this.addGuestBalance(amount, source, description);
-            }
-            
-            // Use ClickForCharity update_balance API (with lazy loading)
-            const response = await fetch('/api/update_balance.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    userId: combinedUserId,
-                    reward: amount
-                })
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success) {
-                    this.balance = parseFloat(data.newBalance) || 0;
-                    console.log('✅ Real balance added:', amount, 'New balance:', this.balance);
-                    return { success: true, balance: this.balance };
-                } else {
-                    throw new Error(data.error || 'API returned error');
-                }
-            } else {
-                throw new Error('API request failed');
-            }
-        } catch (error) {
-            console.error('💥 Add balance error:', error);
-            throw error;
-        }
-    }
-    
-    addGuestBalance(amount, source, description) {
-        this.saveGuestTransaction('earn', amount, source, description);
-        this.balance += amount;
-        
-        console.log('🎁 Guest balance added:', amount, 'New balance:', this.balance);
-        return { success: true, balance: this.balance };
-    }
-    
-    async subtractBalance(amount, source, description) {
-        if (this.isLoggedIn) {
-            return await this.subtractRealBalance(amount, source, description);
-        } else {
-            return this.subtractGuestBalance(amount, source, description);
-        }
-    }
-    
-    async subtractRealBalance(amount, source, description) {
-        // For subtraction, we'd need a separate API or modify update_balance to accept negative
-        // For now, throw an error as we don't have spending implemented yet
-        throw new Error('Balance spending not yet implemented for members');
-    }
-    
-    subtractGuestBalance(amount, source, description) {
-        if (this.balance < amount) {
-            console.log('❌ Insufficient guest balance');
-            return { success: false, balance: this.balance, error: 'Insufficient balance' };
-        }
-        
-        this.saveGuestTransaction('spend', amount, source, description);
-        this.balance -= amount;
-        
-        console.log('💸 Guest balance subtracted:', amount, 'New balance:', this.balance);
-        return { success: true, balance: this.balance };
-    }
-    
-    refreshLoginStatus() {
-        const wasLoggedIn = this.isLoggedIn;
-        this.isLoggedIn = !!this.getValidUsername();
-        this.userId = this.isLoggedIn ? this.getUserIdFromToken() : 'guest';
-        
-        if (wasLoggedIn !== this.isLoggedIn) {
-            console.log(`💰 Login status changed: ${wasLoggedIn ? 'member' : 'guest'} → ${this.isLoggedIn ? 'member' : 'guest'}`);;
-            this.updateCurrencyDisplay();
-            setTimeout(updateBalanceDisplays, 100);
-            
-            // Update login UI
-            if (typeof updateLoginUI === 'function') {
-                updateLoginUI();
-            }
-        }
+        updateCurrencyDisplays();
     }
     
     getTerminology() {
@@ -307,44 +483,49 @@ class UnifiedBalanceSystem {
         };
     }
     
-    // Task completion tracking (for PTC ads)
-    markTaskCompleted(taskId) {
-        const completedTasks = this.getCompletedTasks();
-        completedTasks[taskId] = new Date().toISOString();
-        localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
-        console.log('✅ Task marked complete:', taskId);
+    refreshLoginStatus() {
+        const wasLoggedIn = this.isLoggedIn;
+        this.isLoggedIn = !!this.getValidUsername();
+        this.userId = this.isLoggedIn ? this.getUserIdFromToken() : 'guest';
+        
+        if (wasLoggedIn !== this.isLoggedIn) {
+            console.log(`💰 Login status changed: ${wasLoggedIn ? 'member' : 'guest'} → ${this.isLoggedIn ? 'member' : 'guest'}`);
+            this.updateCurrencyDisplay();
+            
+            if (this.isLoggedIn && !wasLoggedIn) {
+                this.setupFlushTriggers();
+                this.setupCrossSiteSync();
+            }
+            
+            setTimeout(updateBalanceDisplays, 100);
+            
+            if (typeof updateLoginUI === 'function') {
+                updateLoginUI();
+            }
+        }
     }
     
-    isTaskCompleted(taskId) {
-        const completedTasks = this.getCompletedTasks();
-        return !!completedTasks[taskId];
-    }
-    
-    getCompletedTasks() {
-        const stored = localStorage.getItem('completed_tasks');
-        return stored ? JSON.parse(stored) : {};
-    }
-    
-    // Clear all guest data (for testing)
     clearGuestData() {
         localStorage.removeItem('guest_transactions');
-        localStorage.removeItem('completed_tasks');
         console.log('🗑️ Guest data cleared');
     }
 }
 
-// Global instance
-window.unifiedBalance = new UnifiedBalanceSystem();
+// Global instance (singleton pattern)
+if (!window.unifiedBalance) {
+    window.unifiedBalance = new UnifiedBalanceSystem();
+    window.UnifiedBalance = window.unifiedBalance;
+    console.log('✅ UnifiedBalanceSystem singleton created');
+} else {
+    console.warn('⚠️ UnifiedBalanceSystem already exists! Script loaded multiple times.');
+    console.warn('🔍 Stack trace:', new Error().stack);
+}
 
-// Also expose as window.UnifiedBalance for compatibility with app.js
-window.UnifiedBalance = window.unifiedBalance;
-
-// Global function to update all balance displays
+// Global functions
 window.updateBalanceDisplays = async () => {
     const balance = await window.unifiedBalance.getBalance();
     const terminology = window.unifiedBalance.getTerminology();
     
-    // Find all elements with 'balance' class and update them
     const balanceElements = document.querySelectorAll('.balance, #user-balance, #balance-display');
     balanceElements.forEach(element => {
         const formattedBalance = Math.floor(balance);
@@ -352,15 +533,11 @@ window.updateBalanceDisplays = async () => {
         element.title = `${formattedBalance} ${terminology.fullName}`;
     });
     
-    // Update currency terminology
     updateCurrencyDisplays();
 };
 
-// Global function to update currency terminology displays
 window.updateCurrencyDisplays = () => {
     const terminology = window.unifiedBalance.getTerminology();
-    
-    // Find all elements with 'currency' class and update them
     const currencyElements = document.querySelectorAll('.currency, #user-balance-label');
     currencyElements.forEach(element => {
         element.textContent = terminology.currency;
@@ -368,43 +545,13 @@ window.updateCurrencyDisplays = () => {
     });
 };
 
-// Global convenience functions
 window.getBalance = () => window.unifiedBalance.getBalance();
 window.addBalance = (amount, source, description) => window.unifiedBalance.addBalance(amount, source, description);
 window.subtractBalance = (amount, source, description) => window.unifiedBalance.subtractBalance(amount, source, description);
 window.getTerminology = () => window.unifiedBalance.getTerminology();
 
-// Auto-update balance displays when page loads
+// Auto-update on load
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateBalanceDisplays, 100);
-    console.log('🔧 Unified Balance System ready for ClickForCharity!');
+    console.log('💰 Balance system initialized');
 });
-
-// Tab visibility detection - refresh balance when user returns to tab
-document.addEventListener('visibilitychange', () => {
-    if (!document.hidden) {
-        // User switched back to this tab - refresh balance
-        console.log('👁️ Tab visible again - refreshing balance');
-        
-        // Refresh login status first (in case they logged in/out on another tab)
-        if (window.unifiedBalance) {
-            window.unifiedBalance.refreshLoginStatus();
-        }
-        
-        // Then update balance displays
-        setTimeout(updateBalanceDisplays, 100);
-    } else {
-        console.log('👁️ Tab hidden');
-    }
-});
-
-// Also refresh balance when window regains focus (backup for older browsers)
-window.addEventListener('focus', () => {
-    console.log('🔍 Window focused - refreshing balance');
-    if (window.unifiedBalance) {
-        window.unifiedBalance.refreshLoginStatus();
-    }
-    setTimeout(updateBalanceDisplays, 100);
-});
-
-console.log('🔧 ClickForCharity Unified Balance System loaded!');
