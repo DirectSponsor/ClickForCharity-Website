@@ -74,7 +74,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         const terms = window.UnifiedBalance.getTerminology();
         const rewardLabel = terms.currency;
 
-        ads.forEach(ad => {
+        // Sort ads: completed ones go to the bottom
+        const sortedAds = [...ads].sort((a, b) => {
+            const aCompleted = window.UnifiedBalance.isTaskCompleted(a.id);
+            const bCompleted = window.UnifiedBalance.isTaskCompleted(b.id);
+            
+            // If both have same completion status, maintain original order
+            if (aCompleted === bCompleted) return 0;
+            
+            // Completed tasks (true) should come after incomplete ones (false)
+            return aCompleted ? 1 : -1;
+        });
+
+        sortedAds.forEach(ad => {
             const taskItem = document.createElement('div');
             taskItem.className = 'task-item';
             taskItem.dataset.adId = ad.id;
@@ -108,6 +120,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         const statusEl = taskItemEl.querySelector('.task-status');
         if (statusEl) {
             statusEl.textContent = text;
+        }
+    }
+    
+    function moveTaskToBottom(taskItemEl) {
+        if (!taskItemEl) return;
+        
+        // Get the task list container
+        const taskList = document.getElementById('task-list');
+        if (!taskList) return;
+        
+        // Find all incomplete tasks (those without 'done' class)
+        const incompleteTasks = Array.from(taskList.querySelectorAll('.task-item:not(.done)'));
+        
+        // If this is the first completed task, move it to the end
+        if (incompleteTasks.length > 0) {
+            // Append the completed task to the end (after all incomplete tasks)
+            taskList.appendChild(taskItemEl);
         }
     }
 
@@ -285,11 +314,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (accumulatedTime >= requiredTime) {
                 completeAdView(adBeingViewed.ad, adBeingViewed.taskItemEl);
-                // Reset all state
-                adBeingViewed = null;
-                accumulatedTime = 0;
             }
         }
+        
         if (!adBeingViewed) {
             resetDocumentTitle();
         }
@@ -313,6 +340,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `Completed: ${ad.title}`
             );
             window.UnifiedBalance.markTaskCompleted(ad.id);
+            
+            // Move completed task to bottom of list immediately
+            moveTaskToBottom(taskItemEl);
+            
             // No need to renderBalance() - addBalance() already updated display optimistically
             notifyAdReady(taskItemEl);
         } catch (error) {

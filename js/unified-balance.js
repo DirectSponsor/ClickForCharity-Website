@@ -14,6 +14,7 @@ class UnifiedBalanceSystem {
         this.netChange = 0; // Running total of changes since last flush
         this.consecutiveFailures = 0;
         this.isFlushing = false; // Guard flag to prevent double flush
+        this.isSyncing = false; // Guard flag for manual sync
         
         console.log(`💰 ClickForCharity Balance System initialized for ${this.isLoggedIn ? 'member' : 'guest'} user`);
         
@@ -107,14 +108,11 @@ class UnifiedBalanceSystem {
             
             if (result.success) {
                 // Update file balance and reset net change
+                const previousNetChange = this.netChange;
                 this.fileBalance = result.balance;
                 this.resetNetChange();
                 
                 console.log('✅ Flush successful, new balance:', result.balance);
-                
-                // Track last write for cross-site detection
-                localStorage.setItem('last_write_site', this.siteId);
-                localStorage.setItem('last_write_time', Date.now().toString());
                 
                 this.consecutiveFailures = 0;
                 this.hideHubWarning();
@@ -141,12 +139,9 @@ class UnifiedBalanceSystem {
             this.flushNetChange('timer');
         }, 120000);
         
-        // 2. Visibility change - flush when tab becomes hidden AND update last active site
+        // 2. Visibility change - flush when tab becomes hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
-                // Mark that we're leaving this site (more reliable than blur)
-                localStorage.setItem('last_active_site', this.siteId);
-                console.log(`👋 Leaving site, marked last_active_site = ${this.siteId}`);
                 this.flushNetChange('visibility-hidden');
             }
         });
@@ -164,53 +159,77 @@ class UnifiedBalanceSystem {
         console.log('⏱️ Flush triggers setup: timer (120s), blur, beforeunload');
     }
     
-    // ========== CROSS-SITE SYNC LOGIC ==========
+    // ========== MANUAL SYNC ==========
+    
+    async syncBalance() {
+        if (!this.isLoggedIn) {
+            this.showSyncMessage('⚠️ Please log in to sync balance', 3000);
+            return;
+        }
+        if (this.isSyncing) return;
+        this.isSyncing = true;
+        try {
+            this.updateSyncButton('syncing');
+            await this.flushNetChange('manual-sync');
+            this.showSyncMessage('⏳ Syncing balance... (10 seconds)');
+            await new Promise(resolve => setTimeout(resolve, 10000));
+            await this.getBalance();
+            this.updateBalanceDisplaysSync();
+            this.showSyncMessage('✅ Balance synced!', 2000);
+            this.updateSyncButton('success');
+            setTimeout(() => this.updateSyncButton('normal'), 2000);
+            console.log('✅ Manual balance sync completed');
+        } catch (error) {
+            console.error('❌ Sync error:', error);
+            this.showSyncMessage('❌ Sync failed. Please try again.', 3000);
+            this.updateSyncButton('normal');
+        } finally {
+            this.isSyncing = false;
+        }
+    }
+    
+    updateSyncButton(state) {
+        const btn = document.getElementById('sync-balance-btn');
+        if (!btn) return;
+        switch(state) {
+            case 'syncing':
+                btn.innerHTML = '⏳ Syncing...';
+                btn.disabled = true;
+                break;
+            case 'success':
+                btn.innerHTML = '✅ Synced!';
+                btn.disabled = true;
+                break;
+            default:
+                btn.innerHTML = '🔄 Sync <span class="sync-help">(?)</span>';
+                btn.disabled = false;
+        }
+    }
+    
+    showSyncMessage(message, duration = null) {
+        const existing = document.getElementById('sync-message');
+        if (existing) existing.remove();
+        const div = document.createElement('div');
+        div.id = 'sync-message';
+        div.textContent = message;
+        div.style.cssText = 'position:fixed;top:70px;right:20px;background:#4CAF50;color:white;padding:12px 20px;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,0.3);z-index:10001;font-size:14px;';
+        document.body.appendChild(div);
+        if (duration) setTimeout(() => { if (div.parentNode) div.remove(); }, duration);
+    }
     
     setupCrossSiteSync() {
+        // Simple: just refresh balance on focus
         window.addEventListener('focus', async () => {
-            const lastActiveSite = localStorage.getItem('last_active_site');
-            const currentSite = this.siteId;
-            
-            // Check if switching from different site BEFORE updating
-            if (lastActiveSite && lastActiveSite !== currentSite) {
-                // Cross-site switch - need sync
-                console.log(`🔄 Detected site switch on focus: ${lastActiveSite} → ${currentSite}`);
-                await this.syncFromOtherSite();
-            } else {
-                // Same site - just refresh balance
-                console.log(`🔄 Refreshing balance on focus (same site)`);
-                await this.getBalance();
-                this.updateBalanceDisplaysSync();
-            }
-            
-            // Don't update last_active_site here - it gets updated on blur
+            await this.getBalance();
+            this.updateBalanceDisplaysSync();
         });
-        
-        // Listen for localStorage changes from other tabs
+        // Keep storage listener for multi-tab
         window.addEventListener('storage', (e) => {
-            if (e.key === this.getNetChangeKey() || e.key === 'last_write_time') {
-                console.log('🔄 Balance updated in another tab, refreshing...');
+            if (e.key === this.getNetChangeKey()) {
                 this.loadNetChange();
                 this.updateBalanceDisplaysSync();
             }
         });
-        
-        // Set initial site on page load
-        localStorage.setItem('last_active_site', this.siteId);
-    }
-    
-    async syncFromOtherSite() {
-        // CFC: No locking needed - tasks take 10+ seconds, sync will finish before task completes
-        console.log('🔄 Syncing balance from other site (no lock needed)');
-        
-        // Wait 10 seconds for Syncthing
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        
-        // Read balance from file
-        await this.getBalance();
-        this.updateBalanceDisplaysSync();
-        
-        console.log('✅ Cross-site sync completed');
     }
     
     
@@ -481,7 +500,7 @@ class UnifiedBalanceSystem {
             element.title = `${formattedBalance} ${terminology.fullName}`;
         });
         
-        updateCurrencyDisplays();
+        this.updateCurrencyDisplay();
     }
     
     getTerminology() {
