@@ -36,6 +36,39 @@ error() {
     exit 1
 }
 
+# Auto-commit pending changes to prevent backlog
+auto_commit_changes() {
+    log "Checking for pending changes..."
+    
+    # Check if we have any changes to commit
+    if [[ -n $(git status --porcelain) ]]; then
+        local change_count=$(git status --porcelain | wc -l)
+        log "Found $change_count pending changes"
+        
+        # Ask for custom commit message
+        echo ""
+        read -p "Enter commit message (or press Enter for auto-generated): " -r custom_msg
+        echo ""
+        
+        # Add all changes including deletions
+        git add -A
+        
+        # Use custom message or create default
+        if [[ -n "$custom_msg" ]]; then
+            local commit_msg="$custom_msg"
+        else
+            local commit_msg="Auto-commit before deployment - $(date +'%Y-%m-%d %H:%M:%S')"
+        fi
+        
+        # Commit the changes
+        git commit -m "$commit_msg"
+        
+        success "Committed $change_count changes with message: $commit_msg"
+    else
+        log "No pending changes to commit"
+    fi
+}
+
 # Pre-deployment checks
 pre_deploy_checks() {
     log "Running pre-deployment checks..."
@@ -126,6 +159,7 @@ main() {
         exit 0
     fi
     
+    auto_commit_changes
     pre_deploy_checks
     create_local_backup
     deploy_files
