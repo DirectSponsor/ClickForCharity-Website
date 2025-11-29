@@ -369,6 +369,7 @@ body {
     background-color: var(--task-bg);
     border: 1px solid var(--border-color);
     border-radius: 5px;
+    padding: 15px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
@@ -882,6 +883,31 @@ body {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.task-actions .btn-visit {
+    display: inline-block;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    text-align: center;
+    background-color: var(--accent-color);
+    color: #ffffff;
+    margin-left: auto; /* Push to the right */
+}
+
+.task-actions .btn-visit:hover {
+    background-color: var(--accent-hover);
+}
+
+.task-actions .btn-visit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .btn-skip {
