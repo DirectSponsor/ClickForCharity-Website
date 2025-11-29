@@ -828,3 +828,128 @@ body {
     background: #6c757d;
     cursor: not-allowed;
 }
+
+/* Complex Tasks Styles */
+.complex-task {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.complex-task:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.task-content {
+    width: 100%;
+}
+
+.task-header {
+    padding: 15px;
+}
+
+.task-short-description {
+    font-size: 13px;
+    color: var(--text-color);
+    margin: 5px 0 !important;
+    line-height: 1.4;
+}
+
+.task-details {
+    border-top: 1px solid var(--border-color);
+    padding: 15px;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.task-details.expanded {
+    background-color: #f8f9fa;
+}
+
+.task-instructions pre {
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    padding: 12px;
+    margin: 8px 0;
+    font-size: 13px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: inherit;
+}
+
+.task-actions {
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-skip {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-skip:hover {
+    background-color: #5a6268;
+}
+
+.btn-complete {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-complete:hover {
+    background-color: #218838;
+}
+
+.btn-complete:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Mobile responsive styles for complex tasks */
+@media (max-width: 600px) {
+    .complex-task {
+        margin-bottom: 12px;
+    }
+    
+    .task-header {
+        padding: 16px;
+    }
+    
+    .task-details {
+        padding: 16px;
+    }
+    
+    .task-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .task-actions .btn-visit,
+    .task-actions .btn-skip,
+    .task-actions .btn-complete {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 14px;
+        min-height: 44px; /* Ensure adequate touch target size */
+    }
+    
+    .task-instructions pre {
+        font-size: 14px;
+        padding: 14px;
+    }
+}

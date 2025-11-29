@@ -252,6 +252,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
+            // Prevent default link behavior - we'll handle it programmatically
+            e.preventDefault();
+
             const ad = ads.find(a => a.id === adId);
             
             if (ad) {
@@ -275,6 +278,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 taskItem.classList.add('viewing');
                 updateTaskStatus(taskItem, 'Timer running…');
                 startTimerInterval();
+
+                // Force new tab opening for automation compatibility
+                window.open(ad.url, '_blank', 'noopener,noreferrer');
 
                 if (!completionAudioPrimed) {
                     completionAudio.muted = true;

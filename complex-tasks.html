@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Click for Charity – No Money Needed</title>
+    <title>Complex Tasks – Click for Charity</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,16 +17,16 @@
             </div>
             <nav>
                 <ul>
-                    <li class="active"><a href="index.html">Home</a></li>
+                    <li><a href="index.html">Home</a></li>
                     <li><a href="ptc.html">Surf Ads</a></li>
-                    <li><a href="complex-tasks.html">Complex Tasks</a></li>
+                    <li class="active"><a href="complex-tasks.html">Complex Tasks</a></li>
+                    <li><a href="skipped-tasks.html">Skipped Tasks</a></li>
                     <li><a href="surveys.html">Surveys</a></li>
                     <li><a href="offers.html">Offers</a></li>
                     <li><a href="admin.html">Admin</a></li>
                     <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync <span class="sync-help" onclick="event.stopPropagation();window.location.href='/balance-sync-help.html';" style="font-size:11px;opacity:0.7;">(?)</span></button></li>
                 </ul>
             </nav>
-            
             <!-- User Menu Area (bottom of sidebar) -->
             <div class="user-select-container">
                 <!-- Login Button (shown when not logged in) -->
@@ -56,41 +56,24 @@
                 <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
         </aside>
-        <main class="main-content landing" data-menu-target>
-            <section class="hero">
-                <div class="hero-copy">
-                    <h1>No Money Needed—Just Your Clicks <span class="btc-symbol">₿</span></h1>
-                    <p>Support real people instantly. Sponsors fund the rewards; you donate your attention. 100% of value reaches the recipient.</p>
-                    <ul>
-                        <li>Powered by Bitcoin micropayments</li>
-                        <li>Simple tasks, transparent payouts</li>
-                        <li>Optimized for slow networks and older devices</li>
-                    </ul>
-                    <div class="hero-actions">
-                        <a class="btn primary" href="https://clickforcharity.net/">Sign Up</a>
-                        <a class="btn secondary" href="https://clickforcharity.net/about/">Learn More</a>
-                    </div>
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>Complex Tasks</h1>
+                <div class="user-stats">
+                    <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
                 </div>
-            </section>
-
-            <section class="highlights">
-                <article>
-                    <h2>How It Works</h2>
-                    <p>Sponsors publish ads and micro-tasks. Volunteers view or complete them, transferring the sponsor’s payment straight to the recipient.</p>
-                </article>
-                <article>
-                    <h2>Why It Matters</h2>
-                    <p>Every click supports families who can’t afford waste. We build for intermittent connections, high data costs, and legacy hardware.</p>
-                </article>
-                <article>
-                    <h2>What’s Next</h2>
-                    <p>Surf ads today; surveys and offer walls are in progress. Track broader ecosystem updates at <a href="https://directsponsor.net/">DirectSponsor.net</a>.</p>
-                </article>
+            </header>
+            <section class="task-list-container">
+                <h2>Available Tasks</h2>
+                <div id="complex-task-list" class="task-list complex-task-list">
+                    <!-- Complex tasks will be dynamically inserted here by JavaScript -->
+                </div>
             </section>
         </main>
     </div>
     <script src="js/unified-balance.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/complex-tasks.js"></script>
 </body>
 </html>
