@@ -84,12 +84,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         const terms = window.UnifiedBalance.getTerminology();
         const rewardLabel = terms.currency;
 
+        console.log('Rendering tasks, total:', complexTasks.length);
+
         // Filter out completed and skipped tasks
         const availableTasks = complexTasks.filter(task => {
             const isCompleted = window.UnifiedBalance.isTaskCompleted(task.id);
             const isSkipped = window.UnifiedBalance.isTaskSkipped(task.id);
+            console.log(`Task ${task.id}: completed=${isCompleted}, skipped=${isSkipped}`);
             return !isCompleted && !isSkipped;
         });
+
+        console.log('Available tasks after filtering:', availableTasks.length);
 
         if (availableTasks.length === 0) {
             taskListEl.innerHTML = '<p class="empty-state">No available tasks. Check back later!</p>';
@@ -224,6 +229,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             complexTasks = await fetchComplexTasksData();
+            console.log('Complex tasks loaded:', complexTasks);
             await renderBalance();
             renderComplexTasks();
         } catch (error) {
