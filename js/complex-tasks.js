@@ -215,11 +215,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Initialization ---
 
     async function initialize() {
-        // Check if user is logged in
-        if (!window.auth?.isLoggedIn()) {
-            taskListEl.innerHTML = '<p class="empty-state">Please login to access complex tasks.</p>';
-            return;
-        }
+        // TEMP: Disable member-only check for local testing
+        // if (!window.auth?.isLoggedIn()) {
+        //     taskListEl.innerHTML = '<p class="empty-state">Please login to access complex tasks.</p>';
+        //     return;
+        // }
 
         stopTimerInterval();
         taskBeingViewed = null;
