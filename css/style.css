@@ -369,7 +369,6 @@ body {
     background-color: var(--task-bg);
     border: 1px solid var(--border-color);
     border-radius: 5px;
-    padding: 15px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
