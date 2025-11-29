@@ -369,7 +369,7 @@ body {
     background-color: var(--task-bg);
     border: 1px solid var(--border-color);
     border-radius: 5px;
-    padding: 15px;
+    padding: 5px 15px;
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
@@ -841,10 +841,11 @@ body {
 
 .task-content {
     width: 100%;
+    padding: 0; /* Remove padding from this wrapper div */
 }
 
 .task-header {
-    padding: 0.5em;
+    padding: 0; /* Match PTC page .info div */
 }
 
 .task-short-description {
@@ -856,7 +857,7 @@ body {
 
 .task-details {
     border-top: 1px solid var(--border-color);
-    padding: 0.5em;
+    padding: 0; /* Match PTC page .actions div */
     background-color: #fafafa;
     transition: all 0.3s ease;
 }
