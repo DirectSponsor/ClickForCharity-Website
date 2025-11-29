@@ -556,6 +556,30 @@ class UnifiedBalanceSystem {
         localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
         console.log('✅ Task marked complete:', taskId);
     }
+    
+    getSkippedTasks() {
+        const stored = localStorage.getItem('skipped_tasks');
+        return stored ? JSON.parse(stored) : {};
+    }
+    
+    isTaskSkipped(taskId) {
+        const skippedTasks = this.getSkippedTasks();
+        return !!skippedTasks[taskId];
+    }
+    
+    markTaskSkipped(taskId) {
+        const skippedTasks = this.getSkippedTasks();
+        skippedTasks[taskId] = new Date().toISOString();
+        localStorage.setItem('skipped_tasks', JSON.stringify(skippedTasks));
+        console.log('⏭️ Task marked skipped:', taskId);
+    }
+    
+    unskipTask(taskId) {
+        const skippedTasks = this.getSkippedTasks();
+        delete skippedTasks[taskId];
+        localStorage.setItem('skipped_tasks', JSON.stringify(skippedTasks));
+        console.log('↩️ Task unskipped:', taskId);
+    }
 }
 
 // Global instance (singleton pattern)
