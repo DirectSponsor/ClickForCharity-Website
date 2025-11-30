@@ -433,7 +433,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }, 5000);
     }
 
-    // Simple tab close detection
+    // Simple tab close detection - matching unified-balance approach
     console.log('Setting up beforeunload listener');
     window.addEventListener('beforeunload', (e) => {
         console.log('beforeunload fired, taskBeingViewed:', taskBeingViewed);
@@ -444,14 +444,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (taskBeingViewed) {
             console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
-            // Mark that we closed the tab
+            // Mark that we closed the tab - simple approach like unified-balance
             sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
             sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
-            
-            // Also try to show a confirmation dialog (this might help trigger the event)
-            e.preventDefault();
-            e.returnValue = '';
-            return '';
         }
     });
 
