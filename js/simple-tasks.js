@@ -427,6 +427,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Simple tab close detection
+    window.addEventListener('pagehide', (e) => {
+        console.log('pagehide fired, taskBeingViewed:', taskBeingViewed);
+        if (taskBeingViewed) {
+            console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
+            // Mark that we closed the tab
+            sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
+            sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
+        }
+    });
+
+    // Also try beforeunload as backup
     window.addEventListener('beforeunload', (e) => {
         console.log('beforeunload fired, taskBeingViewed:', taskBeingViewed);
         if (taskBeingViewed) {
