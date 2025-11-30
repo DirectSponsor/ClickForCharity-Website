@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const taskItem = visitLink.closest('.task-item');
             const taskId = taskItem.dataset.taskId;
             
-            if (taskItem.classList.contains('done') || taskItem.classList.contains('viewing')) {
+            if (taskItem.classList.contains('done')) {
                 e.preventDefault();
                 return;
             }
@@ -250,6 +250,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const task = simpleTasks.find(t => t.id === taskId);
             
             if (task) {
+                // If this is a re-open (button text is "Re-open"), just reopen the link
+                const isReopen = visitLink.textContent === 'Re-open';
+                
                 if (taskBeingViewed && taskBeingViewed.taskItemEl !== taskItem) {
                     const previousTask = taskBeingViewed.taskItemEl;
                     previousTask.classList.remove('viewing');
@@ -263,13 +266,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 taskBeingViewed = { task, taskItemEl: taskItem };
-                accumulatedTime = 0;
-                taskViewStartTime = null; // Will be set on blur
-
-                visitLink.textContent = 'Viewing...';
-                taskItem.classList.add('viewing');
-                updateTaskStatus(taskItem, 'Timer running…');
-                startTimerInterval();
+                
+                if (isReopen) {
+                    // Re-opening: timer was already running, just continue
+                    visitLink.textContent = 'Viewing...';
+                    updateTaskStatus(taskItem, 'Timer running…');
+                    startTimerInterval();
+                } else {
+                    // First time opening: reset timer
+                    accumulatedTime = 0;
+                    taskViewStartTime = null; // Will be set on blur
+                    visitLink.textContent = 'Viewing...';
+                    taskItem.classList.add('viewing');
+                    updateTaskStatus(taskItem, 'Timer running…');
+                    startTimerInterval();
+                }
 
                 // Force new tab opening for automation compatibility
                 window.open(task.url, '_blank', 'noopener,noreferrer');
@@ -349,6 +360,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (visitBtn) visitBtn.style.display = 'none';
                 if (skipBtn) skipBtn.style.display = 'none';
                 if (completeBtn) completeBtn.style.display = 'inline-block';
+            } else {
+                // Timer not completed yet, change button to "Re-open"
+                const visitBtn = taskBeingViewed.taskItemEl.querySelector('.btn-visit');
+                if (visitBtn) {
+                    visitBtn.textContent = 'Re-open';
+                    updateTaskStatus(taskBeingViewed.taskItemEl, 'Timer paused – click Re-open to continue');
+                }
             }
         }
         
