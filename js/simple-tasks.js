@@ -362,9 +362,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (skipBtn) skipBtn.style.display = 'none';
                 if (completeBtn) completeBtn.style.display = 'inline-block';
             } else {
-                // Timer not completed yet, show modal with time remaining
+                // Timer not completed yet, skip modal for testing
+                const visitBtn = taskBeingViewed.taskItemEl.querySelector('.btn-visit');
                 const remainingTime = Math.ceil((requiredTime - accumulatedTime) / 1000);
-                showModal(remainingTime);
+                if (visitBtn) {
+                    visitBtn.textContent = `${remainingTime} seconds left`;
+                    updateTaskStatus(taskBeingViewed.taskItemEl, 'Please return to the page to continue');
+                }
+                // Temporarily skip modal for testing tab close
+                // showModal(remainingTime);
             }
         }
         
