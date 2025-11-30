@@ -431,41 +431,82 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (taskBeingViewed) {
             // Mark that we closed the tab
             sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
+            sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
         }
     });
 
     // Check if tab was closed on load
     document.addEventListener('DOMContentLoaded', () => {
         const closedTaskId = sessionStorage.getItem('simpleTaskClosed');
-        if (closedTaskId) {
-            // Find and reset the task
-            const taskItem = document.querySelector(`[data-task-id="${closedTaskId}"]`);
-            if (taskItem) {
-                taskItem.classList.remove('viewing');
-                updateTaskStatus(taskItem, 'You closed the task too soon');
-                const visitBtn = taskItem.querySelector('.btn-visit');
-                if (visitBtn) {
-                    visitBtn.textContent = 'Visit';
-                }
-                const timerEl = taskItem.querySelector('.task-timer');
-                if (timerEl) {
-                    const task = simpleTasks.find(t => t.id === closedTaskId);
-                    if (task) {
-                        timerEl.textContent = `(${task.duration}s)`;
-                    }
-                }
-            }
-            
-            // Clear the storage
+        const closedTime = sessionStorage.getItem('simpleTaskClosedTime');
+        
+        if (closedTaskId && closedTime) {
+            // Clear the storage immediately
             sessionStorage.removeItem('simpleTaskClosed');
+            sessionStorage.removeItem('simpleTaskClosedTime');
             
-            // Reset tracking
-            taskBeingViewed = null;
-            accumulatedTime = 0;
-            taskViewStartTime = null;
-            stopTimerInterval();
+            // Show "closed too soon" modal after page loads
+            setTimeout(() => {
+                showClosedTooSoonModal(closedTaskId);
+            }, 100);
         }
     });
+
+    function showClosedTooSoonModal(taskId) {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('closed-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        const modal = document.createElement('div');
+        modal.id = 'closed-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 10000;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            max-width: 400px;
+        `;
+
+        modal.innerHTML = `
+            <button onclick="this.parentElement.remove()" style="
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: none;
+                border: none;
+                font-size: 18px;
+                cursor: pointer;
+                color: #666;
+            ">×</button>
+            <div style="color: #e74c3c; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                You closed the task too soon
+            </div>
+            <div style="color: #333; font-size: 14px; margin-bottom: 15px;">
+                The timer was reset. Click "Visit" to try again.
+            </div>
+            <div style="color: #666; font-size: 12px;">
+                Tip: Keep the task tab open until the timer completes
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Auto-remove after 8 seconds
+        setTimeout(() => {
+            if (modal.parentElement) {
+                modal.remove();
+            }
+        }, 8000);
+    }
 
     async function completeSimpleTask(task, taskItemEl) {
         if (taskItemEl.classList.contains('done')) return;
