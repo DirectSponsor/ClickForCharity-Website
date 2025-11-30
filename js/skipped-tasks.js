@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <pre>${task.instructions}</pre>
                         </div>
                         <div class="task-actions">
-                            <a href="${task.url}" target="_blank" class="btn-visit" role="button" rel="noopener">Visit</a>
                             <button class="btn-unskip" data-unskip-btn>Unskip Task</button>
                         </div>
                         <p class="task-status">This task was skipped. Click "Unskip Task" to restore it.</p>
@@ -155,11 +154,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     taskListEl.addEventListener('click', async (e) => {
         const taskContent = e.target.closest('[data-task-content]');
-        const visitLink = e.target.closest('.btn-visit');
         const unskipBtn = e.target.closest('[data-unskip-btn]');
 
         // Handle task expansion/collapse
-        if (taskContent && !visitLink && !unskipBtn) {
+        if (taskContent && !unskipBtn) {
             const taskItem = taskContent.closest('.task-item');
             const taskId = taskItem.dataset.taskId;
             const taskDetails = taskItem.querySelector('.task-details');
