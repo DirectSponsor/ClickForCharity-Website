@@ -361,13 +361,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (skipBtn) skipBtn.style.display = 'none';
                 if (completeBtn) completeBtn.style.display = 'inline-block';
             } else {
-                // Timer not completed yet, show time remaining
-                const visitBtn = taskBeingViewed.taskItemEl.querySelector('.btn-visit');
+                // Timer not completed yet, show modal with time remaining
                 const remainingTime = Math.ceil((requiredTime - accumulatedTime) / 1000);
-                if (visitBtn) {
-                    visitBtn.textContent = `${remainingTime} seconds left`;
-                    updateTaskStatus(taskBeingViewed.taskItemEl, 'Please return to the page to continue');
-                }
+                showModal(remainingTime);
             }
         }
         
@@ -377,22 +373,72 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateTimerDisplay();
     });
 
-    // Handle tab close - reset the task
-    window.addEventListener('beforeunload', (e) => {
+    // Simple modal function
+    function showModal(seconds) {
+        // Remove existing modal if any
+        const existingModal = document.getElementById('task-modal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        const modal = document.createElement('div');
+        modal.id = 'task-modal';
+        modal.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 2px solid #e74c3c;
+            border-radius: 8px;
+            padding: 20px;
+            z-index: 10000;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        `;
+
+        modal.innerHTML = `
+            <button onclick="this.parentElement.remove()" style="
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: none;
+                border: none;
+                font-size: 18px;
+                cursor: pointer;
+                color: #666;
+            ">×</button>
+            <div style="color: #e74c3c; font-size: 18px; font-weight: bold; margin-bottom: 10px;">
+                ${seconds} seconds left
+            </div>
+            <div style="color: #333; font-size: 14px;">
+                Please return to the task page to continue
+            </div>
+        `;
+
+        document.body.appendChild(modal);
+
+        // Auto-remove after 5 seconds
+        setTimeout(() => {
+            if (modal.parentElement) {
+                modal.remove();
+            }
+        }, 5000);
+    }
+
+    // Simple tab close detection
+    window.addEventListener('beforeunload', () => {
         if (taskBeingViewed) {
-            // Store that we're closing the tab (not just losing focus)
-            sessionStorage.setItem('taskClosed', 'true');
-            sessionStorage.setItem('closedTaskId', taskBeingViewed.task.id);
+            // Mark that we closed the tab
+            sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
         }
     });
 
-    // Check on page load if task was closed
-    window.addEventListener('load', () => {
-        const taskClosed = sessionStorage.getItem('taskClosed');
-        const closedTaskId = sessionStorage.getItem('closedTaskId');
-        
-        if (taskClosed === 'true' && closedTaskId) {
-            // Find the task and reset it
+    // Check if tab was closed on load
+    document.addEventListener('DOMContentLoaded', () => {
+        const closedTaskId = sessionStorage.getItem('simpleTaskClosed');
+        if (closedTaskId) {
+            // Find and reset the task
             const taskItem = document.querySelector(`[data-task-id="${closedTaskId}"]`);
             if (taskItem) {
                 taskItem.classList.remove('viewing');
@@ -400,7 +446,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const visitBtn = taskItem.querySelector('.btn-visit');
                 if (visitBtn) {
                     visitBtn.textContent = 'Visit';
-                    visitBtn.style.display = 'inline-block';
                 }
                 const timerEl = taskItem.querySelector('.task-timer');
                 if (timerEl) {
@@ -411,11 +456,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
             
-            // Clear the session storage
-            sessionStorage.removeItem('taskClosed');
-            sessionStorage.removeItem('closedTaskId');
+            // Clear the storage
+            sessionStorage.removeItem('simpleTaskClosed');
             
-            // Reset task tracking
+            // Reset tracking
             taskBeingViewed = null;
             accumulatedTime = 0;
             taskViewStartTime = null;
