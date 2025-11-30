@@ -150,6 +150,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // --- Cross-Page Sync ---
+
+    // Listen for storage changes from other pages
+    window.addEventListener('storage', (e) => {
+        if (e.key === 'skipped_tasks' || e.key === 'completed_tasks') {
+            console.log('🔄 Skipped tasks: Storage changed, refreshing...');
+            renderSkippedTasks();
+        }
+    });
+
+    // Refresh when page gains focus (user returns from another tab)
+    window.addEventListener('focus', () => {
+        console.log('🔄 Skipped tasks: Page focused, refreshing...');
+        renderSkippedTasks();
+    });
+
     // --- Event Listeners ---
 
     taskListEl.addEventListener('click', async (e) => {

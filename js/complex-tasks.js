@@ -413,18 +413,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
             window.UnifiedBalance.markTaskCompleted(task.id);
             
-            // Remove from view after a short delay
+            // Update balance display
+            await renderBalance();
+            
+            // Remove task immediately after completion (like PTC page)
             setTimeout(() => {
-                taskItemEl.style.opacity = '0.5';
-                updateTaskStatus(taskItemEl, 'Completed today');
+                taskItemEl.remove();
                 
-                // Check if no tasks left
-                setTimeout(() => {
-                    if (taskListEl.querySelectorAll('.task-item:not(.done)').length === 0) {
-                        taskListEl.innerHTML = '<p class="empty-state">No available tasks. Check back later!</p>';
-                    }
-                }, 1000);
-            }, 500);
+                // Check if no tasks left and show empty state
+                if (taskListEl.querySelectorAll('.task-item').length === 0) {
+                    taskListEl.innerHTML = '<p class="empty-state">No available tasks. Check back later!</p>';
+                }
+            }, 1000); // Brief delay to show completion before removal
             
             notifyTaskReady(taskItemEl);
         } catch (error) {
