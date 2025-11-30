@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             instructions: '1. Click the Visit button to open DirectSponsor\'s X profile\n2. Click the Follow button\n3. Like their most recent post\n4. Return here and click Complete when done',
             url: 'https://twitter.com/DirectSponsorNet',
             reward: 25,
-            duration: 45,
+            duration: 20,
             type: 'social_follow'
         },
         {
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             instructions: '1. Click Visit to go to Publish0x\n2. Click "Sign Up" and create your account\n3. Verify your email if required\n4. Browse the platform and read at least one article\n5. Return here and click Complete',
             url: 'https://www.publish0x.com/',
             reward: 50,
-            duration: 120,
+            duration: 45,
             type: 'signup'
         },
         {
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             instructions: '1. Visit the DirectSponsor Odysee channel\n2. Click the Follow/Subscribe button\n3. Watch at least one short video\n4. Return and click Complete when finished',
             url: 'https://odysee.com/@DirectSponsor',
             reward: 30,
-            duration: 60,
+            duration: 25,
             type: 'social_follow'
         }
     ];
@@ -176,10 +176,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
             
-            // Show complete button, hide visit button
+            // Show complete button, hide visit button and skip button
             const visitBtn = taskItemEl.querySelector('.btn-visit');
+            const skipBtn = taskItemEl.querySelector('.btn-skip');
             const completeBtn = taskItemEl.querySelector('.btn-complete');
             if (visitBtn) visitBtn.style.display = 'none';
+            if (skipBtn) skipBtn.style.display = 'none';
             if (completeBtn) completeBtn.style.display = 'inline-block';
         } else {
             timerEl.textContent = `(${secondsLeft}s left)`;
@@ -376,10 +378,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             const requiredTime = taskBeingViewed.task.duration * 1000;
 
             if (accumulatedTime >= requiredTime) {
-                // Timer completed, show complete button
+                // Timer completed, show complete button and hide skip button
                 const visitBtn = taskBeingViewed.taskItemEl.querySelector('.btn-visit');
+                const skipBtn = taskBeingViewed.taskItemEl.querySelector('.btn-skip');
                 const completeBtn = taskBeingViewed.taskItemEl.querySelector('.btn-complete');
                 if (visitBtn) visitBtn.style.display = 'none';
+                if (skipBtn) skipBtn.style.display = 'none';
                 if (completeBtn) completeBtn.style.display = 'inline-block';
             }
         }

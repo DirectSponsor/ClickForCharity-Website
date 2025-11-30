@@ -885,6 +885,22 @@ body {
     gap: 10px;
     flex-wrap: wrap;
     justify-content: space-between;
+    align-items: flex-start;
+}
+
+.complete-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-left: auto;
+}
+
+.complete-section .task-status {
+    font-weight: bold;
+    font-size: 14px;
+    color: #28a745;
+    margin-top: 5px;
+    text-align: center;
 }
 
 .task-actions .btn-visit {
@@ -975,6 +991,73 @@ body {
     }
     
     .task-instructions pre {
+        font-size: 14px;
+        padding: 14px;
+    }
+}
+
+/* Skipped Tasks Styles */
+.skipped-task {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+.skipped-task:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+.btn-unskip {
+    background-color: #17a2b8;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-unskip:hover {
+    background-color: #138496;
+}
+
+.skipped-task .task-status {
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* Mobile responsive styles for skipped tasks */
+@media (max-width: 600px) {
+    .skipped-task {
+        margin-bottom: 12px;
+    }
+    
+    .skipped-task .task-header {
+        padding: 16px;
+    }
+    
+    .skipped-task .task-details {
+        padding: 16px;
+    }
+    
+    .skipped-task .task-actions {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .skipped-task .task-actions .btn-visit,
+    .skipped-task .task-actions .btn-unskip {
+        width: 100%;
+        padding: 12px 16px;
+        font-size: 14px;
+        min-height: 44px; /* Ensure adequate touch target size */
+    }
+    
+    .skipped-task .task-instructions pre {
         font-size: 14px;
         padding: 14px;
     }
