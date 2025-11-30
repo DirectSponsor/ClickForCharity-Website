@@ -361,11 +361,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (skipBtn) skipBtn.style.display = 'none';
                 if (completeBtn) completeBtn.style.display = 'inline-block';
             } else {
-                // Timer not completed yet, change button to "Re-open"
+                // Timer not completed yet, show time remaining
                 const visitBtn = taskBeingViewed.taskItemEl.querySelector('.btn-visit');
+                const remainingTime = Math.ceil((requiredTime - accumulatedTime) / 1000);
                 if (visitBtn) {
-                    visitBtn.textContent = 'Re-open';
-                    updateTaskStatus(taskBeingViewed.taskItemEl, 'Timer paused – click Re-open to continue');
+                    visitBtn.textContent = `${remainingTime} seconds left`;
+                    updateTaskStatus(taskBeingViewed.taskItemEl, 'Please return to the page to continue');
                 }
             }
         }
@@ -374,6 +375,52 @@ document.addEventListener('DOMContentLoaded', async () => {
             resetDocumentTitle();
         }
         updateTimerDisplay();
+    });
+
+    // Handle tab close - reset the task
+    window.addEventListener('beforeunload', (e) => {
+        if (taskBeingViewed) {
+            // Store that we're closing the tab (not just losing focus)
+            sessionStorage.setItem('taskClosed', 'true');
+            sessionStorage.setItem('closedTaskId', taskBeingViewed.task.id);
+        }
+    });
+
+    // Check on page load if task was closed
+    window.addEventListener('load', () => {
+        const taskClosed = sessionStorage.getItem('taskClosed');
+        const closedTaskId = sessionStorage.getItem('closedTaskId');
+        
+        if (taskClosed === 'true' && closedTaskId) {
+            // Find the task and reset it
+            const taskItem = document.querySelector(`[data-task-id="${closedTaskId}"]`);
+            if (taskItem) {
+                taskItem.classList.remove('viewing');
+                updateTaskStatus(taskItem, 'You closed the task too soon');
+                const visitBtn = taskItem.querySelector('.btn-visit');
+                if (visitBtn) {
+                    visitBtn.textContent = 'Visit';
+                    visitBtn.style.display = 'inline-block';
+                }
+                const timerEl = taskItem.querySelector('.task-timer');
+                if (timerEl) {
+                    const task = simpleTasks.find(t => t.id === closedTaskId);
+                    if (task) {
+                        timerEl.textContent = `(${task.duration}s)`;
+                    }
+                }
+            }
+            
+            // Clear the session storage
+            sessionStorage.removeItem('taskClosed');
+            sessionStorage.removeItem('closedTaskId');
+            
+            // Reset task tracking
+            taskBeingViewed = null;
+            accumulatedTime = 0;
+            taskViewStartTime = null;
+            stopTimerInterval();
+        }
     });
 
     async function completeSimpleTask(task, taskItemEl) {
