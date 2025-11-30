@@ -266,6 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 taskBeingViewed = { task, taskItemEl: taskItem };
+                console.log('taskBeingViewed set to:', { id: task.id, title: task.title });
                 
                 if (isReopen) {
                     // Re-opening: timer was already running, just continue
@@ -427,22 +428,33 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Simple tab close detection
-    window.addEventListener('pagehide', (e) => {
-        console.log('pagehide fired, taskBeingViewed:', taskBeingViewed);
+    console.log('Setting up beforeunload listener');
+    window.addEventListener('beforeunload', (e) => {
+        console.log('beforeunload fired, taskBeingViewed:', taskBeingViewed);
+        console.log('taskBeingViewed details:', taskBeingViewed ? {
+            id: taskBeingViewed.task.id,
+            title: taskBeingViewed.task.title
+        } : 'none');
+        
         if (taskBeingViewed) {
             console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
             // Mark that we closed the tab
             sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
             sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
+            
+            // Also try to show a confirmation dialog (this might help trigger the event)
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
         }
     });
 
-    // Also try beforeunload as backup
-    window.addEventListener('beforeunload', (e) => {
-        console.log('beforeunload fired, taskBeingViewed:', taskBeingViewed);
+    // Also add pagehide as backup
+    console.log('Setting up pagehide listener');
+    window.addEventListener('pagehide', (e) => {
+        console.log('pagehide fired, taskBeingViewed:', taskBeingViewed);
         if (taskBeingViewed) {
             console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
-            // Mark that we closed the tab
             sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
             sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
         }
