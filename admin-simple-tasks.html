@@ -99,6 +99,10 @@
 
     <script src="js/nav.js"></script>
     <script>
+        // Global variables
+        let loadTasks;
+
+        // Form handling
         (function () {
             const form = document.getElementById('task-form');
             const feedbackEl = document.getElementById('form-feedback');
@@ -180,7 +184,7 @@
         (function() {
             const taskListEl = document.getElementById('task-management-list');
 
-            async function loadTasks() {
+            loadTasks = async function() {
                 try {
                     const response = await fetch('/api/get-simple-tasks.php');
                     const tasks = await response.json();
@@ -249,7 +253,7 @@
                     console.error('Failed to load tasks:', error);
                     taskListEl.innerHTML = '<p class="error-state">Error loading tasks. Please refresh the page.</p>';
                 }
-            }
+            };
 
             // Load tasks on page load
             loadTasks();
