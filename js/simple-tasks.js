@@ -437,9 +437,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Check if tab was closed on load
-    document.addEventListener('DOMContentLoaded', () => {
-        console.log('DOMContentLoaded fired');
+    // Check if tab was closed on load (immediate check for when script loads)
+    function checkForClosedTask() {
+        console.log('Checking for closed task');
         const closedTaskId = sessionStorage.getItem('simpleTaskClosed');
         const closedTime = sessionStorage.getItem('simpleTaskClosedTime');
         console.log('Session storage found:', { closedTaskId, closedTime });
@@ -455,7 +455,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showClosedTooSoonModal(closedTaskId);
             }, 100);
         }
-    });
+    }
+
+    // Check immediately and also on DOMContentLoaded
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOMContentLoaded fired');
+            checkForClosedTask();
+        });
+    } else {
+        // DOM already loaded
+        console.log('DOM already loaded, checking immediately');
+        checkForClosedTask();
+    }
 
     function showClosedTooSoonModal(taskId) {
         // Remove existing modal if any
