@@ -1,38 +1,5 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    const MOCK_SIMPLE_TASKS = [
-        {
-            id: 'simple_1',
-            title: 'Follow DirectSponsor on X',
-            shortDescription: 'Follow @DirectSponsorNet and like their latest post',
-            instructions: '1. Click the Visit button to open DirectSponsor\'s X profile\n2. Click the Follow button\n3. Like their most recent post\n4. Return here and click Complete when done',
-            url: 'https://twitter.com/DirectSponsorNet',
-            reward: 25,
-            duration: 20,
-            type: 'social_follow'
-        },
-        {
-            id: 'simple_2',
-            title: 'Sign up for Publish0x',
-            shortDescription: 'Create an account on Publish0x and earn crypto for reading',
-            instructions: '1. Click Visit to go to Publish0x\n2. Click "Sign Up" and create your account\n3. Verify your email if required\n4. Browse the platform and read at least one article\n5. Return here and click Complete',
-            url: 'https://www.publish0x.com/',
-            reward: 50,
-            duration: 45,
-            type: 'signup'
-        },
-        {
-            id: 'simple_3',
-            title: 'Subscribe on Odysee',
-            shortDescription: 'Follow DirectSponsor on Odysee platform',
-            instructions: '1. Visit the DirectSponsor Odysee channel\n2. Click the Follow/Subscribe button\n3. Watch at least one short video\n4. Return and click Complete when finished',
-            url: 'https://odysee.com/@DirectSponsor',
-            reward: 30,
-            duration: 25,
-            type: 'social_follow'
-        }
-    ];
-
     const userBalanceEl = document.getElementById('user-balance');
     const userBalanceLabelEl = document.getElementById('user-balance-label');
     const taskListEl = document.getElementById('simple-task-list');
@@ -54,14 +21,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- API Data Fetching ---
 
     async function fetchSimpleTasksData() {
-        // For now, return mock data. Later, replace with actual API call
-        // const response = await fetch('/api/get-simple-tasks.php');
-        // if (!response.ok) {
-        //     throw new Error(`HTTP error! status: ${response.status}`);
-        // }
-        // return response.json();
-        
-        return MOCK_SIMPLE_TASKS;
+        try {
+            const response = await fetch('/api/get-simple-tasks.php');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Failed to fetch simple tasks:', error);
+            return []; // Return empty array on error
+        }
     }
 
     // --- Rendering ---

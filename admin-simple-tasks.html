@@ -99,40 +99,6 @@
 
     <script src="js/nav.js"></script>
     <script>
-        // Mock data for now - will be replaced with API calls
-        const MOCK_SIMPLE_TASKS = [
-            {
-                id: 'simple_1',
-                title: 'Follow DirectSponsor on X',
-                shortDescription: 'Follow @DirectSponsorNet and like their latest post',
-                instructions: '1. Click the Visit button to open DirectSponsor\'s X profile\n2. Click the Follow button\n3. Like their most recent post\n4. Return here and click Complete when done',
-                url: 'https://twitter.com/DirectSponsorNet',
-                reward: 25,
-                duration: 20,
-                type: 'social_follow'
-            },
-            {
-                id: 'simple_2',
-                title: 'Sign up for Publish0x',
-                shortDescription: 'Create an account on Publish0x and earn crypto for reading',
-                instructions: '1. Click Visit to go to Publish0x\n2. Click "Sign Up" and create your account\n3. Verify your email if required\n4. Browse the platform and read at least one article\n5. Return here and click Complete',
-                url: 'https://www.publish0x.com/',
-                reward: 50,
-                duration: 45,
-                type: 'signup'
-            },
-            {
-                id: 'simple_3',
-                title: 'Subscribe on Odysee',
-                shortDescription: 'Follow DirectSponsor on Odysee platform',
-                instructions: '1. Visit the DirectSponsor Odysee channel\n2. Click the Follow/Subscribe button\n3. Watch at least one short video\n4. Return and click Complete when finished',
-                url: 'https://odysee.com/@DirectSponsor',
-                reward: 30,
-                duration: 25,
-                type: 'social_follow'
-            }
-        ];
-
         (function () {
             const form = document.getElementById('task-form');
             const feedbackEl = document.getElementById('form-feedback');
@@ -157,20 +123,45 @@
                     return;
                 }
 
-                // For now, just show success - backend integration coming soon
+                const task = { title, shortDescription, instructions, url, reward, duration, type };
+
                 submitButton.disabled = true;
-                feedbackEl.textContent = 'Task created (mock - backend coming soon)';
-                feedbackEl.style.color = '#27ae60';
-                
-                submitButton.textContent = 'Saved ✓';
-                submitButton.style.backgroundColor = '#368038';
-                submitButton.style.display = 'none';
-                newTaskBtn.style.display = 'inline-block';
-                
-                // Disable all form inputs
-                Array.from(form.elements).forEach(el => {
-                    if (el.type !== 'button') el.disabled = true;
-                });
+                feedbackEl.textContent = 'Saving...';
+                feedbackEl.style.color = '#777';
+
+                try {
+                    const response = await fetch('/api/save-simple-task.php', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(task)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        submitButton.textContent = 'Saved ✓';
+                        submitButton.style.backgroundColor = '#368038';
+                        submitButton.style.display = 'none';
+                        newTaskBtn.style.display = 'inline-block';
+                        feedbackEl.textContent = '';
+                        
+                        // Disable all form inputs
+                        Array.from(form.elements).forEach(el => {
+                            if (el.type !== 'button') el.disabled = true;
+                        });
+                        
+                        loadTasks(); // Refresh task list
+                    } else {
+                        feedbackEl.textContent = result.error || 'Failed to save task.';
+                        feedbackEl.style.color = '#c0392b';
+                        submitButton.disabled = false;
+                    }
+                } catch (error) {
+                    console.error('Save error:', error);
+                    feedbackEl.textContent = 'Network error. Please try again.';
+                    feedbackEl.style.color = '#c0392b';
+                    submitButton.disabled = false;
+                }
             });
 
             newTaskBtn.addEventListener('click', () => {
@@ -189,51 +180,75 @@
         (function() {
             const taskListEl = document.getElementById('task-management-list');
 
-            function loadTasks() {
-                // Use mock data for now
-                const tasks = MOCK_SIMPLE_TASKS;
+            async function loadTasks() {
+                try {
+                    const response = await fetch('/api/get-simple-tasks.php');
+                    const tasks = await response.json();
 
-                if (!tasks || tasks.length === 0) {
-                    taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
-                    return;
-                }
+                    if (!tasks || tasks.length === 0) {
+                        taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
+                        return;
+                    }
 
-                taskListEl.innerHTML = tasks.map(task => `
-                    <div class="admin-task-item" data-task-id="${task.id}">
-                        <div class="admin-task-info">
-                            <h3>${task.title}</h3>
-                            <p class="admin-task-meta">
-                                <strong>ID:</strong> ${task.id} | 
-                                <strong>Type:</strong> ${task.type.replace('_', ' ')} | 
-                                <strong>Timer:</strong> ${task.duration}s | 
-                                <strong>Reward:</strong> ${task.reward}
-                            </p>
-                            <p class="admin-task-short-desc">${task.shortDescription}</p>
-                            <p class="admin-task-instructions">${task.instructions}</p>
-                            <p class="admin-task-url"><a href="${task.url}" target="_blank" rel="noopener">${task.url}</a></p>
+                    taskListEl.innerHTML = tasks.map(task => `
+                        <div class="admin-task-item" data-task-id="${task.id}">
+                            <div class="admin-task-info">
+                                <h3>${task.title}</h3>
+                                <p class="admin-task-meta">
+                                    <strong>ID:</strong> ${task.id} | 
+                                    <strong>Type:</strong> ${task.type.replace('_', ' ')} | 
+                                    <strong>Timer:</strong> ${task.duration}s | 
+                                    <strong>Reward:</strong> ${task.reward}
+                                </p>
+                                <p class="admin-task-short-desc">${task.shortDescription}</p>
+                                <p class="admin-task-instructions">${task.instructions}</p>
+                                <p class="admin-task-url"><a href="${task.url}" target="_blank" rel="noopener">${task.url}</a></p>
+                            </div>
+                            <div class="admin-task-actions">
+                                <button class="btn-delete-admin" data-task-id="${task.id}">Delete</button>
+                            </div>
                         </div>
-                        <div class="admin-task-actions">
-                            <button class="btn-delete-admin" data-task-id="${task.id}">Delete</button>
-                        </div>
-                    </div>
-                `).join('');
+                    `).join('');
 
-                // Add delete handlers (mock for now)
-                taskListEl.querySelectorAll('.btn-delete-admin').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const taskId = btn.dataset.taskId;
-                        const taskItem = btn.closest('.admin-task-item');
-                        const taskTitle = taskItem.querySelector('h3').textContent;
+                    // Add delete handlers
+                    taskListEl.querySelectorAll('.btn-delete-admin').forEach(btn => {
+                        btn.addEventListener('click', async () => {
+                            const taskId = btn.dataset.taskId;
+                            const taskItem = btn.closest('.admin-task-item');
+                            const taskTitle = taskItem.querySelector('h3').textContent;
 
-                        if (!confirm(`Delete "${taskTitle}"? (Mock - backend coming soon)`)) return;
+                            if (!confirm(`Delete "${taskTitle}"?`)) return;
 
-                        // Mock deletion
-                        taskItem.remove();
-                        if (taskListEl.children.length === 0) {
-                            taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
-                        }
+                            try {
+                                const response = await fetch('/api/delete-simple-task.php', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ id: taskId })
+                                });
+
+                                const result = await response.json();
+                                if (response.ok && result.success) {
+                                    taskItem.remove();
+                                    if (taskListEl.children.length === 0) {
+                                        taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
+                                    }
+                                    
+                                    // Show success message
+                                    const message = result.message || 'Task marked for deletion';
+                                    alert(message);
+                                } else {
+                                    alert(result.error || 'Failed to delete task');
+                                }
+                            } catch (error) {
+                                console.error('Delete error:', error);
+                                alert('Network error. Please try again.');
+                            }
+                        });
                     });
-                });
+                } catch (error) {
+                    console.error('Failed to load tasks:', error);
+                    taskListEl.innerHTML = '<p class="error-state">Error loading tasks. Please refresh the page.</p>';
+                }
             }
 
             // Load tasks on page load

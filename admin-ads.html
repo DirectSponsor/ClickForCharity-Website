@@ -221,6 +221,10 @@
                                     if (taskListEl.children.length === 0) {
                                         taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
                                     }
+                                    
+                                    // Show success message
+                                    const message = result.message || 'Ad marked for deletion';
+                                    alert(message);
                                 } else {
                                     alert(result.error || 'Failed to delete task');
                                 }

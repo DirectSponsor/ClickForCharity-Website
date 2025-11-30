@@ -18,6 +18,18 @@ foreach ($files as $file) {
     if ($content !== false) {
         $ad = json_decode($content, true);
         if ($ad && isset($ad['id'])) {
+            // Skip soft-deleted ads that are past their grace period
+            if (isset($ad['deletedUntil']) && $ad['deletedUntil'] < $now) {
+                // Permanently remove expired soft-deleted ads
+                unlink($file);
+                continue;
+            }
+            
+            // Skip ads that are currently soft-deleted (within grace period)
+            if (isset($ad['deletedAt']) && $ad['deletedAt'] <= $now && (!isset($ad['deletedUntil']) || $ad['deletedUntil'] > $now)) {
+                continue; // Don't include soft-deleted ads in results
+            }
+            
             // Auto-delete expired ads
             if (isset($ad['expiresAt']) && $ad['expiresAt'] !== null && $ad['expiresAt'] < $now) {
                 unlink($file);
