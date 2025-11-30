@@ -580,6 +580,11 @@ class UnifiedBalanceSystem {
         localStorage.setItem('skipped_tasks', JSON.stringify(skippedTasks));
         console.log('↩️ Task unskipped:', taskId);
     }
+    
+    getTaskSkipTimestamp(taskId) {
+        const skippedTasks = this.getSkippedTasks();
+        return skippedTasks[taskId] || null;
+    }
 }
 
 // Global instance (singleton pattern)
