@@ -427,8 +427,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // Simple tab close detection
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener('beforeunload', (e) => {
+        console.log('beforeunload fired, taskBeingViewed:', taskBeingViewed);
         if (taskBeingViewed) {
+            console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
             // Mark that we closed the tab
             sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
             sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
@@ -437,8 +439,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Check if tab was closed on load
     document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOMContentLoaded fired');
         const closedTaskId = sessionStorage.getItem('simpleTaskClosed');
         const closedTime = sessionStorage.getItem('simpleTaskClosedTime');
+        console.log('Session storage found:', { closedTaskId, closedTime });
         
         if (closedTaskId && closedTime) {
             // Clear the storage immediately
@@ -447,6 +451,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Show "closed too soon" modal after page loads
             setTimeout(() => {
+                console.log('Showing closed too soon modal');
                 showClosedTooSoonModal(closedTaskId);
             }, 100);
         }
