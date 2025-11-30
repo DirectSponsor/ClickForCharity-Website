@@ -28,10 +28,12 @@
 - All pages updated with "Complex Tasks" and "Skipped Tasks" links
 - Consistent navigation across site
 
-### ✅ **Balance System**
-- Added `isTaskSkipped()`, `markTaskSkipped()`, `unskipTask()` functions
-- Guest mode testing enabled (member check temporarily disabled)
-- Balance updates correctly on task completion
+### ✅ **Guest Access Enabled**
+- **Complex Tasks**: Open to all users with localStorage storage
+- **Skipped Tasks**: Open to all users with localStorage storage  
+- **Warning**: Guests see "Sign up to save your earnings!" notice
+- **Data persistence**: Guest data stored locally (not permanent)
+- **Consistent**: Matches PTC, Surveys, and Offers pages behavior
 
 ### ✅ **CSS Styling**
 - Compact task layout matching PTC page
@@ -82,10 +84,14 @@
 - **Replace mock data** with real database calls
 - **User profile integration** for completed/skipped tasks
 
-### 🎯 **Priority 3: Re-enable Member-Only Access**
-- **Uncomment**: Login check in `js/complex-tasks.js` and `js/skipped-tasks.js`
-- **Ensure**: Proper redirect to login page
-- **Test**: Guest vs member behavior
+### 🎯 **Priority 3: Backend Integration for Logged-In Users**
+- **API Endpoints**:
+  - `/api/get-complex-tasks.php`
+  - `/api/save-complex-task.php`
+  - `/api/delete-complex-task.php`
+- **Replace mock data** with real database calls
+- **User profile integration** for completed/skipped tasks (server-side storage)
+- **Guest vs Member**: Guests use localStorage, Members use server storage
 
 ---
 
@@ -149,7 +155,7 @@
 ### 📋 **Phase 3 Testing Needed**
 - [ ] Admin interface for complex tasks
 - [ ] Backend API integration
-- [ ] Member-only access enforcement
+- [ ] Guest vs Member data storage (localStorage vs server)
 - [ ] Cross-site balance sync
 
 ---

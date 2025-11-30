@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    const MOCK_COMPLEX_TASKS = [
+    const MOCK_SIMPLE_TASKS = [
         {
-            id: 'complex_1',
+            id: 'simple_1',
             title: 'Follow DirectSponsor on X',
             shortDescription: 'Follow @DirectSponsorNet and like their latest post',
             instructions: '1. Click the Visit button to open DirectSponsor\'s X profile\n2. Click the Follow button\n3. Like their most recent post\n4. Return here and click Complete when done',
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             type: 'social_follow'
         },
         {
-            id: 'complex_2',
+            id: 'simple_2',
             title: 'Sign up for Publish0x',
             shortDescription: 'Create an account on Publish0x and earn crypto for reading',
             instructions: '1. Click Visit to go to Publish0x\n2. Click "Sign Up" and create your account\n3. Verify your email if required\n4. Browse the platform and read at least one article\n5. Return here and click Complete',
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             type: 'signup'
         },
         {
-            id: 'complex_3',
+            id: 'simple_3',
             title: 'Subscribe on Odysee',
             shortDescription: 'Follow DirectSponsor on Odysee platform',
             instructions: '1. Visit the DirectSponsor Odysee channel\n2. Click the Follow/Subscribe button\n3. Watch at least one short video\n4. Return and click Complete when finished',
@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const userBalanceEl = document.getElementById('user-balance');
     const userBalanceLabelEl = document.getElementById('user-balance-label');
-    const taskListEl = document.getElementById('complex-task-list');
+    const taskListEl = document.getElementById('simple-task-list');
 
     const TIMER_UPDATE_INTERVAL_MS = 500;
     let timerIntervalId = null;
@@ -48,20 +48,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     completionAudio.preload = 'auto';
     let completionAudioPrimed = false;
 
-    let complexTasks = [];
+    let simpleTasks = [];
     let expandedTasks = new Set(); // Track which tasks are expanded
 
     // --- API Data Fetching ---
 
-    async function fetchComplexTasksData() {
+    async function fetchSimpleTasksData() {
         // For now, return mock data. Later, replace with actual API call
-        // const response = await fetch('/api/get-complex-tasks.php');
+        // const response = await fetch('/api/get-simple-tasks.php');
         // if (!response.ok) {
         //     throw new Error(`HTTP error! status: ${response.status}`);
         // }
         // return response.json();
         
-        return MOCK_COMPLEX_TASKS;
+        return MOCK_SIMPLE_TASKS;
     }
 
     // --- Rendering ---
@@ -73,21 +73,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         userBalanceLabelEl.textContent = terms.currency;
     }
 
-    function renderComplexTasks() {
+    function renderSimpleTasks() {
         taskListEl.innerHTML = ''; // Clear existing tasks
 
-        if (!complexTasks.length) {
-            taskListEl.innerHTML = '<p class="empty-state">No complex tasks available yet.</p>';
+        if (!simpleTasks.length) {
+            taskListEl.innerHTML = '<p class="empty-state">No simple tasks available yet.</p>';
             return;
         }
 
         const terms = window.UnifiedBalance.getTerminology();
         const rewardLabel = terms.currency;
 
-        console.log('Rendering tasks, total:', complexTasks.length);
+        console.log('Rendering tasks, total:', simpleTasks.length);
 
         // Filter out completed and skipped tasks
-        const availableTasks = complexTasks.filter(task => {
+        const availableTasks = simpleTasks.filter(task => {
             const isCompleted = window.UnifiedBalance.isTaskCompleted(task.id);
             const isSkipped = window.UnifiedBalance.isTaskSkipped(task.id);
             console.log(`Task ${task.id}: completed=${isCompleted}, skipped=${isSkipped}`);
@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         availableTasks.forEach(task => {
             const taskItem = document.createElement('div');
-            taskItem.className = 'task-item complex-task';
+            taskItem.className = 'task-item simple-task';
             taskItem.dataset.taskId = task.id;
             
             const isExpanded = expandedTasks.has(task.id);
@@ -225,12 +225,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         resetDocumentTitle();
 
         try {
-            complexTasks = await fetchComplexTasksData();
-            console.log('Complex tasks loaded:', complexTasks);
+            simpleTasks = await fetchSimpleTasksData();
+            console.log('Simple tasks loaded:', simpleTasks);
             await renderBalance();
-            renderComplexTasks();
+            renderSimpleTasks();
         } catch (error) {
-            console.error("Failed to initialize complex tasks:", error);
+            console.error("Failed to initialize simple tasks:", error);
             taskListEl.innerHTML = '<p>Error loading data. Please try again later.</p>';
         }
     }
@@ -278,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Prevent default link behavior - we'll handle it programmatically
             e.preventDefault();
 
-            const task = complexTasks.find(t => t.id === taskId);
+            const task = simpleTasks.find(t => t.id === taskId);
             
             if (task) {
                 if (taskBeingViewed && taskBeingViewed.taskItemEl !== taskItem) {
@@ -347,10 +347,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (completeBtn) {
             const taskItem = completeBtn.closest('.task-item');
             const taskId = taskItem.dataset.taskId;
-            const task = complexTasks.find(t => t.id === taskId);
+            const task = simpleTasks.find(t => t.id === taskId);
             
             if (task) {
-                await completeComplexTask(task, taskItem);
+                await completeSimpleTask(task, taskItem);
             }
         }
     });
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateTimerDisplay();
     });
 
-    async function completeComplexTask(task, taskItemEl) {
+    async function completeSimpleTask(task, taskItemEl) {
         if (taskItemEl.classList.contains('done')) return;
 
         taskItemEl.classList.remove('viewing');
@@ -403,7 +403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             await window.UnifiedBalance.addBalance(
                 task.reward,
-                'complex_task_complete',
+                'simple_task_complete',
                 `Completed: ${task.title}`
             );
             window.UnifiedBalance.markTaskCompleted(task.id);

@@ -133,12 +133,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Initialization ---
 
     async function initialize() {
-        // TEMP: Disable member-only check for local testing
-        // if (!window.auth?.isLoggedIn()) {
-        //     taskListEl.innerHTML = '<p class="empty-state">Please login to view skipped tasks.</p>';
-        //     return;
-        // }
-
+        // Enable guest access with warning - data stored in localStorage only
         try {
             complexTasks = await fetchComplexTasksData();
             console.log('Complex tasks loaded for skipped page:', complexTasks);

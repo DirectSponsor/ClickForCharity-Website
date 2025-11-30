@@ -829,13 +829,13 @@ body {
     cursor: not-allowed;
 }
 
-/* Complex Tasks Styles */
-.complex-task {
+/* Simple Tasks Styles */
+.simple-task {
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
-.complex-task:hover {
+.simple-task:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -962,9 +962,9 @@ body {
     cursor: not-allowed;
 }
 
-/* Mobile responsive styles for complex tasks */
+/* Mobile responsive styles for simple tasks */
 @media (max-width: 600px) {
-    .complex-task {
+    .simple-task {
         margin-bottom: 12px;
     }
     
