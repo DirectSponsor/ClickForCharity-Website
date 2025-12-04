@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
 
-    const MOCK_COMPLEX_TASKS = [
+    const MOCK_SIMPLE_TASKS = [
         {
             id: 'complex_1',
             title: 'Follow DirectSponsor on X',
@@ -37,12 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userBalanceLabelEl = document.getElementById('user-balance-label');
     const taskListEl = document.getElementById('skipped-task-list');
 
-    let complexTasks = [];
+    let simpleTasks = [];
     let expandedTasks = new Set(); // Track which tasks are expanded
 
     // --- API Data Fetching ---
 
-    async function fetchComplexTasksData() {
+    async function fetchSimpleTasksData() {
         // For now, return mock data. Later, replace with actual API call
         // const response = await fetch('/api/get-complex-tasks.php');
         // if (!response.ok) {
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         // }
         // return response.json();
         
-        return MOCK_COMPLEX_TASKS;
+        return MOCK_SIMPLE_TASKS;
     }
 
     // --- Rendering ---
@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderSkippedTasks() {
         taskListEl.innerHTML = ''; // Clear existing tasks
 
-        if (!complexTasks.length) {
+        if (!simpleTasks.length) {
             taskListEl.innerHTML = '<p class="empty-state">No tasks available.</p>';
             return;
         }
@@ -73,10 +73,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         const terms = window.UnifiedBalance.getTerminology();
         const rewardLabel = terms.currency;
 
-        console.log('Rendering skipped tasks, total:', complexTasks.length);
+        console.log('Rendering skipped tasks, total:', simpleTasks.length);
 
         // Filter only skipped tasks
-        const skippedTasks = complexTasks.filter(task => {
+        const skippedTasks = simpleTasks.filter(task => {
             const isSkipped = window.UnifiedBalance.isTaskSkipped(task.id);
             console.log(`Task ${task.id}: skipped=${isSkipped}`);
             return isSkipped;
@@ -135,8 +135,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function initialize() {
         // Enable guest access with warning - data stored in localStorage only
         try {
-            complexTasks = await fetchComplexTasksData();
-            console.log('Complex tasks loaded for skipped page:', complexTasks);
+            simpleTasks = await fetchSimpleTasksData();
+            console.log('Simple tasks loaded for skipped page:', simpleTasks);
             await renderBalance();
             renderSkippedTasks();
         } catch (error) {

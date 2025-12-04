@@ -266,7 +266,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
                 taskBeingViewed = { task, taskItemEl: taskItem };
-                console.log('taskBeingViewed set to:', { id: task.id, title: task.title });
                 
                 if (isReopen) {
                     // Re-opening: timer was already running, just continue
@@ -362,15 +361,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (skipBtn) skipBtn.style.display = 'none';
                 if (completeBtn) completeBtn.style.display = 'inline-block';
             } else {
-                // Timer not completed yet, skip modal for testing
-                const visitBtn = taskBeingViewed.taskItemEl.querySelector('.btn-visit');
+                // Timer not completed yet, show modal with time remaining
                 const remainingTime = Math.ceil((requiredTime - accumulatedTime) / 1000);
-                if (visitBtn) {
-                    visitBtn.textContent = `${remainingTime} seconds left`;
-                    updateTaskStatus(taskBeingViewed.taskItemEl, 'Please return to the page to continue');
-                }
-                // Temporarily skip modal for testing tab close
-                // showModal(remainingTime);
+                showModal(remainingTime);
             }
         }
         
@@ -432,34 +425,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }, 5000);
     }
-
-    // Simple tab close detection - matching unified-balance approach
-    console.log('Setting up beforeunload listener');
-    window.addEventListener('beforeunload', (e) => {
-        console.log('beforeunload fired, taskBeingViewed:', taskBeingViewed);
-        console.log('taskBeingViewed details:', taskBeingViewed ? {
-            id: taskBeingViewed.task.id,
-            title: taskBeingViewed.task.title
-        } : 'none');
-        
-        if (taskBeingViewed) {
-            console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
-            // Mark that we closed the tab - simple approach like unified-balance
-            sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
-            sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
-        }
-    });
-
-    // Also add pagehide as backup
-    console.log('Setting up pagehide listener');
-    window.addEventListener('pagehide', (e) => {
-        console.log('pagehide fired, taskBeingViewed:', taskBeingViewed);
-        if (taskBeingViewed) {
-            console.log('Setting sessionStorage for task:', taskBeingViewed.task.id);
-            sessionStorage.setItem('simpleTaskClosed', taskBeingViewed.task.id);
-            sessionStorage.setItem('simpleTaskClosedTime', Date.now().toString());
-        }
-    });
 
     // Check if tab was closed on load (immediate check for when script loads)
     function checkForClosedTask() {
