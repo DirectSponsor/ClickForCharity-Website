@@ -61,6 +61,29 @@ class AuthSystem {
         window.location.reload();
     }
     
+    async getUserRole() {
+        if (!this.isLoggedIn()) return null;
+        
+        try {
+            const session = this.getSession();
+            const profileUrl = `${this.authUrl}/api/get-profile.php?user_id=${session.user_id}`;
+            
+            const response = await fetch(profileUrl);
+            if (!response.ok) return null;
+            
+            const profile = await response.json();
+            return profile.roles || [];
+        } catch (error) {
+            console.error('Error fetching user role:', error);
+            return null;
+        }
+    }
+    
+    async isAdmin() {
+        const roles = await this.getUserRole();
+        return roles && roles.includes('admin');
+    }
+    
     parseJWT(token) {
         try {
             // JWT has 3 parts separated by dots: header.payload.signature
@@ -126,6 +149,17 @@ class AuthSystem {
 
 // Global instance
 window.auth = new AuthSystem();
+
+// Protect admin pages
+window.requireAdmin = async () => {
+    const isAdmin = await window.auth.isAdmin();
+    if (!isAdmin) {
+        alert('Access denied. Admin privileges required.');
+        window.location.href = 'index.html';
+        return false;
+    }
+    return true;
+};
 
 // Update login UI based on auth status
 window.updateLoginUI = () => {

@@ -99,6 +99,11 @@
 
     <script src="js/nav.js"></script>
     <script>
+        // Check admin privileges on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await requireAdmin();
+        });
+        
         // Global variables
         let loadTasks;
 

@@ -92,78 +92,85 @@
 
     <script src="js/nav.js"></script>
     <script>
-        (function () {
-            const form = document.getElementById('task-form');
-            const feedbackEl = document.getElementById('form-feedback');
-            const submitButton = form.querySelector('button[type="submit"]');
-            const newTaskBtn = document.getElementById('new-task-btn');
+        // Check admin privileges on page load
+        document.addEventListener('DOMContentLoaded', async () => {
+            await requireAdmin();
+        });
+        
+        // Global variables
+        const form = document.getElementById('task-form');
+        const feedbackEl = document.getElementById('form-feedback');
+        const submitButton = form.querySelector('button[type="submit"]');
+        const newTaskBtn = document.getElementById('new-task-btn');
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-                const formData = new FormData(form);
-                const title = formData.get('title').trim();
-                const duration = Number(formData.get('duration'));
-                const reward = Number(formData.get('reward'));
-                const url = formData.get('url').trim();
-                const instructions = formData.get('instructions').trim();
-                const campaignDuration = Number(formData.get('campaignDuration'));
+            const formData = new FormData(form);
+            const title = formData.get('title').trim();
+            const duration = Number(formData.get('duration'));
+            const reward = Number(formData.get('reward'));
+            const url = formData.get('url').trim();
+            const instructions = formData.get('instructions').trim();
+            const campaignDuration = Number(formData.get('campaignDuration'));
 
-                if (!title || !url || !instructions || !duration || !reward) {
-                    feedbackEl.textContent = 'Please fill all fields.';
-                    feedbackEl.style.color = '#c0392b';
-                    return;
-                }
+            if (!title || !url || !instructions || !duration || !reward) {
+                feedbackEl.textContent = 'Please fill all fields.';
+                feedbackEl.style.color = '#c0392b';
+                return;
+            }
 
-                const task = { title, instructions, url, reward, duration, campaignDuration };
+            const task = { title, instructions, url, reward, duration, campaignDuration };
 
-                submitButton.disabled = true;
-                feedbackEl.textContent = 'Saving...';
-                feedbackEl.style.color = '#777';
+            submitButton.disabled = true;
+            feedbackEl.textContent = 'Saving...';
+            feedbackEl.style.color = '#777';
 
-                try {
-                    const response = await fetch('/api/save-ad.php', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(task)
+            try {
+                const response = await fetch('/api/save-ad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(task)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    submitButton.textContent = 'Saved ✓';
+                    submitButton.style.backgroundColor = '#368038';
+                    submitButton.style.display = 'none';
+                    newTaskBtn.style.display = 'inline-block';
+                    feedbackEl.textContent = '';
+                    
+                    // Disable all form inputs
+                    Array.from(form.elements).forEach(el => {
+                        if (el.type !== 'button') el.disabled = true;
                     });
-
-                    const result = await response.json();
-
-                    if (response.ok && result.success) {
-                        submitButton.textContent = 'Saved ✓';
-                        submitButton.style.backgroundColor = '#368038';
-                        submitButton.style.display = 'none';
-                        newTaskBtn.style.display = 'inline-block';
-                        feedbackEl.textContent = '';
-                        
-                        // Disable all form inputs
-                        Array.from(form.elements).forEach(el => {
-                            if (el.type !== 'button') el.disabled = true;
-                        });
-                    } else {
-                        feedbackEl.textContent = result.error || 'Failed to save task.';
-                        feedbackEl.style.color = '#c0392b';
-                    }
-                } catch (error) {
-                    console.error('Save error:', error);
-                    feedbackEl.textContent = 'Network error. Please try again.';
+                    
+                    loadTasks(); // Refresh task list
+                } else {
+                    feedbackEl.textContent = result.error || 'Failed to save task.';
                     feedbackEl.style.color = '#c0392b';
                     submitButton.disabled = false;
                 }
-            });
-
-            newTaskBtn.addEventListener('click', () => {
-                form.reset();
-                Array.from(form.elements).forEach(el => el.disabled = false);
-                submitButton.textContent = 'Save Task';
-                submitButton.style.backgroundColor = '';
-                submitButton.style.display = 'inline-block';
+            } catch (error) {
+                console.error('Save error:', error);
+                feedbackEl.textContent = 'Network error. Please try again.';
+                feedbackEl.style.color = '#c0392b';
                 submitButton.disabled = false;
-                newTaskBtn.style.display = 'none';
-                feedbackEl.textContent = '';
-                loadTasks(); // Refresh task list
-            });
+            }
+        });
+
+        newTaskBtn.addEventListener('click', () => {
+            form.reset();
+            Array.from(form.elements).forEach(el => el.disabled = false);
+            submitButton.textContent = 'Save Task';
+            submitButton.style.backgroundColor = '';
+            submitButton.style.display = 'inline-block';
+            submitButton.disabled = false;
+            newTaskBtn.style.display = 'none';
+            feedbackEl.textContent = '';
+        });
         })();
 
         // Task management
