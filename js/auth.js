@@ -188,12 +188,13 @@ window.updateLoginUI = () => {
 };
 
 // Update content that depends on login status (can be overridden by pages)
-window.updateLoginDependentContent = () => {
+window.updateLoginDependentContent = async () => {
     const isLoggedIn = window.auth.isLoggedIn();
     
     // Update guest mode notices
     const guestNotices = document.querySelectorAll('.guest-only');
     const memberContent = document.querySelectorAll('.member-only');
+    const adminContent = document.querySelectorAll('.admin-only');
     
     guestNotices.forEach(el => {
         el.style.display = isLoggedIn ? 'none' : 'block';
@@ -202,6 +203,18 @@ window.updateLoginDependentContent = () => {
     memberContent.forEach(el => {
         el.style.display = isLoggedIn ? 'block' : 'none';
     });
+    
+    // Handle admin-only content
+    if (isLoggedIn) {
+        const isAdmin = await window.auth.isAdmin();
+        adminContent.forEach(el => {
+            el.style.display = isAdmin ? 'block' : 'none';
+        });
+    } else {
+        adminContent.forEach(el => {
+            el.style.display = 'none';
+        });
+    }
 };
 
 // Toggle user dropdown menu
