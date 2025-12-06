@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const MOCK_SIMPLE_TASKS = [
         {
-            id: 'simple_1',
+            id: 'complex_1',
             title: 'Follow DirectSponsor on X',
             shortDescription: 'Follow @DirectSponsorNet and like their latest post',
             instructions: '1. Click the Visit button to open DirectSponsor\'s X profile\n2. Click the Follow button\n3. Like their most recent post\n4. Return here and click Complete when done',
@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             type: 'social_follow'
         },
         {
-            id: 'simple_2',
+            id: 'complex_2',
             title: 'Sign up for Publish0x',
             shortDescription: 'Create an account on Publish0x and earn crypto for reading',
             instructions: '1. Click Visit to go to Publish0x\n2. Click "Sign Up" and create your account\n3. Verify your email if required\n4. Browse the platform and read at least one article\n5. Return here and click Complete',
@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             type: 'signup'
         },
         {
-            id: 'simple_3',
+            id: 'complex_3',
             title: 'Subscribe on Odysee',
             shortDescription: 'Follow DirectSponsor on Odysee platform',
             instructions: '1. Visit the DirectSponsor Odysee channel\n2. Click the Follow/Subscribe button\n3. Watch at least one short video\n4. Return and click Complete when finished',

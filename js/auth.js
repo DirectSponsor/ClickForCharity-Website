@@ -66,13 +66,13 @@ class AuthSystem {
         
         try {
             const session = this.getSession();
-            const profileUrl = `${this.authUrl}/api/get-profile.php?user_id=${session.user_id}`;
+            const profileUrl = `/api/simple-profile.php?action=profile&user_id=${session.combined_user_id}`;
             
             const response = await fetch(profileUrl);
             if (!response.ok) return null;
             
-            const profile = await response.json();
-            return profile.roles || [];
+            const result = await response.json();
+            return result.success && result.user ? result.user.roles || [] : [];
         } catch (error) {
             console.error('Error fetching user role:', error);
             return null;
