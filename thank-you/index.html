@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- ahrefs code -->
+    <script src="https://analytics.ahrefs.com/analytics.js" data-key="LnMqXWQbvuEtGUb12z11HQ" async></script>
+    <!-- end ahrefs code -->
+
+    <!-- Meta tags -->
+    <title>ClickForCharity.net - Thanks For Visiting</title>
+    <meta name="description" content="No Money Needed. Your visit is enough to help improve lives.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://clickforcharity.net/thank-you/">
+    <meta property="og:title" content="ClickForCharity.net - Thanks For Visiting">
+    <meta property="og:description" content="No Money Needed. Just your visit will be enough to help improve peoples lives.">
+    <meta property="og:image" content="https://clickforcharity.net/thank-you/cover-for-header.png">
+    <meta property="og:image:width" content="1229">
+    <meta property="og:image:height" content="691">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://clickforcharity.net/thank-you/">
+    <meta property="twitter:title" content="ClickForCharity.net - Thanks For Visiting">
+    <meta property="twitter:description" content="No Money Needed. Just your visit will be enough to help improve peoples lives.">
+    <meta property="twitter:image" content="https://clickforcharity.net/thank-you/cover-for-header.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Kavoon&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Background animation */
+        @keyframes color {
+            0%   { background-color: #B3D4FF; }
+            20%  { background-color: #79ba9e; }
+            40%  { background-color: #4f9491; }
+            60%  { background-color: #4f9491; }
+            80%  { background-color: #79ba9e; }
+            100% { background-color: #B3D4FF; }
+        }
+
+        body {
+            background-color: #B3D4FF;
+            animation: color 20s infinite linear;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            padding: 1rem;
+            min-height: 100vh;
+            color: white;
+        }
+
+        /* Main heading with bounce animation */
+        .main-heading {
+            margin: 2rem 0;
+            text-shadow: 5px 5px 10px rgba(85, 85, 85, 0.3);
+        }
+
+        .bounce-text {
+            display: inline-block;
+            font-family: 'Kavoon', cursive;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 1rem;
+        }
+
+        .bounce-text span {
+            display: inline-block;
+            animation: bounce 1s infinite;
+            animation-iteration-count: 10;
+        }
+
+        @keyframes bounce {
+            0%, 50%, 100% {
+                transform: translateY(0);
+            }
+            25% {
+                transform: translateY(-20px);
+            }
+        }
+
+        /* Staggered animation delays */
+        .bounce-text span:nth-child(1) { animation-delay: 0.1s; }
+        .bounce-text span:nth-child(2) { animation-delay: 0.2s; }
+        .bounce-text span:nth-child(3) { animation-delay: 0.3s; }
+        .bounce-text span:nth-child(4) { animation-delay: 0.4s; }
+        .bounce-text span:nth-child(5) { animation-delay: 0.5s; }
+        .bounce-text span:nth-child(6) { animation-delay: 0.6s; }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.9rem);
+            line-height: 1.5;
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        .btn {
+            background-color: white;
+            border: none;
+            border-radius: 1.5rem;
+            color: #0d172a;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem 1.6rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            box-shadow: 0px 1px 2px rgba(166, 175, 195, 0.25);
+        }
+
+        .btn:hover {
+            background-color: #1e293b;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Timer - Smiley face version */
+        .timer-container {
+            margin: 2rem auto;
+            max-width: 300px;
+        }
+
+        .timer {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #E74C3C;
+            background: linear-gradient(to bottom, #000000 0%, #111 100%);
+            border-radius: 10px;
+            padding: 1rem;
+            margin: 1rem auto;
+            display: inline-block;
+            min-width: 150px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timer::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(to top, rgba(0,0,0,0.5), transparent);
+            pointer-events: none;
+        }
+
+        .timer-label {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .timer-smiley {
+            font-size: 4rem;
+            animation: smileyPop 0.5s ease-out;
+        }
+
+        @keyframes smileyPop {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            70% {
+                transform: scale(1.2);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Ads container */
+        .ads-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .ad-item {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 1rem;
+            border-radius: 10px;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 1 350px;
+        }
+
+        /* Tasks section */
+        .tasks-section {
+            margin: 3rem 0;
+        }
+
+        .section-title {
+            font-family: 'Kavoon', cursive;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-shadow: 5px 5px 10px rgba(85, 85, 85, 0.3);
+        }
+
+        .tasks-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .task-card {
+            background-color: rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-radius: 10px;
+            flex: 0 1 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task-card h2 {
+            font-family: 'Kavoon', cursive;
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            text-shadow: 5px 5px 10px rgba(85, 85, 85, 0.3);
+        }
+
+        .task-tip {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        /* Footer */
+        .footer {
+            margin: 2rem 0;
+        }
+
+        .video-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            border-radius: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .timer {
+                font-size: 3rem;
+                min-height: 80px;
+            }
+            
+            .timer-smiley {
+                font-size: 3rem;
+            }
+            
+            .ad-item, .task-card {
+                flex: 0 1 100%;
+            }
+            
+            .video-container iframe {
+                height: 250px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .bounce-text {
+                font-size: 1.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+            }
+            
+            .timer {
+                font-size: 2.5rem;
+                min-height: 70px;
+            }
+            
+            .timer-smiley {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="main-heading">
+        <div class="bounce-text">
+            <span>T</span>
+            <span>h</span>
+            <span>a</span>
+            <span>n</span>
+            <span>k</span>
+            <span>s</span>
+        </div>
+        <div style="font-size: 1.5rem; margin-top: 0.5rem;">For visiting! &#128512;</div>
+    </header>
+
+    <p class="subtitle">
+        Please stay at least 10 seconds, or explore our site
+    </p>
+
+    <div class="button-group">
+        <a href="https://clickforcharity.net/" class="btn" role="button">Explore</a>
+        <a href="https://clickforcharity.net/about" class="btn" role="button">Learn More</a>
+        <a href="#tasks" class="btn" role="button">Quick Tasks ↓</a>
+    </div>
+
+    <div class="timer-container">
+        <div class="timer" id="countdown">10</div>
+        <div class="timer-label">Seconds until you can continue</div>
+    </div>
+
+    <div class="ads-container">
+        <div class="ad-item">
+            <a href='https://postimg.cc/njQZbX91' target='_blank'>
+                <img src='https://i.postimg.cc/njQZbX91/freedom-bear-escape.jpg' 
+                     alt='freedom-bear-escape'
+                     style="max-width: 100%; height: auto; border-radius: 5px;">
+            </a>
+        </div>
+        <div class="ad-item">
+            <iframe data-aa='2326471' 
+                    src='https://ad.a-ads.com/2326471?size=250x250' 
+                    style='width:300px; height:250px; border:0; background-color:transparent;' 
+                    allowtransparency='true' 
+                    scrolling='no' 
+                    frameborder='0'>
+            </iframe>
+        </div>
+        <div class="ad-item">
+            <script async src="https://api.surfvisits.com/banner_ads.js?pw=247&size=300x250"></script>
+        </div>
+    </div>
+
+    <section class="tasks-section" id="tasks">
+        <h1 class="section-title">Tasks</h1>
+        
+        <div class="tasks-container">
+            <div class="task-card">
+                <h2>Task 1</h2>
+                <p class="task-tip">We will have a new task 1 soon, meantime here's a smiley coffee.</p>
+                <a href='https://postimg.cc/mPYCHFb5' target='_blank'>
+                    <img src='https://i.postimg.cc/mPYCHFb5/coffee-smile.jpg' 
+                         alt='coffee-smile'
+                         style="max-width: 100%; height: auto; border-radius: 5px;">
+                </a>
+            </div>
+            
+            <div class="task-card">
+                <h2>Task 2</h2>
+                <p class="task-tip">This will earn some bitcoin.</p>
+                <a target="_blank" href="https://www.rotate4all.com/ptp/promote-282704">
+                    <img src="rotate4all2.png" 
+                         alt="Rotate4All"
+                         style="width: 257px; height: auto;">
+                </a>
+            </div>
+            
+            <div class="task-card">
+                <h2>Task 3</h2>
+                <p class="task-tip">This one will earn us a little bitcoin too, or ad credits to get more users.</p>
+                <a target="_blank" href="https://invertirads.club/ref/clickforcharity">
+                    <img src="http://invertirads.club/banners/banner2.gif" 
+                         alt="Invertirads"
+                         width="125" height="125">
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="footer">
+        <div class="video-container">
+            <iframe src="https://odysee.com/$/embed/@roflfaucet:7/stevehughes2:c?r=9cn37JvaLAtLK8z8NfZjsqm8ZNCaNuUy" 
+                    allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+
+    <script>
+        // Timer with smiley face at the end
+        document.addEventListener('DOMContentLoaded', function() {
+            const timerElement = document.getElementById('countdown');
+            let timeLeft = 10;
+            
+            const countdown = setInterval(() => {
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    // Replace with smiley face
+                    timerElement.innerHTML = '<span class="timer-smiley">&#128512;</span>';
+                    timerElement.style.animation = 'pulse 1s infinite';
+                    
+                    // Optional: Change the label text when timer completes
+                    const label = document.querySelector('.timer-label');
+                    if (label) {
+                        label.textContent = 'Ready to continue!';
+                        label.style.color = '#4CAF50';
+                        label.style.fontWeight = 'bold';
+                    }
+                } else {
+                    timerElement.textContent = timeLeft;
+                    timeLeft--;
+                    
+                    // Add visual feedback for last 3 seconds
+                    if (timeLeft < 3) {
+                        timerElement.style.color = '#FF9800';
+                    }
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
