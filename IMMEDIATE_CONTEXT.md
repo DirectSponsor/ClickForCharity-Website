@@ -1,3 +1,12 @@
+Please can you add this to the doc below as a to-do?
+
+file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-static/index.html we need to make especially the about pages using info from these pages, 
+file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-static/about/index.html
+file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-static/about/advertisers-partners/index.html
+file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-static/about/how-it-works/index.html
+file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-static/about/privacy/index.html
+file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-static/about/privacy/mailing-list/index.html
+
 # Click for Charity - Project Status
 **Date: Nov 30, 2025**  
 **Status: Simple Tasks Complete, Complex Tasks Ready for Next Phase**
