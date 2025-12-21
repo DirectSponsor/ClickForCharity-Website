@@ -194,5 +194,17 @@ file:///home/andy/Documents/websites/website_backups/clickforcharity.net/cfc-sta
 **Today's Progress**: Simple Tasks system is COMPLETE with production-ready backend, admin interface, and CoinPayU-style tab switch UX. Tab close detection needs future investigation but doesn't block functionality.
 
 **Next Focus**: Complex Tasks admin interface and backend integration to complete that system. 
-
-
+ 
+ 
+ ## DNS Notes - directsponsor.net (Dec 18, 2025)
+ 
+ - **Goal**: Point `www.directsponsor.net` and `ftp.directsponsor.net` to `104.168.38.197` while leaving email (mail server) DNS intact.
+ - **Current observations**:
+   - `dig @1.1.1.1 www.directsponsor.net +short` returns `104.168.38.197`.
+   - Site works in multiple locations (local + VPN).
+   - whatsmydns was checked using the **NS** view (`#NS/www.directsponsor.net`) which is not the right record type to confirm the `www` A/CNAME change; re-check using the **A** (or **CNAME**) view.
+ - **Email**:
+   - SPF TXT record is `v=spf1 a mx ip4:193.29.59.104 ~all` and should remain unchanged to avoid mail delivery issues.
+ - **Next check (tomorrow)**:
+   - Check `A/CNAME` for `www.directsponsor.net` and `ftp.directsponsor.net` on multiple resolvers (e.g. `@1.1.1.1`, `@8.8.8.8`).
+   - If some networks still show old records, it’s likely caching/propagation; wait until TTLs expire.
