@@ -1,0 +1,11 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Force non-www canonical host
+    RewriteCond %{HTTP_HOST} ^www\.clickforcharity\.net$ [NC]
+    RewriteRule ^(.*)$ https://clickforcharity.net/$1 [R=301,L]
+
+    # Redirect index.html to root to match canonical URL
+    RewriteCond %{THE_REQUEST} /index\.html [NC]
+    RewriteRule ^index\.html$ https://clickforcharity.net/ [R=301,L]
+</IfModule>
