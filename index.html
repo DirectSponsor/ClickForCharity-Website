@@ -28,6 +28,7 @@
     <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
     <div class="menu-overlay" data-menu-overlay></div>
     <div class="container">
+<!-- include start sidebar.incl -->
         <aside class="sidebar" id="site-navigation">
             <div class="logo">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
@@ -36,12 +37,13 @@
             <nav>
                 <ul>
                     <li class="active"><a href="index.html">Home</a></li>
-                    <li><a href="ptc.html">Surf Ads</a></li>
-                    <li><a href="simple-tasks.html">Simple Tasks</a></li>
-                    <li><a href="surveys.html">Surveys</a></li>
-                    <li><a href="offers.html">Offers</a></li>
+                    <li ><a href="ptc.html">Surf Ads</a></li>
+                    <li ><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="offers.html">Offers</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
-                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="/balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
+                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="display:inline-block;font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
                 </ul>
             </nav>
             
@@ -74,6 +76,7 @@
                 <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
         </aside>
+<!-- include end sidebar.incl -->
         <main class="main-content landing" data-menu-target>
             <section class="hero">
                 <div class="hero-copy">
