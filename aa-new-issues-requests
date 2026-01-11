@@ -1,0 +1,29 @@
+# clickforcharity.net - New Issues & Requests
+
+*Add your notes here - AI will process and clear them automatically*
+*Just write naturally, no formatting required*
+
+---
+
+✅ COMPLETED (Jan 11, 2026):
+- Created balance-sync-help.html page with comprehensive sync documentation
+
+---
+
+❌ REVERTED (Jan 11, 2026):
+- PTC ads bug fix was reverted - original issue needs investigation
+- User clarified: PTC ads (Surf Ads) should reset daily, Simple Tasks should be one-time only
+- The shared isTaskCompleted() function can't handle both behaviors currently
+
+---
+
+PENDING:
+- Context/docs organization for multiple projects (3 active)
+- PTC ads showing as "completed today" even when not completed - needs proper daily reset mechanism
+- Simple Tasks: Need server-side completion tracking to prevent localStorage bloat from old one-time tasks
+  * Current: localStorage stores all completed tasks forever
+  * Problem: Will grow indefinitely as users complete tasks
+  * Solution needed: Server-side tracking or periodic cleanup mechanism for tasks that no longer exist
+
+---
+
