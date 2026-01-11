@@ -10,20 +10,22 @@
 
 ---
 
-❌ REVERTED (Jan 11, 2026):
-- PTC ads bug fix was reverted - original issue needs investigation
-- User clarified: PTC ads (Surf Ads) should reset daily, Simple Tasks should be one-time only
-- The shared isTaskCompleted() function can't handle both behaviors currently
+✅ COMPLETED (Jan 11, 2026 - Evening):
+- Implemented 23-hour rolling reset for PTC ads (Surf Ads)
+- Added automatic cleanup of completion records for expired ads
+- PTC ads now use isPTCAdCompleted() with 23-hour timer
+- Simple Tasks remain one-time only using isTaskCompleted()
+- Sync help link fixed (relative path instead of absolute)
+- Implemented comment-based include system for sidebar (edit once, update all pages)
 
 ---
 
 PENDING:
 - Context/docs organization for multiple projects (3 active)
-- PTC ads showing as "completed today" even when not completed - needs proper daily reset mechanism
 - Simple Tasks: Need server-side completion tracking to prevent localStorage bloat from old one-time tasks
   * Current: localStorage stores all completed tasks forever
   * Problem: Will grow indefinitely as users complete tasks
-  * Solution needed: Server-side tracking or periodic cleanup mechanism for tasks that no longer exist
+  * Solution: Implement cleanup similar to PTC ads, or server-side tracking
 
 ---
 

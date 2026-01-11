@@ -550,11 +550,53 @@ class UnifiedBalanceSystem {
         return !!completedTasks[taskId];
     }
     
+    // PTC Ad completion tracking with 23-hour rolling reset
+    isPTCAdCompleted(adId) {
+        const completedTasks = this.getCompletedTasks();
+        const completedTimestamp = completedTasks[adId];
+        
+        if (!completedTimestamp) return false;
+        
+        // Check if 23 hours have passed since completion
+        const completedTime = new Date(completedTimestamp);
+        const now = new Date();
+        const hoursSinceCompletion = (now - completedTime) / (1000 * 60 * 60);
+        
+        // If more than 23 hours have passed, task is available again
+        if (hoursSinceCompletion >= 23) {
+            // Clean up old completion record
+            delete completedTasks[adId];
+            localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+            return false;
+        }
+        
+        return true;
+    }
+    
     markTaskCompleted(taskId) {
         const completedTasks = this.getCompletedTasks();
         completedTasks[taskId] = new Date().toISOString();
         localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
         console.log('✅ Task marked complete:', taskId);
+    }
+    
+    // Clean up completion records for ads that no longer exist
+    cleanupExpiredAdCompletions(activeAdIds) {
+        const completedTasks = this.getCompletedTasks();
+        let cleaned = false;
+        
+        // Remove completion records for ads that start with 'ad_' but aren't in active list
+        Object.keys(completedTasks).forEach(taskId => {
+            if (taskId.startsWith('ad_') && !activeAdIds.includes(taskId)) {
+                delete completedTasks[taskId];
+                cleaned = true;
+            }
+        });
+        
+        if (cleaned) {
+            localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+            console.log('🧹 Cleaned up expired ad completion records');
+        }
     }
     
     getSkippedTasks() {

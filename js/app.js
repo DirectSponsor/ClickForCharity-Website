@@ -74,10 +74,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const terms = window.UnifiedBalance.getTerminology();
         const rewardLabel = terms.currency;
 
+        // Clean up completion records for expired ads
+        const activeAdIds = ads.map(ad => ad.id);
+        window.UnifiedBalance.cleanupExpiredAdCompletions(activeAdIds);
+        
         // Sort ads: completed ones go to the bottom
         const sortedAds = [...ads].sort((a, b) => {
-            const aCompleted = window.UnifiedBalance.isTaskCompleted(a.id);
-            const bCompleted = window.UnifiedBalance.isTaskCompleted(b.id);
+            const aCompleted = window.UnifiedBalance.isPTCAdCompleted(a.id);
+            const bCompleted = window.UnifiedBalance.isPTCAdCompleted(b.id);
             
             // If both have same completion status, maintain original order
             if (aCompleted === bCompleted) return 0;
@@ -91,13 +95,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             taskItem.className = 'task-item';
             taskItem.dataset.adId = ad.id;
             
-            // Check if task was already completed today
-            if (window.UnifiedBalance.isTaskCompleted(ad.id)) {
+            // Check if task was already completed (23-hour rolling reset)
+            if (window.UnifiedBalance.isPTCAdCompleted(ad.id)) {
                 taskItem.classList.add('done');
             }
 
-            const isCompleted = window.UnifiedBalance.isTaskCompleted(ad.id);
-            const statusText = isCompleted ? 'Completed today' : 'Ready when you are';
+            const isCompleted = window.UnifiedBalance.isPTCAdCompleted(ad.id);
+            const statusText = isCompleted ? 'Completed (available in <23h)' : 'Ready when you are';
             const visitText = isCompleted ? 'Viewed' : 'Visit';
             
             taskItem.innerHTML = `
@@ -241,8 +245,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const taskItem = visitLink.closest('.task-item');
             const adId = parseInt(taskItem.dataset.adId, 10);
             
-            // Prevent clicking if already completed today
-            if (window.UnifiedBalance.isTaskCompleted(adId)) {
+            // Prevent clicking if already completed (within 23 hours)
+            if (window.UnifiedBalance.isPTCAdCompleted(adId)) {
                 e.preventDefault();
                 return;
             }
