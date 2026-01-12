@@ -19,7 +19,7 @@ The actual include content remains visible in the HTML files (between the marker
 ### Making Changes to the Sidebar
 
 1. Edit `includes/sidebar.incl` with your changes
-2. Run `./process-includes.sh` from the project root
+2. Run `./build.sh` from the project root
 3. All pages will be updated automatically
 
 ### Variables
@@ -48,20 +48,20 @@ All unused variables are removed during processing.
    [Your footer content]
    <!-- include end footer.incl -->
    ```
-3. Run `./process-includes.sh`
+3. Run `./build.sh`
 
 ## Important Notes
 
 - The include markers stay in the HTML as comments - they're not removed
 - Content between markers gets replaced each time you run the script
 - Admin pages (admin*.html) and sitemap.html are excluded from processing
-- Always run `./process-includes.sh` before deploying to ensure all pages are in sync
+- Always run `./build.sh` before deploying to ensure all pages are in sync
 
 ## Deployment Integration
 
-The `process-includes.sh` script should be run before deployment. You can add it to your deploy workflow:
+The `build.sh` script should be run before deployment. You can add it to your deploy workflow:
 
 ```bash
-./process-includes.sh
+./build.sh
 ./deploy.sh
 ```

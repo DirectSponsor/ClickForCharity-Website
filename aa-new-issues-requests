@@ -20,12 +20,22 @@
 
 ---
 
+✅ COMPLETED (Jan 12, 2026):
+- Renamed process-includes.sh to build.sh (matches other projects)
+- Implemented automatic cleanup for Simple Tasks completion records
+  * cleanupExpiredSimpleTaskCompletions() removes records for expired tasks
+  * Prevents localStorage bloat from old one-time tasks
+  * Called automatically when Simple Tasks page loads
+- Added total PTC tasks completed counter
+  * getTotalPTCTasksCompleted() returns lifetime count
+  * incrementPTCTasksCompleted() increments counter on each completion
+  * Stored in localStorage as 'ptc_stats' for future reference
+
+---
+
 PENDING:
-- Context/docs organization for multiple projects (3 active)
-- Simple Tasks: Need server-side completion tracking to prevent localStorage bloat from old one-time tasks
-  * Current: localStorage stores all completed tasks forever
-  * Problem: Will grow indefinitely as users complete tasks
-  * Solution: Implement cleanup similar to PTC ads, or server-side tracking
+- None at the moment
+
 
 ---
 

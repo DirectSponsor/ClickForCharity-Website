@@ -55,6 +55,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         console.log('Rendering tasks, total:', simpleTasks.length);
 
+        // Clean up completion records for expired simple tasks
+        const activeTaskIds = simpleTasks.map(task => task.id);
+        window.UnifiedBalance.cleanupExpiredSimpleTaskCompletions(activeTaskIds);
+
         // Filter out completed and skipped tasks
         const availableTasks = simpleTasks.filter(task => {
             const isCompleted = window.UnifiedBalance.isTaskCompleted(task.id);

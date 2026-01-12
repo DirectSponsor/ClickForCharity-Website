@@ -599,6 +599,43 @@ class UnifiedBalanceSystem {
         }
     }
     
+    // Clean up completion records for simple tasks that no longer exist
+    cleanupExpiredSimpleTaskCompletions(activeTaskIds) {
+        const completedTasks = this.getCompletedTasks();
+        let cleaned = false;
+        
+        // Remove completion records for tasks that start with 'simple_' but aren't in active list
+        Object.keys(completedTasks).forEach(taskId => {
+            if (taskId.startsWith('simple_') && !activeTaskIds.includes(taskId)) {
+                delete completedTasks[taskId];
+                cleaned = true;
+            }
+        });
+        
+        if (cleaned) {
+            localStorage.setItem('completed_tasks', JSON.stringify(completedTasks));
+            console.log('🧹 Cleaned up expired simple task completion records');
+        }
+    }
+    
+    // Get total number of PTC ads completed by user (lifetime)
+    getTotalPTCTasksCompleted() {
+        const stats = localStorage.getItem('ptc_stats');
+        if (!stats) return 0;
+        const parsed = JSON.parse(stats);
+        return parsed.totalCompleted || 0;
+    }
+    
+    // Increment total PTC tasks completed counter
+    incrementPTCTasksCompleted() {
+        const stats = localStorage.getItem('ptc_stats');
+        const parsed = stats ? JSON.parse(stats) : { totalCompleted: 0 };
+        parsed.totalCompleted = (parsed.totalCompleted || 0) + 1;
+        localStorage.setItem('ptc_stats', JSON.stringify(parsed));
+        console.log('📊 Total PTC tasks completed:', parsed.totalCompleted);
+        return parsed.totalCompleted;
+    }
+    
     getSkippedTasks() {
         const stored = localStorage.getItem('skipped_tasks');
         return stored ? JSON.parse(stored) : {};

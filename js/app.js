@@ -351,6 +351,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
             window.UnifiedBalance.markTaskCompleted(ad.id);
             
+            // Increment total PTC tasks completed counter
+            window.UnifiedBalance.incrementPTCTasksCompleted();
+            
             // Move completed task to bottom of list immediately
             moveTaskToBottom(taskItemEl);
             
