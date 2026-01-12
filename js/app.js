@@ -101,7 +101,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const isCompleted = window.UnifiedBalance.isPTCAdCompleted(ad.id);
-            const statusText = isCompleted ? 'Completed (available in <23h)' : 'Ready when you are';
+            let statusText = 'Ready when you are';
+            if (isCompleted) {
+                const timeRemaining = window.UnifiedBalance.getPTCAdTimeRemaining(ad.id);
+                const timeFormatted = window.UnifiedBalance.formatTimeRemaining(timeRemaining);
+                statusText = `Completed (available in ${timeFormatted})`;
+            }
             const visitText = isCompleted ? 'Viewed' : 'Visit';
             
             taskItem.innerHTML = `

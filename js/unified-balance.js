@@ -573,6 +573,39 @@ class UnifiedBalanceSystem {
         return true;
     }
     
+    // Get time remaining until PTC ad is available again (in milliseconds)
+    getPTCAdTimeRemaining(adId) {
+        const completedTasks = this.getCompletedTasks();
+        const completedTimestamp = completedTasks[adId];
+        
+        if (!completedTimestamp) return 0;
+        
+        const completedTime = new Date(completedTimestamp);
+        const now = new Date();
+        const availableTime = new Date(completedTime.getTime() + (23 * 60 * 60 * 1000)); // 23 hours later
+        
+        const remaining = availableTime - now;
+        return remaining > 0 ? remaining : 0;
+    }
+    
+    // Format time remaining as human-readable string (e.g., "2h 15m")
+    formatTimeRemaining(milliseconds) {
+        if (milliseconds <= 0) return 'Available now';
+        
+        const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+        const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+        
+        if (hours > 0 && minutes > 0) {
+            return `${hours}h ${minutes}m`;
+        } else if (hours > 0) {
+            return `${hours}h`;
+        } else if (minutes > 0) {
+            return `${minutes}m`;
+        } else {
+            return 'Less than 1m';
+        }
+    }
+    
     markTaskCompleted(taskId) {
         const completedTasks = this.getCompletedTasks();
         completedTasks[taskId] = new Date().toISOString();

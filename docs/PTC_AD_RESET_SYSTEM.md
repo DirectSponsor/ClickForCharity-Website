@@ -60,6 +60,60 @@ isPTCAdCompleted(adId) {
 3. If ≥23 hours: removes completion record and returns `false` (available)
 4. If <23 hours: returns `true` (still completed)
 
+#### `getPTCAdTimeRemaining(adId)`
+
+Returns milliseconds remaining until ad is available again.
+
+```javascript
+getPTCAdTimeRemaining(adId) {
+    const completedTasks = this.getCompletedTasks();
+    const completedTimestamp = completedTasks[adId];
+    
+    if (!completedTimestamp) return 0;
+    
+    const completedTime = new Date(completedTimestamp);
+    const now = new Date();
+    const availableTime = new Date(completedTime.getTime() + (23 * 60 * 60 * 1000));
+    
+    const remaining = availableTime - now;
+    return remaining > 0 ? remaining : 0;
+}
+```
+
+#### `formatTimeRemaining(milliseconds)`
+
+Formats milliseconds into human-readable string.
+
+```javascript
+formatTimeRemaining(milliseconds) {
+    if (milliseconds <= 0) return 'Available now';
+    
+    const hours = Math.floor(milliseconds / (1000 * 60 * 60));
+    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+    
+    if (hours > 0 && minutes > 0) {
+        return `${hours}h ${minutes}m`;
+    } else if (hours > 0) {
+        return `${hours}h`;
+    } else if (minutes > 0) {
+        return `${minutes}m`;
+    } else {
+        return 'Less than 1m';
+    }
+}
+```
+
+**Usage in app.js:**
+```javascript
+const isCompleted = window.UnifiedBalance.isPTCAdCompleted(ad.id);
+let statusText = 'Ready when you are';
+if (isCompleted) {
+    const timeRemaining = window.UnifiedBalance.getPTCAdTimeRemaining(ad.id);
+    const timeFormatted = window.UnifiedBalance.formatTimeRemaining(timeRemaining);
+    statusText = `Completed (available in ${timeFormatted})`;
+}
+```
+
 #### `cleanupExpiredAdCompletions(activeAdIds)`
 
 ```javascript
@@ -133,8 +187,14 @@ The system integrates with the existing ad expiry mechanism:
 
 **Status Messages:**
 - Available: "Ready when you are"
-- Completed: "Completed (available in <23h)"
+- Completed: "Completed (available in 2h 15m)" ← Shows exact time remaining
 - After 23h: Automatically shows as "Ready when you are"
+
+**Countdown Timer:**
+- Shows exact time remaining (e.g., "22h 45m", "5h 30m", "45m")
+- Calculated client-side (zero server resources)
+- Updates when page is refreshed
+- Much clearer than generic "<23h" message
 
 **Visual Indicators:**
 - Completed ads have `.done` class applied
