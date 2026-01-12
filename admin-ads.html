@@ -275,11 +275,12 @@
             const feedbackEl = document.getElementById('reset-feedback');
 
             resetBtn.addEventListener('click', () => {
-                if (!confirm('Clear all completed tasks from localStorage? This will let you test tasks again.')) return;
+                if (!confirm('Clear all completed tasks and PTC stats from localStorage? This will let you test tasks again.')) return;
 
                 try {
                     localStorage.removeItem('completed_tasks');
-                    feedbackEl.textContent = '✓ Completed tasks reset!';
+                    localStorage.removeItem('ptc_stats');
+                    feedbackEl.textContent = '✓ Completed tasks and PTC stats reset!';
                     setTimeout(() => {
                         feedbackEl.textContent = '';
                     }, 3000);
