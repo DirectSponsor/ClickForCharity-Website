@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let ads = [];
-    let audioPlayed = false; // Flag to prevent audio from playing multiple times
 
     // --- API Data Fetching ---
 
@@ -195,27 +194,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateTaskStatus(taskItemEl, 'Reward ready!');
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
-            
-            // Play notification sound only once when timer first completes
-            if (!audioPlayed) {
-                audioPlayed = true;
-                try {
-                    const notificationSound = new Audio('sounds/ding.mp3');
-                    notificationSound.volume = 0.9;
-                    notificationSound.play().then(() => {
-                        console.log('✅ Timer complete - notification sound played');
-                    }).catch((err) => {
-                        console.warn('⚠️ Notification sound blocked:', err.message);
-                    });
-                } catch (err) {
-                    console.warn('❌ Audio playback error:', err);
-                }
-                
-                // Vibrate on mobile
-                if (navigator.vibrate) {
-                    navigator.vibrate([200, 80, 200]);
-                }
-            }
         } else {
             timerEl.textContent = `(${secondsLeft}s left)`;
             updateTaskStatus(taskItemEl, `Timer running – ${secondsLeft}s remaining`);
@@ -231,7 +209,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function notifyAdReady(taskItemEl) {
-        console.log('🔔 notifyAdReady called');
         if (!taskItemEl) return;
         const timerEl = taskItemEl.querySelector('.task-timer');
         if (timerEl) {
@@ -239,18 +216,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         updateTaskStatus(taskItemEl, 'Reward ready!');
         
-        // Play notification sound - create new Audio instance to ensure it plays once
-        try {
-            const notificationSound = new Audio('sounds/ding.mp3');
-            notificationSound.volume = 0.9;
-            notificationSound.play().then(() => {
-                console.log('✅ Notification sound played');
-            }).catch((err) => {
-                console.warn('⚠️ Notification sound blocked:', err.message);
-            });
-        } catch (err) {
-            console.warn('❌ Audio playback error:', err);
-        }
+        // Play notification sound once when task completes
+        const notificationSound = new Audio('sounds/ding.mp3');
+        notificationSound.volume = 0.9;
+        notificationSound.play().catch(() => {});
         
         if (navigator.vibrate) {
             navigator.vibrate([200, 80, 200]);
@@ -266,7 +235,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         adBeingViewed = null;
         adViewStartTime = null;
         accumulatedTime = 0;
-        audioPlayed = false; // Reset audio flag for next task
         resetDocumentTitle();
 
         try {
