@@ -38,8 +38,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     const COUNTDOWN_TITLE_SUFFIX = ' — Click for Charity';
     let titleMode = 'default';
 
-    const completionAudio = new Audio('https://freesound.org/data/previews/341/341695_5121236-lq.mp3');
-    completionAudio.preload = 'auto';
+    // Notification sound
+    // Sound Effect by https://pixabay.com/users/freesound_community
+    const completionAudio = new Audio('sounds/ding.mp3');
+    completionAudio.volume = 0.9; // Set to 90% of system volume
     let completionAudioPrimed = false;
 
     let ads = [];
@@ -206,10 +208,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             completionAudio.muted = false;
             completionAudio.currentTime = 0;
-            completionAudio.play().catch(() => {});
-            completionAudioPrimed = true;
+            completionAudio.play().then(() => {
+                console.log('✅ Notification sound played successfully');
+                completionAudioPrimed = true;
+            }).catch((err) => {
+                console.warn('⚠️ Notification sound blocked by browser:', err.message);
+                console.log('💡 Click anywhere on the page to enable audio notifications');
+            });
         } catch (err) {
-            console.warn('Completion audio failed:', err);
+            console.warn('❌ Completion audio failed:', err);
         }
         if (navigator.vibrate) {
             navigator.vibrate([200, 80, 200]);
