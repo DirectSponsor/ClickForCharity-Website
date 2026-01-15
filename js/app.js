@@ -297,6 +297,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 adBeingViewed = { ad, taskItemEl: taskItem };
                 accumulatedTime = 0;
                 adViewStartTime = null; // Will be set on blur
+                notificationPlayed = false; // Reset for this ad
 
                 visitLink.textContent = 'Viewing...';
                 taskItem.classList.add('viewing');
