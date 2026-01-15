@@ -380,6 +380,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // No need to renderBalance() - addBalance() already updated display optimistically
             notifyAdReady(taskItemEl);
+            
+            // Re-render tasks to show correct timer and countdown status
+            renderTasks();
         } catch (error) {
             console.error('Failed to update balance:', error);
             taskItemEl.classList.remove('done');
