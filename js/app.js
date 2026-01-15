@@ -42,7 +42,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Sound Effect by https://pixabay.com/users/freesound_community
     const completionAudio = new Audio('sounds/ding.mp3');
     completionAudio.volume = 0.9; // Set to 90% of system volume
+    completionAudio.preload = 'auto';
+    completionAudio.loop = false; // Play only once
     let completionAudioPrimed = false;
+    
+    // Debug audio loading
+    completionAudio.addEventListener('loadeddata', () => {
+        console.log('🔊 Audio file loaded successfully');
+    });
+    completionAudio.addEventListener('error', (e) => {
+        console.error('❌ Audio file failed to load:', e);
+    });
 
     let ads = [];
 
