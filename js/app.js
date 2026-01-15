@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let ads = [];
+    let notificationPlayed = false; // Track if notification has played for current ad
 
     // --- API Data Fetching ---
 
@@ -194,6 +195,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateTaskStatus(taskItemEl, 'Reward ready!');
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
+            
+            // Play notification sound once when timer completes (while user is viewing ad)
+            if (!notificationPlayed) {
+                notificationPlayed = true;
+                const notificationSound = new Audio('sounds/ding.mp3');
+                notificationSound.volume = 0.9;
+                notificationSound.play().catch(() => {});
+                
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 80, 200]);
+                }
+            }
         } else {
             timerEl.textContent = `(${secondsLeft}s left)`;
             updateTaskStatus(taskItemEl, `Timer running – ${secondsLeft}s remaining`);
@@ -215,15 +228,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             timerEl.textContent = '(Complete)';
         }
         updateTaskStatus(taskItemEl, 'Reward ready!');
-        
-        // Play notification sound once when task completes
-        const notificationSound = new Audio('sounds/ding.mp3');
-        notificationSound.volume = 0.9;
-        notificationSound.play().catch(() => {});
-        
-        if (navigator.vibrate) {
-            navigator.vibrate([200, 80, 200]);
-        }
         document.title = COMPLETION_TITLE;
         titleMode = 'complete';
     }
@@ -235,6 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         adBeingViewed = null;
         adViewStartTime = null;
         accumulatedTime = 0;
+        notificationPlayed = false; // Reset for next ad
         resetDocumentTitle();
 
         try {

@@ -1,0 +1,9 @@
+.tox-tinymce{
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+.tox-editor-header,.tox-toolbar__primary{
+  background-color: #F9F9F9 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
