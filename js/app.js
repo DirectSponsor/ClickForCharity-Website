@@ -226,6 +226,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function notifyAdReady(taskItemEl) {
+        console.log('🔔 notifyAdReady called');
         if (!taskItemEl) return;
         const timerEl = taskItemEl.querySelector('.task-timer');
         if (timerEl) {
@@ -235,6 +236,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             completionAudio.muted = false;
             completionAudio.currentTime = 0;
+            
+            // Stop audio after it finishes playing to prevent looping
+            completionAudio.onended = () => {
+                completionAudio.pause();
+                completionAudio.currentTime = 0;
+                console.log('🔇 Audio finished and stopped');
+            };
+            
             completionAudio.play().then(() => {
                 console.log('✅ Notification sound played successfully');
                 completionAudioPrimed = true;
