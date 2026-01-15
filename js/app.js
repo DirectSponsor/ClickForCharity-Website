@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let ads = [];
+    let audioPlayed = false; // Flag to prevent audio from playing multiple times
 
     // --- API Data Fetching ---
 
@@ -195,21 +196,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
             
-            // Play notification sound when timer completes
-            try {
-                completionAudio.currentTime = 0;
-                completionAudio.play().then(() => {
-                    console.log('✅ Timer complete - notification sound played');
-                }).catch((err) => {
-                    console.warn('⚠️ Notification sound blocked:', err.message);
-                });
-            } catch (err) {
-                console.warn('❌ Audio playback error:', err);
-            }
-            
-            // Vibrate on mobile
-            if (navigator.vibrate) {
-                navigator.vibrate([200, 80, 200]);
+            // Play notification sound only once when timer first completes
+            if (!audioPlayed) {
+                audioPlayed = true;
+                try {
+                    const notificationSound = new Audio('sounds/ding.mp3');
+                    notificationSound.volume = 0.9;
+                    notificationSound.play().then(() => {
+                        console.log('✅ Timer complete - notification sound played');
+                    }).catch((err) => {
+                        console.warn('⚠️ Notification sound blocked:', err.message);
+                    });
+                } catch (err) {
+                    console.warn('❌ Audio playback error:', err);
+                }
+                
+                // Vibrate on mobile
+                if (navigator.vibrate) {
+                    navigator.vibrate([200, 80, 200]);
+                }
             }
         } else {
             timerEl.textContent = `(${secondsLeft}s left)`;
@@ -233,27 +238,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             timerEl.textContent = '(Complete)';
         }
         updateTaskStatus(taskItemEl, 'Reward ready!');
+        
+        // Play notification sound - create new Audio instance to ensure it plays once
         try {
-            completionAudio.muted = false;
-            completionAudio.currentTime = 0;
-            
-            // Stop audio after it finishes playing to prevent looping
-            completionAudio.onended = () => {
-                completionAudio.pause();
-                completionAudio.currentTime = 0;
-                console.log('🔇 Audio finished and stopped');
-            };
-            
-            completionAudio.play().then(() => {
-                console.log('✅ Notification sound played successfully');
-                completionAudioPrimed = true;
+            const notificationSound = new Audio('sounds/ding.mp3');
+            notificationSound.volume = 0.9;
+            notificationSound.play().then(() => {
+                console.log('✅ Notification sound played');
             }).catch((err) => {
-                console.warn('⚠️ Notification sound blocked by browser:', err.message);
-                console.log('💡 Click anywhere on the page to enable audio notifications');
+                console.warn('⚠️ Notification sound blocked:', err.message);
             });
         } catch (err) {
-            console.warn('❌ Completion audio failed:', err);
+            console.warn('❌ Audio playback error:', err);
         }
+        
         if (navigator.vibrate) {
             navigator.vibrate([200, 80, 200]);
         }
@@ -268,6 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         adBeingViewed = null;
         adViewStartTime = null;
         accumulatedTime = 0;
+        audioPlayed = false; // Reset audio flag for next task
         resetDocumentTitle();
 
         try {
