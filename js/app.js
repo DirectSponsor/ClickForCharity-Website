@@ -184,6 +184,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateTaskStatus(taskItemEl, 'Reward ready!');
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
+            
+            // Play notification sound when timer completes
+            try {
+                completionAudio.currentTime = 0;
+                completionAudio.play().then(() => {
+                    console.log('✅ Timer complete - notification sound played');
+                }).catch((err) => {
+                    console.warn('⚠️ Notification sound blocked:', err.message);
+                });
+            } catch (err) {
+                console.warn('❌ Audio playback error:', err);
+            }
+            
+            // Vibrate on mobile
+            if (navigator.vibrate) {
+                navigator.vibrate([200, 80, 200]);
+            }
         } else {
             timerEl.textContent = `(${secondsLeft}s left)`;
             updateTaskStatus(taskItemEl, `Timer running – ${secondsLeft}s remaining`);
