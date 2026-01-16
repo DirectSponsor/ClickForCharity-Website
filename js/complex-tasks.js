@@ -77,7 +77,7 @@
     }
 
     function renderTasks() {
-        const categories = ['follows', 'engagements', 'signups'];
+        const categories = ['follows', 'engagements'];
         
         categories.forEach(category => {
             const tasks = allTasks.filter(t => t.category === category);

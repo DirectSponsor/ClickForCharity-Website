@@ -19,14 +19,7 @@ define('REWARD_PER_PLATFORM', 25);
 $REWARDED_PLATFORMS = [
     'odysee' => 'Odysee',
     'publish0x' => 'Publish0x',
-    'rumble' => 'Rumble',
-    'bitchute' => 'BitChute',
-    'minds' => 'Minds',
-    'gab' => 'Gab',
-    'lbry' => 'LBRY',
-    'mastodon' => 'Mastodon',
-    'substack' => 'Substack',
-    'medium' => 'Medium'
+    'minds' => 'Minds'
 ];
 
 function getProfileFilePath($userId) {

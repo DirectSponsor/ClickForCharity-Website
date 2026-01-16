@@ -68,33 +68,5 @@
     "requiresLogin": true,
     "repeatable": true,
     "enabled": true
-  },
-  {
-    "id": "task_006",
-    "title": "Create Publish0x account",
-    "shortDescription": "Sign up for Publish0x blogging platform",
-    "instructions": "1. Visit Publish0x\n2. Click Sign Up\n3. Complete registration with email\n4. Verify your email\n5. Return and mark complete",
-    "url": "https://publish0x.com",
-    "reward": 100,
-    "duration": 120,
-    "category": "signups",
-    "platform": "publish0x",
-    "requiresLogin": false,
-    "repeatable": false,
-    "enabled": true
-  },
-  {
-    "id": "task_007",
-    "title": "Join Odysee",
-    "shortDescription": "Create an Odysee account",
-    "instructions": "1. Visit Odysee.com\n2. Click Sign Up\n3. Create account with email or wallet\n4. Verify your email\n5. Complete your profile\n6. Return and mark complete",
-    "url": "https://odysee.com/$/signup",
-    "reward": 100,
-    "duration": 120,
-    "category": "signups",
-    "platform": "odysee",
-    "requiresLogin": false,
-    "repeatable": false,
-    "enabled": true
   }
 ]
