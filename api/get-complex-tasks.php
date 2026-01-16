@@ -79,9 +79,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return false;
         }
         
-        // Must be for a platform user is member of
-        if (!in_array($task['platform'], $userPlatforms)) {
-            return false;
+        // Platform membership filtering depends on task category
+        if ($task['category'] === 'signups') {
+            // Sign-up tasks: only show if user is NOT a member yet
+            if (in_array($task['platform'], $userPlatforms)) {
+                return false;
+            }
+        } else {
+            // Follow/engagement tasks: only show if user IS a member
+            if (!in_array($task['platform'], $userPlatforms)) {
+                return false;
+            }
         }
         
         // Must not be skipped
