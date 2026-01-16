@@ -12,19 +12,20 @@
     let userId = null;
 
     function init() {
-        if (!window.auth || typeof window.auth.getUserId !== 'function') {
+        if (!window.auth || typeof window.auth.getSession !== 'function') {
             console.log('Auth system not ready, waiting...');
             setTimeout(init, 500);
             return;
         }
         
-        userId = window.auth.getUserId();
+        const session = window.auth.getSession();
         
-        if (!userId) {
-            console.log('User not logged in, waiting for auth...');
-            setTimeout(init, 500);
+        if (!session || !session.combined_user_id) {
+            console.log('User not logged in');
             return;
         }
+        
+        userId = session.combined_user_id;
 
         loadUserPlatforms();
         attachEventListeners();
