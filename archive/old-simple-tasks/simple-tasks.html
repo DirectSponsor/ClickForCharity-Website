@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://clickforcharity.net/simple-tasks.html">
+    <!-- Open Graph Meta Tags -->
     <meta property="og:url" content="https://clickforcharity.net/simple-tasks.html">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Simple Tasks – Click for Charity">
+    <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
     <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
@@ -84,69 +85,19 @@
             <div class="member-only platforms-notice">
                 <p>💡 <strong>Tip:</strong> <a href="my-platforms.html">Select which platforms you use</a> to see tasks you can complete and earn bonus coins for joining new platforms!</p>
             </div>
-
-            <div class="member-only" id="complex-tasks-content">
-                <div class="task-tabs">
-                    <button class="tab-button active" data-tab="follows">
-                        Follows & Subscriptions <span class="tab-count" id="follows-count">(0)</span>
-                    </button>
-                    <button class="tab-button" data-tab="engagements">
-                        Engagements <span class="tab-count" id="engagements-count">(0)</span>
-                    </button>
-                    <button class="tab-button" data-tab="signups">
-                        Sign-ups <span class="tab-count" id="signups-count">(0)</span>
-                    </button>
+            
+            <section class="task-list-container">
+                <h2>Available Tasks</h2>
+                <div id="simple-task-list" class="task-list simple-task-list">
+                    <!-- Simple tasks will be dynamically inserted here by JavaScript -->
                 </div>
-
-                <div class="tab-content active" id="follows-tab">
-                    <div class="tab-description">
-                        <p>Follow accounts and subscribe to channels. These are one-time actions.</p>
-                    </div>
-                    <div id="follows-tasks" class="complex-task-list"></div>
-                    <div class="empty-state" style="display: none;">
-                        <p>No follow tasks available. Check back later!</p>
-                    </div>
-                </div>
-
-                <div class="tab-content" id="engagements-tab">
-                    <div class="tab-description">
-                        <p>Like posts, comment on videos, and share content. New tasks appear regularly.</p>
-                    </div>
-                    <div id="engagements-tasks" class="complex-task-list"></div>
-                    <div class="empty-state" style="display: none;">
-                        <p>No engagement tasks available. Check back later!</p>
-                    </div>
-                </div>
-
-                <div class="tab-content" id="signups-tab">
-                    <div class="tab-description">
-                        <p>Create accounts on new platforms. These tasks offer higher rewards.</p>
-                    </div>
-                    <div id="signups-tasks" class="complex-task-list"></div>
-                    <div class="empty-state" style="display: none;">
-                        <p>No sign-up tasks available. Check back later!</p>
-                    </div>
-                </div>
-
-                <div id="no-platforms-notice" class="platforms-notice" style="display: none; background-color: #fff3cd; border-color: #ffc107;">
-                    <p>⚠️ <strong>No platforms selected!</strong> <a href="my-platforms.html">Select your platforms</a> to see available tasks.</p>
-                </div>
-            </div>
-
-            <div class="guest-only">
-                <div class="login-prompt">
-                    <h2>Login Required</h2>
-                    <p>You need to be logged in to access tasks.</p>
-                    <button class="btn-primary" onclick="window.auth.login()">Login Now</button>
-                </div>
-            </div>
+            </section>
         </main>
     </div>
-
-    <script src="js/auth.js"></script>
     <script src="js/unified-balance.js"></script>
-    <script src="js/complex-tasks.js"></script>
+    <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/simple-tasks.js"></script>
     <!-- include start footer.incl -->
     <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
         <div style="margin-bottom:0.5rem;">
