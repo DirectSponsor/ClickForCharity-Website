@@ -64,6 +64,14 @@ auto_commit_changes() {
         git commit -m "$commit_msg"
         
         success "Committed $change_count changes with message: $commit_msg"
+        
+        # Push to GitHub
+        log "Pushing to GitHub..."
+        if git push origin main; then
+            success "Pushed to GitHub successfully"
+        else
+            warning "Failed to push to GitHub (continuing with deployment)"
+        fi
     else
         log "No pending changes to commit"
     fi

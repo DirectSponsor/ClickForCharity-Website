@@ -1,0 +1,38 @@
+# Configuration files with secrets
+config.php
+/var/clickforcharity-data/config/
+
+# Environment files
+.env
+.env.local
+
+# Logs
+*.log
+/var/log/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+
+# Node modules
+node_modules/
+
+# Backups
+*.backup
+*.bak
+
+# User data (handled separately via Apache alias)
+/var/clickforcharity-data/
+
+# Deploy script (keep local only)
+deploy.sh

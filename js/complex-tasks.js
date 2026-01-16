@@ -111,15 +111,16 @@
                     <div class="task-compact-content">
                         <div class="task-title">${task.title}</div>
                         <div class="task-short-desc">${task.shortDescription}</div>
-                        <span class="platform-badge">${task.platform}</span>
+                        <div class="task-meta">
+                            <span class="platform-badge">${task.platform}</span>
+                            <span class="reward-badge">${task.reward} coins</span>
+                        </div>
                     </div>
                     <button class="btn-skip-compact" onclick="event.stopPropagation(); skipTask('${task.id}')">Skip</button>
                 </div>
                 
                 <div class="task-expanded" style="display: ${isExpanded ? 'block' : 'none'}">
                     <div class="task-details">
-                        <h3>${task.title}</h3>
-                        <div class="task-reward">Reward: <strong>${task.reward} coins</strong></div>
                         <div class="task-instructions">
                             <h4>Instructions:</h4>
                             <pre>${task.instructions}</pre>
@@ -458,14 +459,15 @@ function createGuestTaskCard(task) {
                 <div class="task-compact-content">
                     <div class="task-title">${task.title}</div>
                     <div class="task-short-desc">${task.shortDescription}</div>
-                    <span class="platform-badge">${task.platform}</span>
+                    <div class="task-meta">
+                        <span class="platform-badge">${task.platform}</span>
+                        <span class="reward-badge">${task.reward} coins</span>
+                    </div>
                 </div>
             </div>
             
             <div class="task-expanded" style="display: ${isExpanded ? 'block' : 'none'}">
                 <div class="task-details">
-                    <h3>${task.title}</h3>
-                    <div class="task-reward">Reward: <strong>${task.reward} coins</strong></div>
                     <div class="task-instructions">
                         <h4>Instructions:</h4>
                         <pre>${task.instructions}</pre>
