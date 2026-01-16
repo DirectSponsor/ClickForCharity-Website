@@ -415,30 +415,123 @@ function showNotification(message, type = 'success') {
     }, 5000);
 }
 
+// Guest-specific state
+let guestTasks = [];
+let guestExpandedTaskId = null;
+let guestTaskTimers = {};
+
 async function loadGuestTasks() {
     try {
         const response = await fetch('/data/complex-tasks/tasks.json');
         const tasks = await response.json();
         
         // Show all enabled tasks to guests
-        const guestTasks = tasks.filter(task => task.enabled);
+        guestTasks = tasks.filter(task => task.enabled);
         
-        const container = document.getElementById('guest-tasks');
-        const emptyState = document.getElementById('guest-empty-state');
-        
-        if (guestTasks.length === 0) {
-            container.innerHTML = '';
-            emptyState.style.display = 'block';
-        } else {
-            emptyState.style.display = 'none';
-            container.innerHTML = guestTasks.map(task => createTaskCard(task)).join('');
-            attachTaskEventListeners();
-        }
+        renderGuestTasks();
     } catch (error) {
         console.error('Error loading guest tasks:', error);
         document.getElementById('guest-empty-state').style.display = 'block';
     }
 }
+
+function renderGuestTasks() {
+    const container = document.getElementById('guest-tasks');
+    const emptyState = document.getElementById('guest-empty-state');
+    
+    if (guestTasks.length === 0) {
+        container.innerHTML = '';
+        emptyState.style.display = 'block';
+    } else {
+        emptyState.style.display = 'none';
+        container.innerHTML = guestTasks.map(task => createGuestTaskCard(task)).join('');
+    }
+}
+
+function createGuestTaskCard(task) {
+    const isExpanded = guestExpandedTaskId === task.id;
+    const timerState = guestTaskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
+    
+    return `
+        <div class="complex-task-card ${isExpanded ? 'expanded' : ''}" data-task-id="${task.id}">
+            <div class="task-compact" onclick="toggleGuestTask('${task.id}')">
+                <div class="task-compact-content">
+                    <div class="task-title">${task.title}</div>
+                    <div class="task-short-desc">${task.shortDescription}</div>
+                    <span class="platform-badge">${task.platform}</span>
+                </div>
+            </div>
+            
+            <div class="task-expanded" style="display: ${isExpanded ? 'block' : 'none'}">
+                <div class="task-details">
+                    <h3>${task.title}</h3>
+                    <div class="task-reward">Reward: <strong>${task.reward} coins</strong></div>
+                    <div class="task-instructions">
+                        <h4>Instructions:</h4>
+                        <pre>${task.instructions}</pre>
+                    </div>
+                </div>
+                
+                <div class="task-actions">
+                    <button class="btn-visit" onclick="visitGuestTask('${task.id}', '${task.url}', ${task.duration})" ${timerState.running ? 'disabled' : ''}>
+                        ${timerState.running ? 'Visiting...' : 'Visit'}
+                    </button>
+                    
+                    <div class="task-timer" id="guest-timer-${task.id}" style="display: ${timerState.running ? 'block' : 'none'}">
+                        <span class="timer-text">Time remaining: <strong><span class="timer-value">${timerState.timeLeft}</span>s</strong></span>
+                    </div>
+                    
+                    <div style="margin-top: 16px; padding: 12px; background: #e3f2fd; border-radius: 4px; text-align: center;">
+                        <p style="margin: 0; color: #1976d2;"><strong>Sign up to complete tasks and earn coins!</strong></p>
+                        <button class="btn-primary" onclick="window.auth.login()" style="margin-top: 8px;">Sign Up Free</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+window.toggleGuestTask = function(taskId) {
+    if (guestExpandedTaskId === taskId) {
+        guestExpandedTaskId = null;
+    } else {
+        guestExpandedTaskId = taskId;
+    }
+    renderGuestTasks();
+};
+
+window.visitGuestTask = function(taskId, url, duration) {
+    window.open(url, '_blank');
+    
+    guestTaskTimers[taskId] = {
+        running: true,
+        timeLeft: duration,
+        completed: false
+    };
+    
+    renderGuestTasks();
+    
+    const interval = setInterval(() => {
+        if (!guestTaskTimers[taskId] || !guestTaskTimers[taskId].running) {
+            clearInterval(interval);
+            return;
+        }
+        
+        guestTaskTimers[taskId].timeLeft--;
+        
+        const timerElement = document.querySelector(`#guest-timer-${taskId} .timer-value`);
+        if (timerElement) {
+            timerElement.textContent = guestTaskTimers[taskId].timeLeft;
+        }
+        
+        if (guestTaskTimers[taskId].timeLeft <= 0) {
+            clearInterval(interval);
+            guestTaskTimers[taskId].running = false;
+            guestTaskTimers[taskId].completed = true;
+            renderGuestTasks();
+        }
+    }, 1000);
+};
 
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
