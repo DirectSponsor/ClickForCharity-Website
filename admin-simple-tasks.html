@@ -23,27 +23,17 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
-    <div class="menu-overlay" data-menu-overlay></div>
-    <div class="container">
-        <aside class="sidebar" id="site-navigation">
-            <div class="logo">
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+        <header style="margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
-                <span>Click for Charity</span>
+                <div>
+                    <h1 style="margin: 0; font-size: 24px;">Click for Charity</h1>
+                    <p style="margin: 0; color: #777; font-size: 14px;">Tasks Management</p>
+                </div>
             </div>
-            <nav>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="ptc.html">Surf Ads</a></li>
-                    <li><a href="simple-tasks.html">Simple Tasks</a></li>
-                    <li><a href="skipped-tasks.html">Skipped Tasks</a></li>
-                    <li><a href="surveys.html">Surveys</a></li>
-                    <li><a href="offers.html">Offers</a></li>
-                    <li><a href="admin.html">Admin Dashboard</a></li>
-                </ul>
-            </nav>
-        </aside>
-        <main class="main-content" data-menu-target>
+        </header>
+        <main>
             <section class="admin-form" aria-labelledby="admin-form-heading">
                 <h1 id="admin-form-heading">Tasks Management</h1>
                 <p class="section-nav">
