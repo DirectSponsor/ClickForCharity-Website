@@ -1452,3 +1452,342 @@ body {
         min-height: 48px;
     }
 }
+
+/* Complex Tasks Styles */
+.task-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tab-button {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    transition: all 0.2s ease;
+    position: relative;
+    bottom: -2px;
+}
+
+.tab-button:hover {
+    background-color: #f8f9fa;
+}
+
+.tab-button.active {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.tab-count {
+    font-size: 12px;
+    opacity: 0.7;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-description {
+    background-color: #f8f9fa;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: var(--text-light);
+}
+
+.tab-description p {
+    margin: 0;
+}
+
+.complex-task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.complex-task-card {
+    background-color: var(--task-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    overflow: hidden;
+    transition: all 0.2s ease;
+}
+
+.complex-task-card.expanded {
+    border-color: var(--accent-color);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
+}
+
+.task-compact {
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.task-compact:hover {
+    background-color: #f8f9fa;
+}
+
+.task-compact-content {
+    flex: 1;
+}
+
+.task-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--text-color);
+}
+
+.task-short-desc {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 6px;
+}
+
+.login-badge,
+.platform-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    margin-right: 6px;
+    font-weight: 500;
+}
+
+.login-badge {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.platform-badge {
+    background-color: #e7f3ff;
+    color: #004085;
+    text-transform: capitalize;
+}
+
+.btn-skip-compact {
+    padding: 8px 16px;
+    background-color: #6c757d;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    flex-shrink: 0;
+}
+
+.btn-skip-compact:hover {
+    background-color: #5a6268;
+}
+
+.task-expanded {
+    border-top: 1px solid var(--border-color);
+    padding: 16px;
+}
+
+.task-details h3 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+.task-reward {
+    font-size: 14px;
+    margin-bottom: 16px;
+    color: var(--text-color);
+}
+
+.task-reward strong {
+    color: #28a745;
+    font-size: 16px;
+}
+
+.task-instructions h4 {
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: var(--text-color);
+}
+
+.task-instructions pre {
+    background-color: #f8f9fa;
+    padding: 12px;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.task-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+}
+
+.btn-visit,
+.btn-complete,
+.btn-skip {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-visit {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-visit:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+}
+
+.btn-visit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-complete {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-complete:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.btn-complete:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+.btn-skip {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-skip:hover {
+    background-color: #5a6268;
+}
+
+.task-timer {
+    padding: 8px 16px;
+    background-color: #fff3cd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.timer-text {
+    color: #856404;
+}
+
+.timer-value {
+    font-weight: 700;
+    color: #856404;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text-light);
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.task-notification {
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    font-size: 14px;
+    animation: slideDown 0.3s ease-out;
+}
+
+.task-notification.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.task-notification.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+@media (max-width: 600px) {
+    .task-tabs {
+        flex-direction: column;
+        gap: 0;
+        border-bottom: none;
+    }
+    
+    .tab-button {
+        border-bottom: 1px solid var(--border-color);
+        border-left: 3px solid transparent;
+        padding: 14px 16px;
+        text-align: left;
+        bottom: 0;
+    }
+    
+    .tab-button.active {
+        border-left-color: var(--accent-color);
+        border-bottom-color: var(--border-color);
+    }
+    
+    .task-compact {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .btn-skip-compact {
+        width: 100%;
+        padding: 10px 16px;
+        min-height: 44px;
+    }
+    
+    .task-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .btn-visit,
+    .btn-complete,
+    .btn-skip {
+        width: 100%;
+        padding: 12px 16px;
+        min-height: 44px;
+    }
+    
+    .task-timer {
+        width: 100%;
+        text-align: center;
+    }
+}

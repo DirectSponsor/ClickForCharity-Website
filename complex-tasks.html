@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/complex-tasks.html">
+    <meta property="og:url" content="https://clickforcharity.net/complex-tasks.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Tasks – Click for Charity">
+    <meta property="og:description" content="Complete social media tasks to help people change their lives and live in abundance.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/complex-tasks.html">
+    <meta name="twitter:title" content="Tasks – Click for Charity">
+    <meta name="twitter:description" content="Complete social media tasks to help people change their lives and live in abundance.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <title>Tasks – Click for Charity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+        <aside class="sidebar" id="site-navigation">
+            <div class="logo">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="ptc.html">Surf Ads</a></li>
+                    <li><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li><a href="surveys.html">Surveys</a></li>
+                    <li><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="display:inline-block;font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
+                </ul>
+            </nav>
+            
+            <div class="user-select-container">
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>Tasks</h1>
+                <div class="user-stats">
+                    <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
+                </div>
+            </header>
+            
+            <div class="member-only platforms-notice">
+                <p>💡 <strong>Tip:</strong> <a href="my-platforms.html">Select which platforms you use</a> to see tasks you can complete and earn bonus coins for joining new platforms!</p>
+            </div>
+
+            <div class="member-only" id="complex-tasks-content">
+                <div class="task-tabs">
+                    <button class="tab-button active" data-tab="follows">
+                        Follows & Subscriptions <span class="tab-count" id="follows-count">(0)</span>
+                    </button>
+                    <button class="tab-button" data-tab="engagements">
+                        Engagements <span class="tab-count" id="engagements-count">(0)</span>
+                    </button>
+                    <button class="tab-button" data-tab="signups">
+                        Sign-ups <span class="tab-count" id="signups-count">(0)</span>
+                    </button>
+                </div>
+
+                <div class="tab-content active" id="follows-tab">
+                    <div class="tab-description">
+                        <p>Follow accounts and subscribe to channels. These are one-time actions.</p>
+                    </div>
+                    <div id="follows-tasks" class="complex-task-list"></div>
+                    <div class="empty-state" style="display: none;">
+                        <p>No follow tasks available. Check back later!</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="engagements-tab">
+                    <div class="tab-description">
+                        <p>Like posts, comment on videos, and share content. New tasks appear regularly.</p>
+                    </div>
+                    <div id="engagements-tasks" class="complex-task-list"></div>
+                    <div class="empty-state" style="display: none;">
+                        <p>No engagement tasks available. Check back later!</p>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="signups-tab">
+                    <div class="tab-description">
+                        <p>Create accounts on new platforms. These tasks offer higher rewards.</p>
+                    </div>
+                    <div id="signups-tasks" class="complex-task-list"></div>
+                    <div class="empty-state" style="display: none;">
+                        <p>No sign-up tasks available. Check back later!</p>
+                    </div>
+                </div>
+
+                <div id="no-platforms-notice" class="platforms-notice" style="display: none; background-color: #fff3cd; border-color: #ffc107;">
+                    <p>⚠️ <strong>No platforms selected!</strong> <a href="my-platforms.html">Select your platforms</a> to see available tasks.</p>
+                </div>
+            </div>
+
+            <div class="guest-only">
+                <div class="login-prompt">
+                    <h2>Login Required</h2>
+                    <p>You need to be logged in to access tasks.</p>
+                    <button class="btn-primary" onclick="window.auth.login()">Login Now</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/complex-tasks.js"></script>
+    <script src="js/nav.js"></script>
+</body>
+</html>
