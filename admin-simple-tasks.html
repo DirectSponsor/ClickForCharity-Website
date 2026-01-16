@@ -118,6 +118,11 @@
                             Enabled (task is active and visible to users)
                         </label>
                     </div>
+                    <div class="field">
+                        <label for="task-expiry">Expiry Date (optional)</label>
+                        <input type="date" id="task-expiry" name="expiryDate">
+                        <small>Leave blank for no expiry. Task will be hidden after this date.</small>
+                    </div>
                     <div class="form-actions">
                         <button type="submit" class="btn primary">Save Task</button>
                         <button type="button" id="new-task-btn" class="btn secondary" style="display:none;">Create Another Task</button>
@@ -170,6 +175,7 @@
                 const platform = formData.get('platform');
                 const repeatable = document.getElementById('task-repeatable').checked;
                 const enabled = document.getElementById('task-enabled').checked;
+                const expiryDate = formData.get('expiryDate') || null;
 
                 if (!title || !shortDescription || !instructions || !url || !duration || !reward || !category || !platform) {
                     feedbackEl.textContent = 'Please fill all fields.';
@@ -188,7 +194,7 @@
                     platform,
                     repeatable,
                     enabled,
-                    requiresLogin: true
+                    expiryDate
                 };
 
                 submitButton.disabled = true;

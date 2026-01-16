@@ -163,6 +163,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userData['skippedComplexTasks'] = [];
     }
     
+    // Initialize stats tracking
+    if (!isset($userData['taskStats'])) {
+        $userData['taskStats'] = [
+            'totalCompleted' => 0,
+            'byCategory' => [
+                'follows' => 0,
+                'engagements' => 0,
+                'other' => 0
+            ]
+        ];
+    }
+    
     $reward = 0;
     $taskTitle = '';
     
@@ -182,6 +194,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Add to completed tasks
         if (!in_array($taskId, $userData['completedComplexTasks'])) {
             $userData['completedComplexTasks'][] = $taskId;
+            
+            // Update stats
+            $userData['taskStats']['totalCompleted']++;
+            $category = $task['category'] ?? 'other';
+            if (isset($userData['taskStats']['byCategory'][$category])) {
+                $userData['taskStats']['byCategory'][$category]++;
+            }
         }
         
         // Award coins

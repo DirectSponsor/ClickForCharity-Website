@@ -1,0 +1,8 @@
+{
+  "enabled": false,
+  "email": "admin@clickforcharity.net",
+  "from": "noreply@clickforcharity.net",
+  "alert_on_failure": true,
+  "alert_on_overdue": true,
+  "overdue_hours": 48
+}

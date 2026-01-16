@@ -79,6 +79,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return false;
         }
         
+        // Filter out expired tasks
+        if (isset($task['expiryDate']) && $task['expiryDate']) {
+            $expiryDate = strtotime($task['expiryDate']);
+            if ($expiryDate && $expiryDate < time()) {
+                return false;
+            }
+        }
+        
         // Platform filtering: "none" means show to everyone, otherwise check membership
         if ($task['platform'] !== 'none' && !in_array($task['platform'], $userPlatforms)) {
             return false;

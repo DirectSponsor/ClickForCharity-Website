@@ -65,7 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'category' => $input['category'],
         'platform' => $input['platform'],
         'repeatable' => isset($input['repeatable']) ? (bool)$input['repeatable'] : false,
-        'enabled' => isset($input['enabled']) ? (bool)$input['enabled'] : true
+        'enabled' => isset($input['enabled']) ? (bool)$input['enabled'] : true,
+        'expiryDate' => isset($input['expiryDate']) && $input['expiryDate'] ? $input['expiryDate'] : null
     ];
     
     // Add to tasks array
