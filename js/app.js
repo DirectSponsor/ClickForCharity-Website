@@ -344,6 +344,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const requiredTime = adBeingViewed.ad.duration * 1000;
 
             if (accumulatedTime >= requiredTime) {
+                // Mark notification as played BEFORE completing to prevent sound on return
+                notificationPlayed = true;
                 completeAdView(adBeingViewed.ad, adBeingViewed.taskItemEl);
             }
         }
@@ -363,6 +365,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         visitLink.textContent = 'Viewed';
 
         stopTimerInterval();
+        adBeingViewed = null;
 
         try {
             await window.UnifiedBalance.addBalance(
