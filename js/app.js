@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let ads = [];
-    let notificationPlayedForAd = null; // Track which ad ID has had notification played
+    let timerWasComplete = false; // Track if timer was already complete on last check
 
     // --- API Data Fetching ---
 
@@ -189,22 +189,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         const elapsed = accumulatedTime + (adViewStartTime ? Date.now() - adViewStartTime : 0);
         const remainingMs = Math.max(0, ad.duration * 1000 - elapsed);
         const secondsLeft = Math.ceil(remainingMs / 1000);
+        const isComplete = remainingMs <= 0;
 
-        if (remainingMs <= 0) {
+        if (isComplete) {
             timerEl.textContent = '(Complete)';
             updateTaskStatus(taskItemEl, 'Reward ready!');
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
-            
-            // Stop the interval immediately to prevent further calls
             stopTimerInterval();
             
-            // Play notification sound once when timer completes (while user is viewing ad)
-            if (notificationPlayedForAd !== ad.id) {
-                notificationPlayedForAd = ad.id;
-                const notificationSound = new Audio('sounds/ding.mp3');
-                notificationSound.volume = 0.9;
-                notificationSound.play().catch(() => {});
+            // Play sound only on the transition from incomplete to complete
+            if (!timerWasComplete) {
+                timerWasComplete = true;
+                completionAudio.currentTime = 0;
+                completionAudio.play().catch(() => {});
                 
                 if (navigator.vibrate) {
                     navigator.vibrate([200, 80, 200]);
@@ -218,6 +216,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function startTimerInterval() {
+        if (!adBeingViewed) return; // Don't start if no active ad
         updateTimerDisplay();
         if (!timerIntervalId) {
             timerIntervalId = setInterval(updateTimerDisplay, TIMER_UPDATE_INTERVAL_MS);
@@ -298,8 +297,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 adBeingViewed = { ad, taskItemEl: taskItem };
                 accumulatedTime = 0;
-                adViewStartTime = null; // Will be set on blur
-                notificationPlayedForAd = null; // Reset for new ad
+                adViewStartTime = null;
+                timerWasComplete = false;
 
                 visitLink.textContent = 'Viewing...';
                 taskItem.classList.add('viewing');
