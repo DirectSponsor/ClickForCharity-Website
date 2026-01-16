@@ -108,12 +108,6 @@
                     </div>
                     <div class="field">
                         <label>
-                            <input type="checkbox" id="task-repeatable" name="repeatable" value="true">
-                            Repeatable (users can complete multiple times)
-                        </label>
-                    </div>
-                    <div class="field">
-                        <label>
                             <input type="checkbox" id="task-enabled" name="enabled" value="true" checked>
                             Enabled (task is active and visible to users)
                         </label>
@@ -173,7 +167,7 @@
                 const reward = Number(formData.get('reward'));
                 const category = formData.get('category');
                 const platform = formData.get('platform');
-                const repeatable = document.getElementById('task-repeatable').checked;
+                const repeatable = false; // All tasks are one-time by default
                 const enabled = document.getElementById('task-enabled').checked;
                 const expiryDate = formData.get('expiryDate') || null;
 
