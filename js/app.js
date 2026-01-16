@@ -55,7 +55,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let ads = [];
-    let notificationPlayed = false; // Track if notification has played for current ad
 
     // --- API Data Fetching ---
 
@@ -195,18 +194,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateTaskStatus(taskItemEl, 'Reward ready!');
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
-            
-            // Play notification sound once when timer completes (while user is viewing ad)
-            if (!notificationPlayed) {
-                notificationPlayed = true;
-                const notificationSound = new Audio('sounds/ding.mp3');
-                notificationSound.volume = 0.9;
-                notificationSound.play().catch(() => {});
-                
-                if (navigator.vibrate) {
-                    navigator.vibrate([200, 80, 200]);
-                }
-            }
         } else {
             timerEl.textContent = `(${secondsLeft}s left)`;
             updateTaskStatus(taskItemEl, `Timer running – ${secondsLeft}s remaining`);
@@ -239,7 +226,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         adBeingViewed = null;
         adViewStartTime = null;
         accumulatedTime = 0;
-        notificationPlayed = false; // Reset for next ad
         resetDocumentTitle();
 
         try {
@@ -297,7 +283,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 adBeingViewed = { ad, taskItemEl: taskItem };
                 accumulatedTime = 0;
                 adViewStartTime = null; // Will be set on blur
-                notificationPlayed = false; // Reset for this ad
 
                 visitLink.textContent = 'Viewing...';
                 taskItem.classList.add('viewing');
@@ -344,8 +329,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const requiredTime = adBeingViewed.ad.duration * 1000;
 
             if (accumulatedTime >= requiredTime) {
-                // Mark notification as played BEFORE completing to prevent sound on return
-                notificationPlayed = true;
                 completeAdView(adBeingViewed.ad, adBeingViewed.taskItemEl);
             }
         }
@@ -366,6 +349,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         stopTimerInterval();
         adBeingViewed = null;
+        
+        // Play notification sound once on completion
+        const notificationSound = new Audio('sounds/ding.mp3');
+        notificationSound.volume = 0.9;
+        notificationSound.play().catch(() => {});
+        
+        if (navigator.vibrate) {
+            navigator.vibrate([200, 80, 200]);
+        }
 
         try {
             await window.UnifiedBalance.addBalance(
