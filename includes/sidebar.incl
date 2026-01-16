@@ -9,6 +9,7 @@
                     <li #ACTIVE_PTC#><a href="ptc.html">Surf Ads</a></li>
                     <li #ACTIVE_SIMPLE_TASKS#><a href="simple-tasks.html">Simple Tasks</a></li>
                     <li #ACTIVE_SKIPPED_TASKS#><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li class="member-only" #ACTIVE_MY_PLATFORMS#><a href="my-platforms.html">My Platforms</a></li>
                     <li #ACTIVE_SURVEYS#><a href="surveys.html">Surveys</a></li>
                     <li #ACTIVE_OFFERS#><a href="offers.html">Offers</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
