@@ -12,7 +12,13 @@
     let userId = null;
 
     function init() {
-        userId = window.auth?.getUserId();
+        if (!window.auth || typeof window.auth.getUserId !== 'function') {
+            console.log('Auth system not ready, waiting...');
+            setTimeout(init, 500);
+            return;
+        }
+        
+        userId = window.auth.getUserId();
         
         if (!userId) {
             console.log('User not logged in, waiting for auth...');
