@@ -1,10 +1,10 @@
 [
   {
     "id": "task_001",
-    "title": "Follow @ClickForCharity on X",
+    "title": "Follow @ClickForAfrica on X",
     "shortDescription": "Follow our X account to stay updated",
     "instructions": "1. Click the Visit button to open X/Twitter\n2. Click the Follow button on our profile\n3. Return here and click Complete when done",
-    "url": "https://x.com/clickforcharity",
+    "url": "https://x.com/clickforafrica",
     "reward": 50,
     "duration": 30,
     "category": "follows",
@@ -46,7 +46,7 @@
     "title": "Like our latest post",
     "shortDescription": "Like our most recent X post",
     "instructions": "1. Visit the post\n2. Click the heart/like button\n3. Return and complete the task",
-    "url": "https://x.com/clickforcharity/status/123456789",
+    "url": "https://x.com/clickforafrica/status/123456789",
     "reward": 25,
     "duration": 20,
     "category": "engagements",
