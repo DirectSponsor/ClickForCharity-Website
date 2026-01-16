@@ -1,8 +1,8 @@
         <aside class="sidebar" id="site-navigation">
-            <div class="logo">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
                 <span>Click for Charity</span>
-            </div>
+            </a>
             <nav>
                 <ul>
                     <li #ACTIVE_HOME#><a href="index.html">Home</a></li>
