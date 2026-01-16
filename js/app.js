@@ -196,6 +196,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.title = COMPLETION_TITLE;
             titleMode = 'complete';
             
+            // Stop the interval immediately to prevent further calls
+            stopTimerInterval();
+            
             // Play notification sound once when timer completes (while user is viewing ad)
             if (notificationPlayedForAd !== ad.id) {
                 notificationPlayedForAd = ad.id;
