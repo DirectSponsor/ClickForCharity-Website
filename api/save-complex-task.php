@@ -64,7 +64,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'duration' => (int)$input['duration'],
         'category' => $input['category'],
         'platform' => $input['platform'],
-        'requiresLogin' => isset($input['requiresLogin']) ? (bool)$input['requiresLogin'] : true,
         'repeatable' => isset($input['repeatable']) ? (bool)$input['repeatable'] : false,
         'enabled' => isset($input['enabled']) ? (bool)$input['enabled'] : true
     ];

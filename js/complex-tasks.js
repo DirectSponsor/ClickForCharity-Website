@@ -111,7 +111,6 @@
                     <div class="task-compact-content">
                         <div class="task-title">${task.title}</div>
                         <div class="task-short-desc">${task.shortDescription}</div>
-                        ${task.requiresLogin ? '<span class="login-badge">Login required</span>' : ''}
                         <span class="platform-badge">${task.platform}</span>
                     </div>
                     <button class="btn-skip-compact" onclick="event.stopPropagation(); skipTask('${task.id}')">Skip</button>
@@ -421,10 +420,8 @@ async function loadGuestTasks() {
         const response = await fetch('/data/complex-tasks/tasks.json');
         const tasks = await response.json();
         
-        // Filter to only platform='none' and enabled tasks
-        const guestTasks = tasks.filter(task => 
-            task.platform === 'none' && task.enabled
-        );
+        // Show all enabled tasks to guests
+        const guestTasks = tasks.filter(task => task.enabled);
         
         const container = document.getElementById('guest-tasks');
         const emptyState = document.getElementById('guest-empty-state');
