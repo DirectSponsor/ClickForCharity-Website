@@ -68,5 +68,33 @@
     "requiresLogin": true,
     "repeatable": true,
     "enabled": true
+  },
+  {
+    "id": "task_006",
+    "title": "Visit our site from social media",
+    "shortDescription": "Help us build social media traffic",
+    "instructions": "1. Click Visit to open our social media post\n2. Click the link in the post to visit our website\n3. Browse at least 2 pages on the site\n4. Return here and click Complete",
+    "url": "https://x.com/clickforafrica/status/example",
+    "reward": 30,
+    "duration": 60,
+    "category": "engagements",
+    "platform": "none",
+    "requiresLogin": true,
+    "repeatable": true,
+    "enabled": true
+  },
+  {
+    "id": "task_007",
+    "title": "Search and visit our site",
+    "shortDescription": "Help improve our search rankings",
+    "instructions": "1. Click Visit to open Google search\n2. Search for 'click for charity'\n3. Find and click our website in results\n4. Stay on site for 30+ seconds, visit 2+ pages\n5. Return and complete",
+    "url": "https://www.google.com/search?q=click+for+charity",
+    "reward": 35,
+    "duration": 90,
+    "category": "engagements",
+    "platform": "none",
+    "requiresLogin": true,
+    "repeatable": true,
+    "enabled": true
   }
 ]

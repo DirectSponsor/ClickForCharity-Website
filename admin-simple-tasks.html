@@ -19,7 +19,7 @@
     <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
-    <title>Admin – Simple Tasks Management</title>
+    <title>Admin – Tasks Management</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -45,7 +45,7 @@
         </aside>
         <main class="main-content" data-menu-target>
             <section class="admin-form" aria-labelledby="admin-form-heading">
-                <h1 id="admin-form-heading">Simple Tasks Management</h1>
+                <h1 id="admin-form-heading">Tasks Management</h1>
                 <p class="section-nav">
                     <a href="#create-task">Create Task</a> | 
                     <a href="#manage-tasks">Manage Tasks</a> | 
@@ -53,8 +53,8 @@
                     <a href="simple-tasks.html" target="_blank">View Live Page</a>
                 </p>
                 
-                <h2 id="create-task">Create a Simple Task</h2>
-                <p class="description">Create simple tasks like social media follows, sign-ups, and other one-time actions. Tasks are one-off by default - users can only complete them once.</p>
+                <h2 id="create-task">Create a Task</h2>
+                <p class="description">Create tasks for users to complete. Choose the category and platform, set rewards and timers.</p>
                 <form id="task-form">
                     <div class="field">
                         <label for="task-title">Title</label>
@@ -84,13 +84,38 @@
                         <input type="number" id="task-reward" name="reward" min="1" max="1000" step="1" value="25" required>
                     </div>
                     <div class="field">
-                        <label for="task-type">Task Type</label>
-                        <select id="task-type" name="type" required>
-                            <option value="social_follow">Social Media Follow</option>
-                            <option value="signup">Platform Sign-up</option>
-                            <option value="multi_step">Multi-step Action</option>
-                            <option value="other">Other</option>
+                        <label for="task-category">Category</label>
+                        <select id="task-category" name="category" required>
+                            <option value="follows">Follows & Subscriptions</option>
+                            <option value="engagements">Engagements (Likes, Comments, etc.)</option>
                         </select>
+                    </div>
+                    <div class="field">
+                        <label for="task-platform">Platform</label>
+                        <select id="task-platform" name="platform" required>
+                            <option value="none">None (shows to everyone)</option>
+                            <option value="x">X (Twitter)</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="facebook">Facebook</option>
+                            <option value="instagram">Instagram</option>
+                            <option value="tiktok">TikTok</option>
+                            <option value="odysee">Odysee</option>
+                            <option value="publish0x">Publish0x</option>
+                            <option value="minds">Minds</option>
+                        </select>
+                        <small>Select "None" for tasks that show to all users regardless of platform membership</small>
+                    </div>
+                    <div class="field">
+                        <label>
+                            <input type="checkbox" id="task-repeatable" name="repeatable" value="true">
+                            Repeatable (users can complete multiple times)
+                        </label>
+                    </div>
+                    <div class="field">
+                        <label>
+                            <input type="checkbox" id="task-enabled" name="enabled" value="true" checked>
+                            Enabled (task is active and visible to users)
+                        </label>
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn primary">Save Task</button>
@@ -140,22 +165,37 @@
                 const url = formData.get('url').trim();
                 const duration = Number(formData.get('duration'));
                 const reward = Number(formData.get('reward'));
-                const type = formData.get('type');
+                const category = formData.get('category');
+                const platform = formData.get('platform');
+                const repeatable = document.getElementById('task-repeatable').checked;
+                const enabled = document.getElementById('task-enabled').checked;
 
-                if (!title || !shortDescription || !instructions || !url || !duration || !reward) {
+                if (!title || !shortDescription || !instructions || !url || !duration || !reward || !category || !platform) {
                     feedbackEl.textContent = 'Please fill all fields.';
                     feedbackEl.style.color = '#c0392b';
                     return;
                 }
 
-                const task = { title, shortDescription, instructions, url, reward, duration, type };
+                const task = { 
+                    title, 
+                    shortDescription, 
+                    instructions, 
+                    url, 
+                    reward, 
+                    duration, 
+                    category, 
+                    platform,
+                    repeatable,
+                    enabled,
+                    requiresLogin: true
+                };
 
                 submitButton.disabled = true;
                 feedbackEl.textContent = 'Saving...';
                 feedbackEl.style.color = '#777';
 
                 try {
-                    const response = await fetch('/api/save-simple-task.php', {
+                    const response = await fetch('/api/save-complex-task.php', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(task)
@@ -207,7 +247,7 @@
 
             loadTasks = async function() {
                 try {
-                    const response = await fetch('/api/get-simple-tasks.php');
+                    const response = await fetch('/data/complex-tasks/tasks.json');
                     const tasks = await response.json();
 
                     if (!tasks || tasks.length === 0) {
@@ -218,12 +258,14 @@
                     taskListEl.innerHTML = tasks.map(task => `
                         <div class="admin-task-item" data-task-id="${task.id}">
                             <div class="admin-task-info">
-                                <h3>${task.title}</h3>
+                                <h3>${task.title} ${task.enabled ? '' : '<span style="color:#c0392b;">(Disabled)</span>'}</h3>
                                 <p class="admin-task-meta">
                                     <strong>ID:</strong> ${task.id} | 
-                                    <strong>Type:</strong> ${task.type.replace('_', ' ')} | 
+                                    <strong>Category:</strong> ${task.category} | 
+                                    <strong>Platform:</strong> ${task.platform} | 
                                     <strong>Timer:</strong> ${task.duration}s | 
-                                    <strong>Reward:</strong> ${task.reward}
+                                    <strong>Reward:</strong> ${task.reward} | 
+                                    <strong>Repeatable:</strong> ${task.repeatable ? 'Yes' : 'No'}
                                 </p>
                                 <p class="admin-task-short-desc">${task.shortDescription}</p>
                                 <p class="admin-task-instructions">${task.instructions}</p>
@@ -245,7 +287,7 @@
                             if (!confirm(`Delete "${taskTitle}"?`)) return;
 
                             try {
-                                const response = await fetch('/api/delete-simple-task.php', {
+                                const response = await fetch('/api/delete-complex-task.php', {
                                     method: 'POST',
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify({ id: taskId })

@@ -87,25 +87,15 @@
 
             <div class="member-only" id="complex-tasks-content">
                 <div class="task-tabs">
-                    <button class="tab-button active" data-tab="follows">
-                        Follows & Subscriptions <span class="tab-count" id="follows-count">(0)</span>
-                    </button>
-                    <button class="tab-button" data-tab="engagements">
+                    <button class="tab-button active" data-tab="engagements">
                         Engagements <span class="tab-count" id="engagements-count">(0)</span>
                     </button>
+                    <button class="tab-button" data-tab="follows">
+                        Follows & Subscriptions <span class="tab-count" id="follows-count">(0)</span>
+                    </button>
                 </div>
 
-                <div class="tab-content active" id="follows-tab">
-                    <div class="tab-description">
-                        <p>Follow accounts and subscribe to channels. These are one-time actions.</p>
-                    </div>
-                    <div id="follows-tasks" class="complex-task-list"></div>
-                    <div class="empty-state" style="display: none;">
-                        <p>No follow tasks available. <a href="my-platforms.html">Select your platforms</a> to see tasks!</p>
-                    </div>
-                </div>
-
-                <div class="tab-content" id="engagements-tab">
+                <div class="tab-content active" id="engagements-tab">
                     <div class="tab-description">
                         <p>Like posts, comment on videos, and share content. New tasks appear regularly.</p>
                     </div>
@@ -115,16 +105,36 @@
                     </div>
                 </div>
 
+                <div class="tab-content" id="follows-tab">
+                    <div class="tab-description">
+                        <p>Follow accounts and subscribe to channels. These are one-time actions.</p>
+                    </div>
+                    <div id="follows-tasks" class="complex-task-list"></div>
+                    <div class="empty-state" style="display: none;">
+                        <p>No follow tasks available. <a href="my-platforms.html">Select your platforms</a> to see tasks!</p>
+                    </div>
+                </div>
+
                 <div id="no-platforms-notice" class="platforms-notice" style="display: none; background-color: #fff3cd; border-color: #ffc107;">
                     <p>⚠️ <strong>No platforms selected!</strong> <a href="my-platforms.html">Select your platforms</a> to see available tasks.</p>
                 </div>
             </div>
 
             <div class="guest-only">
-                <div class="login-prompt">
-                    <h2>Login Required</h2>
-                    <p>You need to be logged in to access tasks.</p>
-                    <button class="btn-primary" onclick="window.auth.login()">Login Now</button>
+                <div class="platforms-notice" style="background-color: #e3f2fd; border-color: #2196f3;">
+                    <p>👋 <strong>Welcome!</strong> Try these tasks to get started. <a href="#" onclick="window.auth.login(); return false;">Sign up</a> to save your earnings and unlock more tasks!</p>
+                </div>
+                
+                <div id="guest-tasks-content">
+                    <h2 style="margin-top: 24px;">Available Tasks</h2>
+                    <div id="guest-tasks" class="complex-task-list"></div>
+                    <div id="guest-empty-state" class="empty-state" style="display: none;">
+                        <p>No tasks available right now. Check back later!</p>
+                    </div>
+                </div>
+                
+                <div class="platforms-notice" style="margin-top: 32px; background-color: #fff3cd; border-color: #ffc107;">
+                    <p>💡 <strong>Want more tasks?</strong> <a href="#" onclick="window.auth.login(); return false;">Sign up free</a> to unlock platform-specific tasks and start earning!</p>
                 </div>
             </div>
         </main>

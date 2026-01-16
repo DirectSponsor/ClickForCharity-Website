@@ -22,7 +22,8 @@
         const session = window.auth.getSession();
         
         if (!session || !session.combined_user_id) {
-            console.log('User not logged in');
+            console.log('User not logged in - loading guest tasks');
+            loadGuestTasks();
             return;
         }
         
@@ -270,30 +271,181 @@
         }
     };
 
-    function attachTaskEventListeners() {
-        // Event listeners are attached via onclick in HTML for simplicity
-        // This function is here for future enhancements
-    }
-
-    function showNotification(message, type) {
-        const existing = document.querySelector('.task-notification');
-        if (existing) existing.remove();
-        
-        const notification = document.createElement('div');
-        notification.className = `task-notification ${type}`;
-        notification.textContent = message;
-        
-        const content = document.getElementById('complex-tasks-content');
-        content.insertBefore(notification, content.firstChild);
-        
-        setTimeout(() => {
-            notification.remove();
-        }, 5000);
-    }
-
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
+window.toggleTask = function(taskId) {
+    if (expandedTaskId === taskId) {
+        expandedTaskId = null;
     } else {
-        init();
+        expandedTaskId = taskId;
     }
+    renderTasks();
+};
+
+window.visitTask = function(taskId, url, duration) {
+    window.open(url, '_blank');
+    
+    taskTimers[taskId] = {
+        running: true,
+        timeLeft: duration,
+        completed: false
+    };
+    
+    renderTasks();
+    
+    const interval = setInterval(() => {
+        if (!taskTimers[taskId] || !taskTimers[taskId].running) {
+            clearInterval(interval);
+            return;
+        }
+        
+        taskTimers[taskId].timeLeft--;
+        
+        const timerElement = document.querySelector(`#timer-${taskId} .timer-value`);
+        if (timerElement) {
+            timerElement.textContent = taskTimers[taskId].timeLeft;
+        }
+        
+        if (taskTimers[taskId].timeLeft <= 0) {
+            clearInterval(interval);
+            taskTimers[taskId].running = false;
+            taskTimers[taskId].completed = true;
+            renderTasks();
+        }
+    }, 1000);
+};
+
+window.completeTask = async function(taskId) {
+    try {
+        const completeBtn = document.getElementById(`complete-${taskId}`);
+        if (completeBtn) {
+            completeBtn.disabled = true;
+            completeBtn.textContent = 'Completing...';
+        }
+
+        const response = await fetch('api/update-user-tasks.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                task_id: taskId,
+                action: 'complete'
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            delete taskTimers[taskId];
+            expandedTaskId = null;
+            
+            showNotification(`✓ ${data.message}`, 'success');
+            
+            if (window.unifiedBalance) {
+                window.unifiedBalance.syncBalance();
+            }
+            
+            await loadTasks();
+        } else {
+            showNotification(`✗ ${data.error || 'Failed to complete task'}`, 'error');
+            if (completeBtn) {
+                completeBtn.disabled = false;
+                completeBtn.textContent = 'Complete Task';
+            }
+        }
+    } catch (error) {
+        console.error('Error completing task:', error);
+        showNotification('✗ Network error. Please try again.', 'error');
+    }
+};
+
+window.skipTask = async function(taskId) {
+    if (!confirm('Are you sure you want to skip this task? You can unskip it later from the Skipped Tasks page.')) {
+        return;
+    }
+
+    try {
+        const response = await fetch('api/update-user-tasks.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user_id: userId,
+                task_id: taskId,
+                action: 'skip'
+            })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            delete taskTimers[taskId];
+            expandedTaskId = null;
+            
+            showNotification('Task skipped', 'success');
+            
+            await loadTasks();
+        } else {
+            showNotification(`✗ ${data.error || 'Failed to skip task'}`, 'error');
+        }
+    } catch (error) {
+        console.error('Error skipping task:', error);
+        showNotification('✗ Network error. Please try again.', 'error');
+    }
+};
+
+function attachTaskEventListeners() {
+    // Event listeners are attached via onclick in HTML for simplicity
+    // This function is here for future enhancements
+}
+
+function showNotification(message, type = 'success') {
+    const existing = document.querySelector('.task-notification');
+    if (existing) existing.remove();
+    
+    const notification = document.createElement('div');
+    notification.className = `task-notification ${type}`;
+    notification.textContent = message;
+    
+    const content = document.getElementById('complex-tasks-content');
+    content.insertBefore(notification, content.firstChild);
+    
+    setTimeout(() => {
+        notification.remove();
+    }, 5000);
+}
+
+async function loadGuestTasks() {
+    try {
+        const response = await fetch('/data/complex-tasks/tasks.json');
+        const tasks = await response.json();
+        
+        // Filter to only platform='none' and enabled tasks
+        const guestTasks = tasks.filter(task => 
+            task.platform === 'none' && task.enabled
+        );
+        
+        const container = document.getElementById('guest-tasks');
+        const emptyState = document.getElementById('guest-empty-state');
+        
+        if (guestTasks.length === 0) {
+            container.innerHTML = '';
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+            container.innerHTML = guestTasks.map(task => createTaskCard(task)).join('');
+            attachTaskEventListeners();
+        }
+    } catch (error) {
+        console.error('Error loading guest tasks:', error);
+        document.getElementById('guest-empty-state').style.display = 'block';
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
 })();
