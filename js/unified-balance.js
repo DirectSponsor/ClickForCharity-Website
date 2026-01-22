@@ -128,15 +128,21 @@ class UnifiedBalanceSystem {
         
         console.log(`🔄 Starting sync with ${this.actionQueue.length} queued actions (${totalQueuedAmount} coins)`);
         
-        // Show progress notification with countdown
-        for (let i = 10; i >= 0; i--) {
-            this.showSyncProgress(totalQueuedAmount, i);
+        // Add pending indicator to balance display
+        this.updateBalanceDisplaysSync();
+        
+        // Wait 30 seconds for Syncthing (more reliable than 10s)
+        const startTime = Date.now();
+        const syncDuration = 30000; // 30 seconds
+        
+        while (Date.now() - startTime < syncDuration) {
             await new Promise(resolve => setTimeout(resolve, 1000));
+            // Update tooltip countdown
+            this.updateBalanceDisplaysSync();
         }
         
         // Reload balance after sync
         await this.getBalance();
-        this.updateBalanceDisplaysSync();
         
         // Process all queued actions
         console.log(`✅ Sync complete - processing ${this.actionQueue.length} queued actions`);
@@ -145,15 +151,33 @@ class UnifiedBalanceSystem {
             console.log(`📝 Processed queued action: ${action.amount} from ${action.source}`);
         }
         this.saveNetChange();
-        this.updateBalanceDisplaysSync();
         
-        // Clear queue
+        // Clear queue and update display
         this.actionQueue = [];
         this.isSyncing = false;
+        this.updateBalanceDisplaysSync();
         
-        // Hide progress and show success
-        this.hideSyncProgress();
-        this.showSyncMessage(`✅ Synced! ${totalQueuedAmount} coins added`, 3000);
+        // Brief highlight to show balance updated
+        this.highlightBalanceUpdate();
+    }
+    
+    getTotalQueuedAmount() {
+        return this.actionQueue.reduce((sum, action) => sum + action.amount, 0);
+    }
+    
+    getSecondsRemaining() {
+        return 0;
+    }
+    
+    highlightBalanceUpdate() {
+        const balanceElements = document.querySelectorAll('.balance-display, #current-balance, .user-balance');
+        balanceElements.forEach(el => {
+            el.style.transition = 'background-color 0.5s';
+            el.style.backgroundColor = '#4CAF50';
+            setTimeout(() => {
+                el.style.backgroundColor = '';
+            }, 500);
+        });
     }
     
     // ========== FLUSH TO LOCAL FILE ==========
@@ -641,15 +665,87 @@ class UnifiedBalanceSystem {
     updateBalanceDisplaysSync() {
         const balance = this.fileBalance + this.netChange;
         const terminology = this.getTerminology();
+        const queuedAmount = this.getTotalQueuedAmount();
         
         const balanceElements = document.querySelectorAll('.balance, #user-balance, #balance-display');
         balanceElements.forEach(element => {
             const formattedBalance = Math.floor(balance);
-            element.textContent = formattedBalance;
-            element.title = `${formattedBalance} ${terminology.fullName}`;
+            
+            // If there are queued actions, show +? indicator
+            if (queuedAmount > 0) {
+                element.innerHTML = `${formattedBalance} <span class="pending-indicator" style="
+                    color: #4CAF50;
+                    font-weight: bold;
+                    cursor: help;
+                    animation: pulse 2s ease-in-out infinite;
+                ">+?</span>`;
+                
+                // Add pulse animation if not already added
+                if (!document.getElementById('pulse-animation')) {
+                    const style = document.createElement('style');
+                    style.id = 'pulse-animation';
+                    style.textContent = `
+                        @keyframes pulse {
+                            0%, 100% { opacity: 1; transform: scale(1); }
+                            50% { opacity: 0.7; transform: scale(1.1); }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                // Add tooltip on hover/tap
+                const pendingIndicator = element.querySelector('.pending-indicator');
+                if (pendingIndicator) {
+                    pendingIndicator.onclick = () => this.showPendingTooltip(element, queuedAmount);
+                    pendingIndicator.onmouseenter = () => this.showPendingTooltip(element, queuedAmount);
+                    pendingIndicator.onmouseleave = () => this.hidePendingTooltip();
+                }
+                
+                element.title = `${formattedBalance} ${terminology.fullName} (${queuedAmount} pending)`;
+            } else {
+                element.textContent = formattedBalance;
+                element.title = `${formattedBalance} ${terminology.fullName}`;
+            }
         });
         
         this.updateCurrencyDisplay();
+    }
+    
+    showPendingTooltip(anchorElement, queuedAmount) {
+        this.hidePendingTooltip();
+        
+        const tooltip = document.createElement('div');
+        tooltip.id = 'pending-tooltip';
+        tooltip.style.cssText = `
+            position: absolute;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10002;
+            font-size: 13px;
+            min-width: 200px;
+            pointer-events: none;
+        `;
+        
+        tooltip.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 4px;">🔄 Syncing balance...</div>
+            <div style="font-size: 12px; opacity: 0.9;">${queuedAmount} coins pending</div>
+            <div style="font-size: 11px; opacity: 0.8; margin-top: 4px;">Will be added shortly</div>
+        `;
+        
+        document.body.appendChild(tooltip);
+        
+        // Position tooltip near the anchor element
+        const rect = anchorElement.getBoundingClientRect();
+        tooltip.style.left = `${rect.left}px`;
+        tooltip.style.top = `${rect.bottom + 8}px`;
+    }
+    
+    hidePendingTooltip() {
+        const tooltip = document.getElementById('pending-tooltip');
+        if (tooltip) tooltip.remove();
     }
     
     getTerminology() {
