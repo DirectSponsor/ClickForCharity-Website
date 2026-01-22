@@ -15,8 +15,6 @@ class UnifiedBalanceSystem {
         this.consecutiveFailures = 0;
         this.isFlushing = false; // Guard flag to prevent double flush
         this.isSyncing = false; // Guard flag for manual sync
-        this.actionQueue = []; // Queue for actions during sync
-        this.syncCheckDone = false; // Track if we've checked sync on first action
         
         console.log(`💰 ClickForCharity Balance System initialized for ${this.isLoggedIn ? 'member' : 'guest'} user`);
         
@@ -61,27 +59,7 @@ class UnifiedBalanceSystem {
         this.saveNetChange();
     }
     
-    async addToNetChange(amount, source, description) {
-        // On first action, check if we need to sync
-        if (!this.syncCheckDone && this.isLoggedIn) {
-            this.syncCheckDone = true;
-            
-            const needsSync = await this.checkIfNeedsSync();
-            if (needsSync) {
-                // Start sync in background (non-blocking)
-                this.startBackgroundSync();
-                // This action will be blocked, but user can browse
-                return;
-            }
-        }
-        
-        // Block if sync is in progress
-        if (this.isSyncing) {
-            console.log('⏳ Action blocked - sync in progress');
-            return;
-        }
-        
-        // Normal processing
+    addToNetChange(amount, source, description) {
         this.netChange += amount;
         this.saveNetChange();
         
@@ -89,158 +67,6 @@ class UnifiedBalanceSystem {
         this.updateBalanceDisplaysSync();
         
         console.log(`📝 Net change: ${this.netChange > 0 ? '+' : ''}${amount} from ${source || 'unknown'} (total: ${this.netChange})`);
-    }
-    
-    async checkIfNeedsSync() {
-        try {
-            const combinedUserId = this.getCombinedUserIdFromToken();
-            const response = await fetch(`/api/get_balance.php?user_id=${combinedUserId}`, {
-                method: 'GET',
-                cache: 'no-cache'
-            });
-            
-            if (response.ok) {
-                const data = await response.json();
-                if (data.success && data.last_updated) {
-                    const fileAge = Date.now() - (data.last_updated * 1000);
-                    
-                    // Check which site last updated the balance
-                    const lastSite = localStorage.getItem(`last_site_${combinedUserId}`);
-                    
-                    // If file is fresh AND last update was from a different site, sync needed
-                    if (fileAge < 15000 && lastSite && lastSite !== this.siteId) {
-                        console.log(`🔄 Fresh balance file from ${lastSite} (${Math.round(fileAge/1000)}s old) - sync needed`);
-                        return true;
-                    }
-                    
-                    // Mark this site as the last updater
-                    localStorage.setItem(`last_site_${combinedUserId}`, this.siteId);
-                }
-            }
-        } catch (error) {
-            console.warn('⚠️ Sync check error:', error);
-        }
-        return false;
-    }
-    
-    async startBackgroundSync() {
-        if (this.isSyncing) return;
-        
-        this.isSyncing = true;
-        console.log('🔄 Starting background sync - buttons disabled');
-        
-        // Show notification with countdown
-        const syncDuration = 13; // 13 seconds to be safe
-        for (let i = syncDuration; i >= 0; i--) {
-            this.showSyncNotification(i);
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-        
-        // Reload balance after sync
-        await this.getBalance();
-        this.updateBalanceDisplaysSync();
-        
-        // Clear sync state
-        this.isSyncing = false;
-        this.hideSyncNotification();
-        
-        // Show success message
-        this.showSyncMessage('✅ Balance synced! You can now play', 3000);
-        console.log('✅ Background sync complete - buttons enabled');
-    }
-    
-    showSyncNotification(secondsRemaining) {
-        let notification = document.getElementById('sync-notification');
-        
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'sync-notification';
-            notification.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 16px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10001;
-                font-size: 14px;
-                min-width: 280px;
-            `;
-            document.body.appendChild(notification);
-        }
-        
-        notification.innerHTML = `
-            <div style="font-weight: bold; margin-bottom: 8px;">⏳ Syncing balance from other site...</div>
-            <div style="font-size: 13px; opacity: 0.9;">Please wait ${secondsRemaining} seconds</div>
-            <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">You can browse but can't play yet</div>
-        `;
-    }
-    
-    hideSyncNotification() {
-        const notification = document.getElementById('sync-notification');
-        if (notification) notification.remove();
-    }
-    
-    async syncAndProcessQueue() {
-        if (this.isSyncing) return;
-        
-        this.isSyncing = true;
-        const totalQueuedAmount = this.actionQueue.reduce((sum, action) => sum + action.amount, 0);
-        
-        console.log(`🔄 Starting sync with ${this.actionQueue.length} queued actions (${totalQueuedAmount} coins)`);
-        
-        // Add pending indicator to balance display
-        this.updateBalanceDisplaysSync();
-        
-        // Wait 30 seconds for Syncthing (more reliable than 10s)
-        const startTime = Date.now();
-        const syncDuration = 30000; // 30 seconds
-        
-        while (Date.now() - startTime < syncDuration) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            // Update tooltip countdown
-            this.updateBalanceDisplaysSync();
-        }
-        
-        // Reload balance after sync
-        await this.getBalance();
-        
-        // Process all queued actions
-        console.log(`✅ Sync complete - processing ${this.actionQueue.length} queued actions`);
-        for (const action of this.actionQueue) {
-            this.netChange += action.amount;
-            console.log(`📝 Processed queued action: ${action.amount} from ${action.source}`);
-        }
-        this.saveNetChange();
-        
-        // Clear queue and update display
-        this.actionQueue = [];
-        this.isSyncing = false;
-        this.updateBalanceDisplaysSync();
-        
-        // Brief highlight to show balance updated
-        this.highlightBalanceUpdate();
-    }
-    
-    getTotalQueuedAmount() {
-        return this.actionQueue.reduce((sum, action) => sum + action.amount, 0);
-    }
-    
-    getSecondsRemaining() {
-        return 0;
-    }
-    
-    highlightBalanceUpdate() {
-        const balanceElements = document.querySelectorAll('.balance-display, #current-balance, .user-balance');
-        balanceElements.forEach(el => {
-            el.style.transition = 'background-color 0.5s';
-            el.style.backgroundColor = '#4CAF50';
-            setTimeout(() => {
-                el.style.backgroundColor = '';
-            }, 500);
-        });
     }
     
     // ========== FLUSH TO LOCAL FILE ==========
@@ -389,68 +215,6 @@ class UnifiedBalanceSystem {
         div.style.cssText = 'position:fixed;top:70px;right:20px;background:#4CAF50;color:white;padding:12px 20px;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,0.3);z-index:10001;font-size:14px;';
         document.body.appendChild(div);
         if (duration) setTimeout(() => { if (div.parentNode) div.remove(); }, duration);
-    }
-    
-    showSyncProgress(queuedAmount, secondsRemaining) {
-        let notification = document.getElementById('sync-progress-notification');
-        
-        if (!notification) {
-            notification = document.createElement('div');
-            notification.id = 'sync-progress-notification';
-            notification.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                padding: 16px 20px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-                z-index: 10001;
-                font-size: 14px;
-                min-width: 280px;
-            `;
-            document.body.appendChild(notification);
-        }
-        
-        const totalSeconds = 10;
-        const progress = ((totalSeconds - secondsRemaining) / totalSeconds) * 100;
-        
-        notification.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-                <div class="spinner" style="
-                    border: 3px solid rgba(255,255,255,0.3);
-                    border-top: 3px solid white;
-                    border-radius: 50%;
-                    width: 20px;
-                    height: 20px;
-                    animation: spin 1s linear infinite;
-                "></div>
-                <div style="flex: 1;">
-                    <div style="font-weight: bold;">Syncing your balance...</div>
-                    <div style="font-size: 12px; opacity: 0.9;">${queuedAmount} coins queued</div>
-                </div>
-            </div>
-            <div style="background: rgba(255,255,255,0.2); height: 6px; border-radius: 3px; overflow: hidden;">
-                <div style="background: white; height: 100%; width: ${progress}%; transition: width 0.3s;"></div>
-            </div>
-            <div style="text-align: center; margin-top: 6px; font-size: 12px; opacity: 0.9;">
-                ${secondsRemaining}s remaining
-            </div>
-        `;
-        
-        // Add spinner animation if not already added
-        if (!document.getElementById('spinner-style')) {
-            const style = document.createElement('style');
-            style.id = 'spinner-style';
-            style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
-            document.head.appendChild(style);
-        }
-    }
-    
-    hideSyncProgress() {
-        const notification = document.getElementById('sync-progress-notification');
-        if (notification) notification.remove();
     }
     
     setupCrossSiteSync() {
@@ -728,87 +492,15 @@ class UnifiedBalanceSystem {
     updateBalanceDisplaysSync() {
         const balance = this.fileBalance + this.netChange;
         const terminology = this.getTerminology();
-        const queuedAmount = this.getTotalQueuedAmount();
         
         const balanceElements = document.querySelectorAll('.balance, #user-balance, #balance-display');
         balanceElements.forEach(element => {
             const formattedBalance = Math.floor(balance);
-            
-            // If there are queued actions, show +? indicator
-            if (queuedAmount > 0) {
-                element.innerHTML = `${formattedBalance} <span class="pending-indicator" style="
-                    color: #4CAF50;
-                    font-weight: bold;
-                    cursor: help;
-                    animation: pulse 2s ease-in-out infinite;
-                ">+?</span>`;
-                
-                // Add pulse animation if not already added
-                if (!document.getElementById('pulse-animation')) {
-                    const style = document.createElement('style');
-                    style.id = 'pulse-animation';
-                    style.textContent = `
-                        @keyframes pulse {
-                            0%, 100% { opacity: 1; transform: scale(1); }
-                            50% { opacity: 0.7; transform: scale(1.1); }
-                        }
-                    `;
-                    document.head.appendChild(style);
-                }
-                
-                // Add tooltip on hover/tap
-                const pendingIndicator = element.querySelector('.pending-indicator');
-                if (pendingIndicator) {
-                    pendingIndicator.onclick = () => this.showPendingTooltip(element, queuedAmount);
-                    pendingIndicator.onmouseenter = () => this.showPendingTooltip(element, queuedAmount);
-                    pendingIndicator.onmouseleave = () => this.hidePendingTooltip();
-                }
-                
-                element.title = `${formattedBalance} ${terminology.fullName} (${queuedAmount} pending)`;
-            } else {
-                element.textContent = formattedBalance;
-                element.title = `${formattedBalance} ${terminology.fullName}`;
-            }
+            element.textContent = formattedBalance;
+            element.title = `${formattedBalance} ${terminology.fullName}`;
         });
         
         this.updateCurrencyDisplay();
-    }
-    
-    showPendingTooltip(anchorElement, queuedAmount) {
-        this.hidePendingTooltip();
-        
-        const tooltip = document.createElement('div');
-        tooltip.id = 'pending-tooltip';
-        tooltip.style.cssText = `
-            position: absolute;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10002;
-            font-size: 13px;
-            min-width: 200px;
-            pointer-events: none;
-        `;
-        
-        tooltip.innerHTML = `
-            <div style="font-weight: bold; margin-bottom: 4px;">🔄 Syncing balance...</div>
-            <div style="font-size: 12px; opacity: 0.9;">${queuedAmount} coins pending</div>
-            <div style="font-size: 11px; opacity: 0.8; margin-top: 4px;">Will be added shortly</div>
-        `;
-        
-        document.body.appendChild(tooltip);
-        
-        // Position tooltip near the anchor element
-        const rect = anchorElement.getBoundingClientRect();
-        tooltip.style.left = `${rect.left}px`;
-        tooltip.style.top = `${rect.bottom + 8}px`;
-    }
-    
-    hidePendingTooltip() {
-        const tooltip = document.getElementById('pending-tooltip');
-        if (tooltip) tooltip.remove();
     }
     
     getTerminology() {
