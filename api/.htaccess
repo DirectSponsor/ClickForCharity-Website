@@ -1,0 +1,6 @@
+# Enable CORS for cross-site balance sync detection
+<FilesMatch "\.(txt|php)$">
+    Header set Access-Control-Allow-Origin "*"
+    Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header set Access-Control-Allow-Headers "Content-Type"
+</FilesMatch>
