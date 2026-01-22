@@ -146,3 +146,14 @@ grep CRON /var/log/syslog
 sudo mkdir -p /var/log
 sudo chmod 755 /var/log
 ```
+
+## Conflict Resolver (Auth Server Only)
+
+This script runs on the central Auth Server () to merge and resolve Syncthing balance conflicts.
+
+**Schedule (Every 10 minutes):**
+```bash
+*/10 * * * * php /var/www/auth.directsponsor.org/public_html/api/resolve-conflicts.php >> /var/directsponsor-data/logs/conflict-resolver.log 2>&1
+```
+
+See [CONFLICT-RESOLVER.md](CONFLICT-RESOLVER.md) for full details.

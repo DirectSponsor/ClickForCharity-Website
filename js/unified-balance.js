@@ -114,6 +114,9 @@ class UnifiedBalanceSystem {
                 
                 console.log('✅ Flush successful, new balance:', result.balance);
                 
+                // Mark this user as having recent changes (for cross-site detection)
+                this.markRecentChange(combinedUserId);
+                
                 this.consecutiveFailures = 0;
                 this.hideHubWarning();
             } else {
@@ -218,8 +221,9 @@ class UnifiedBalanceSystem {
     }
     
     setupCrossSiteSync() {
-        // Simple: just refresh balance on focus
+        // Check for recent changes on other sites when user focuses this tab
         window.addEventListener('focus', async () => {
+            await this.checkForCrossSiteChanges();
             await this.getBalance();
             this.updateBalanceDisplaysSync();
         });
@@ -230,6 +234,125 @@ class UnifiedBalanceSystem {
                 this.updateBalanceDisplaysSync();
             }
         });
+    }
+    
+    async markRecentChange(userId) {
+        try {
+            await fetch(`/api/mark_recent_change.php?user_id=${userId}`, {
+                method: 'GET',
+                cache: 'no-cache'
+            });
+        } catch (error) {
+            console.warn('⚠️ Could not mark recent change:', error);
+        }
+    }
+    
+    async checkForCrossSiteChanges() {
+        if (!this.isLoggedIn) return;
+        
+        const userId = this.getUserIdFromToken();
+        const sites = [
+            'https://roflfaucet.com/api/recent_changes.txt',
+            'https://clickforcharity.net/api/recent_changes.txt',
+            'https://es3-auth.directsponsor.net/api/recent_changes.txt'
+        ];
+        
+        try {
+            for (const siteUrl of sites) {
+                // Skip checking our own site
+                if (siteUrl.includes(window.location.hostname)) continue;
+                
+                const response = await fetch(siteUrl, { cache: 'no-cache' });
+                if (!response.ok) continue;
+                
+                const text = await response.text();
+                
+                // Check if our user ID is in the list
+                const lines = text.split('\n');
+                for (const line of lines) {
+                    if (line.includes(':' + userId)) {
+                        const [timestamp] = line.split(':');
+                        const age = Math.floor((Date.now() / 1000) - parseInt(timestamp));
+                        
+                        // Show sync banner
+                        this.showCrossSiteSyncBanner(siteUrl, age);
+                        return; // Only show one banner
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Could not check for cross-site changes:', error);
+        }
+    }
+    
+    showCrossSiteSyncBanner(siteUrl, ageSeconds) {
+        const siteName = siteUrl.includes('roflfaucet') ? 'ROFLFaucet' : 
+                        siteUrl.includes('clickforcharity') ? 'ClickForCharity' : 'another site';
+        
+        const banner = document.createElement('div');
+        banner.id = 'cross-site-sync-banner';
+        banner.style.cssText = `
+            position: fixed;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            z-index: 10001;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        `;
+        
+        banner.innerHTML = `
+            <div>⚠️ Balance updated on ${siteName} ${ageSeconds}s ago</div>
+            <button onclick="window.unifiedBalance.syncNow()" style="
+                background: white;
+                color: #667eea;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                font-weight: bold;
+                cursor: pointer;
+            ">Sync Now</button>
+            <button onclick="this.parentElement.remove()" style="
+                background: rgba(255,255,255,0.2);
+                color: white;
+                border: none;
+                padding: 6px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+            ">Dismiss</button>
+        `;
+        
+        // Remove existing banner if present
+        const existing = document.getElementById('cross-site-sync-banner');
+        if (existing) existing.remove();
+        
+        document.body.appendChild(banner);
+    }
+    
+    async syncNow() {
+        const banner = document.getElementById('cross-site-sync-banner');
+        if (banner) {
+            banner.innerHTML = '<div>⏳ Syncing... waiting 10 seconds for file propagation</div>';
+        }
+        
+        // Wait 10 seconds for Syncthing
+        await new Promise(resolve => setTimeout(resolve, 10000));
+        
+        // Reload balance
+        await this.getBalance();
+        this.updateBalanceDisplaysSync();
+        
+        if (banner) {
+            banner.innerHTML = '<div>✅ Balance synced!</div>';
+            setTimeout(() => banner.remove(), 2000);
+        }
     }
     
     
