@@ -68,20 +68,16 @@ class UnifiedBalanceSystem {
             
             const needsSync = await this.checkIfNeedsSync();
             if (needsSync) {
-                // Queue this action
-                this.actionQueue.push({amount, source, description});
-                console.log(`📋 Action queued: ${amount} coins (sync needed)`);
-                
-                // Start sync and process queue
-                await this.syncAndProcessQueue();
+                // Start sync in background (non-blocking)
+                this.startBackgroundSync();
+                // This action will be blocked, but user can browse
                 return;
             }
         }
         
-        // If already syncing, queue the action
+        // Block if sync is in progress
         if (this.isSyncing) {
-            this.actionQueue.push({amount, source, description});
-            console.log(`📋 Action queued: ${amount} coins (sync in progress)`);
+            console.log('⏳ Action blocked - sync in progress');
             return;
         }
         
@@ -125,6 +121,66 @@ class UnifiedBalanceSystem {
             console.warn('⚠️ Sync check error:', error);
         }
         return false;
+    }
+    
+    async startBackgroundSync() {
+        if (this.isSyncing) return;
+        
+        this.isSyncing = true;
+        console.log('🔄 Starting background sync - buttons disabled');
+        
+        // Show notification with countdown
+        const syncDuration = 13; // 13 seconds to be safe
+        for (let i = syncDuration; i >= 0; i--) {
+            this.showSyncNotification(i);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        
+        // Reload balance after sync
+        await this.getBalance();
+        this.updateBalanceDisplaysSync();
+        
+        // Clear sync state
+        this.isSyncing = false;
+        this.hideSyncNotification();
+        
+        // Show success message
+        this.showSyncMessage('✅ Balance synced! You can now play', 3000);
+        console.log('✅ Background sync complete - buttons enabled');
+    }
+    
+    showSyncNotification(secondsRemaining) {
+        let notification = document.getElementById('sync-notification');
+        
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'sync-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 16px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10001;
+                font-size: 14px;
+                min-width: 280px;
+            `;
+            document.body.appendChild(notification);
+        }
+        
+        notification.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 8px;">⏳ Syncing balance from other site...</div>
+            <div style="font-size: 13px; opacity: 0.9;">Please wait ${secondsRemaining} seconds</div>
+            <div style="font-size: 12px; opacity: 0.8; margin-top: 4px;">You can browse but can't play yet</div>
+        `;
+    }
+    
+    hideSyncNotification() {
+        const notification = document.getElementById('sync-notification');
+        if (notification) notification.remove();
     }
     
     async syncAndProcessQueue() {
