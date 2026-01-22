@@ -107,11 +107,18 @@ class UnifiedBalanceSystem {
                 const data = await response.json();
                 if (data.success && data.last_updated) {
                     const fileAge = Date.now() - (data.last_updated * 1000);
-                    // If file modified in last 15 seconds, likely just came from another site
-                    if (fileAge < 15000) {
-                        console.log(`🔄 Fresh balance file detected (${Math.round(fileAge/1000)}s old) - sync needed`);
+                    
+                    // Check which site last updated the balance
+                    const lastSite = localStorage.getItem(`last_site_${combinedUserId}`);
+                    
+                    // If file is fresh AND last update was from a different site, sync needed
+                    if (fileAge < 15000 && lastSite && lastSite !== this.siteId) {
+                        console.log(`🔄 Fresh balance file from ${lastSite} (${Math.round(fileAge/1000)}s old) - sync needed`);
                         return true;
                     }
+                    
+                    // Mark this site as the last updater
+                    localStorage.setItem(`last_site_${combinedUserId}`, this.siteId);
                 }
             }
         } catch (error) {
