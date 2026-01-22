@@ -45,6 +45,18 @@ class UnifiedBalanceSystem {
     }
     
     loadNetChange() {
+        // Check when netChange was last updated
+        const lastUpdateKey = `${this.getNetChangeKey()}_timestamp`;
+        const lastUpdate = localStorage.getItem(lastUpdateKey);
+        const now = Date.now();
+        
+        // If netChange is older than 5 minutes, it's stale - clear it
+        if (lastUpdate && (now - parseInt(lastUpdate)) > 300000) {
+            console.log('📊 Clearing stale netChange (older than 5 minutes)');
+            this.resetNetChange();
+            return;
+        }
+        
         const stored = localStorage.getItem(this.getNetChangeKey());
         this.netChange = stored ? parseFloat(stored) : 0;
         console.log(`📊 Loaded net change: ${this.netChange}`);
@@ -52,6 +64,7 @@ class UnifiedBalanceSystem {
     
     saveNetChange() {
         localStorage.setItem(this.getNetChangeKey(), this.netChange.toString());
+        localStorage.setItem(`${this.getNetChangeKey()}_timestamp`, Date.now().toString());
     }
     
     resetNetChange() {
