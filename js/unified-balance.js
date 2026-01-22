@@ -250,44 +250,29 @@ class UnifiedBalanceSystem {
     async checkForCrossSiteChanges() {
         if (!this.isLoggedIn) return;
         
-        const userId = this.getUserIdFromToken();
-        const sites = [
-            'https://roflfaucet.com/api/recent_changes.txt',
-            'https://clickforcharity.net/api/recent_changes.txt',
-            'https://es3-auth.directsponsor.net/api/recent_changes.txt'
-        ];
+        const combinedUserId = this.getCombinedUserIdFromToken();
         
         try {
-            for (const siteUrl of sites) {
-                // Skip checking our own site
-                if (siteUrl.includes(window.location.hostname)) continue;
-                
-                const response = await fetch(siteUrl, { cache: 'no-cache' });
-                if (!response.ok) continue;
-                
-                const text = await response.text();
-                
-                // Check if our user ID is in the list
-                const lines = text.split('\n');
-                for (const line of lines) {
-                    if (line.includes(':' + userId)) {
-                        const [timestamp] = line.split(':');
-                        const age = Math.floor((Date.now() / 1000) - parseInt(timestamp));
-                        
-                        // Show sync banner
-                        this.showCrossSiteSyncBanner(siteUrl, age);
-                        return; // Only show one banner
-                    }
-                }
+            const response = await fetch(`/api/check_cross_site_changes.php?user_id=${combinedUserId}`, {
+                cache: 'no-cache'
+            });
+            
+            if (!response.ok) return;
+            
+            const data = await response.json();
+            
+            if (data.success && data.has_changes) {
+                // Show sync banner
+                this.showCrossSiteSyncBanner(data.site, data.age_seconds);
             }
         } catch (error) {
             console.warn('⚠️ Could not check for cross-site changes:', error);
         }
     }
     
-    showCrossSiteSyncBanner(siteUrl, ageSeconds) {
-        const siteName = siteUrl.includes('roflfaucet') ? 'ROFLFaucet' : 
-                        siteUrl.includes('clickforcharity') ? 'ClickForCharity' : 'another site';
+    showCrossSiteSyncBanner(site, ageSeconds) {
+        const siteName = site === 'roflfaucet' ? 'ROFLFaucet' : 
+                        site === 'clickforcharity' ? 'ClickForCharity' : site;
         
         const banner = document.createElement('div');
         banner.id = 'cross-site-sync-banner';
