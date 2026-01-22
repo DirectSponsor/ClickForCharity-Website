@@ -15,6 +15,7 @@ class UnifiedBalanceSystem {
         this.consecutiveFailures = 0;
         this.isFlushing = false; // Guard flag to prevent double flush
         this.isSyncing = false; // Guard flag for manual sync
+        this.gamesEnabled = false; // Start disabled until sync check complete
         
         console.log(`💰 ClickForCharity Balance System initialized for ${this.isLoggedIn ? 'member' : 'guest'} user`);
         
@@ -35,6 +36,10 @@ class UnifiedBalanceSystem {
             }
             this.setupFlushTriggers();
             this.setupCrossSiteSync();
+            this.checkAndWaitForSync();
+        } else {
+            // Guest users can play immediately
+            this.gamesEnabled = true;
         }
     }
     
@@ -59,7 +64,21 @@ class UnifiedBalanceSystem {
         this.saveNetChange();
     }
     
+    canMakeTransaction() {
+        if (!this.gamesEnabled) {
+            console.warn('⚠️ Transaction blocked - waiting for sync to complete');
+            this.showSyncMessage('⏳ Please wait - syncing balance...', 2000);
+            return false;
+        }
+        return true;
+    }
+    
     addToNetChange(amount, source, description) {
+        // Block transactions during sync period
+        if (!this.canMakeTransaction()) {
+            return;
+        }
+        
         this.netChange += amount;
         this.saveNetChange();
         
@@ -215,6 +234,50 @@ class UnifiedBalanceSystem {
         div.style.cssText = 'position:fixed;top:70px;right:20px;background:#4CAF50;color:white;padding:12px 20px;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,0.3);z-index:10001;font-size:14px;';
         document.body.appendChild(div);
         if (duration) setTimeout(() => { if (div.parentNode) div.remove(); }, duration);
+    }
+    
+    async checkAndWaitForSync() {
+        const pageLoadTime = Date.now();
+        
+        try {
+            // Get initial balance data (includes last_updated timestamp)
+            const combinedUserId = this.getCombinedUserIdFromToken();
+            const response = await fetch(`/api/get_balance.php?user_id=${combinedUserId}`, {
+                method: 'GET',
+                cache: 'no-cache'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.last_updated) {
+                    const fileAge = pageLoadTime - (data.last_updated * 1000); // Convert to ms
+                    
+                    // If file was modified in last 15 seconds, likely cross-site navigation
+                    if (fileAge < 15000) {
+                        console.log(`🔄 Balance file is fresh (${Math.round(fileAge/1000)}s old) - waiting for Syncthing sync...`);
+                        this.showSyncMessage('⏳ Syncing balance from other site... (10 seconds)', null);
+                        
+                        // Wait 10 seconds for Syncthing to propagate changes
+                        await new Promise(resolve => setTimeout(resolve, 10000));
+                        
+                        // Reload balance after sync period
+                        await this.getBalance();
+                        this.updateBalanceDisplaysSync();
+                        
+                        this.showSyncMessage('✅ Balance synced!', 2000);
+                        console.log('✅ Cross-site sync complete');
+                    } else {
+                        console.log(`📊 Balance file is old (${Math.round(fileAge/1000)}s) - no sync delay needed`);
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Sync check error:', error);
+        } finally {
+            // Always enable games after check (even if error)
+            this.gamesEnabled = true;
+            console.log('🎮 Games enabled');
+        }
     }
     
     setupCrossSiteSync() {
