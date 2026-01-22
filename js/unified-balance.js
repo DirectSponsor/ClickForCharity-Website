@@ -15,6 +15,8 @@ class UnifiedBalanceSystem {
         this.consecutiveFailures = 0;
         this.isFlushing = false; // Guard flag to prevent double flush
         this.isSyncing = false; // Guard flag for manual sync
+        this.actionQueue = []; // Queue for actions during sync
+        this.syncCheckDone = false; // Track if we've checked sync on first action
         
         console.log(`💰 ClickForCharity Balance System initialized for ${this.isLoggedIn ? 'member' : 'guest'} user`);
         
@@ -59,7 +61,31 @@ class UnifiedBalanceSystem {
         this.saveNetChange();
     }
     
-    addToNetChange(amount, source, description) {
+    async addToNetChange(amount, source, description) {
+        // On first action, check if we need to sync
+        if (!this.syncCheckDone && this.isLoggedIn) {
+            this.syncCheckDone = true;
+            
+            const needsSync = await this.checkIfNeedsSync();
+            if (needsSync) {
+                // Queue this action
+                this.actionQueue.push({amount, source, description});
+                console.log(`📋 Action queued: ${amount} coins (sync needed)`);
+                
+                // Start sync and process queue
+                await this.syncAndProcessQueue();
+                return;
+            }
+        }
+        
+        // If already syncing, queue the action
+        if (this.isSyncing) {
+            this.actionQueue.push({amount, source, description});
+            console.log(`📋 Action queued: ${amount} coins (sync in progress)`);
+            return;
+        }
+        
+        // Normal processing
         this.netChange += amount;
         this.saveNetChange();
         
@@ -67,6 +93,67 @@ class UnifiedBalanceSystem {
         this.updateBalanceDisplaysSync();
         
         console.log(`📝 Net change: ${this.netChange > 0 ? '+' : ''}${amount} from ${source || 'unknown'} (total: ${this.netChange})`);
+    }
+    
+    async checkIfNeedsSync() {
+        try {
+            const combinedUserId = this.getCombinedUserIdFromToken();
+            const response = await fetch(`/api/get_balance.php?user_id=${combinedUserId}`, {
+                method: 'GET',
+                cache: 'no-cache'
+            });
+            
+            if (response.ok) {
+                const data = await response.json();
+                if (data.success && data.last_updated) {
+                    const fileAge = Date.now() - (data.last_updated * 1000);
+                    // If file modified in last 15 seconds, likely just came from another site
+                    if (fileAge < 15000) {
+                        console.log(`🔄 Fresh balance file detected (${Math.round(fileAge/1000)}s old) - sync needed`);
+                        return true;
+                    }
+                }
+            }
+        } catch (error) {
+            console.warn('⚠️ Sync check error:', error);
+        }
+        return false;
+    }
+    
+    async syncAndProcessQueue() {
+        if (this.isSyncing) return;
+        
+        this.isSyncing = true;
+        const totalQueuedAmount = this.actionQueue.reduce((sum, action) => sum + action.amount, 0);
+        
+        console.log(`🔄 Starting sync with ${this.actionQueue.length} queued actions (${totalQueuedAmount} coins)`);
+        
+        // Show progress notification with countdown
+        for (let i = 10; i >= 0; i--) {
+            this.showSyncProgress(totalQueuedAmount, i);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        
+        // Reload balance after sync
+        await this.getBalance();
+        this.updateBalanceDisplaysSync();
+        
+        // Process all queued actions
+        console.log(`✅ Sync complete - processing ${this.actionQueue.length} queued actions`);
+        for (const action of this.actionQueue) {
+            this.netChange += action.amount;
+            console.log(`📝 Processed queued action: ${action.amount} from ${action.source}`);
+        }
+        this.saveNetChange();
+        this.updateBalanceDisplaysSync();
+        
+        // Clear queue
+        this.actionQueue = [];
+        this.isSyncing = false;
+        
+        // Hide progress and show success
+        this.hideSyncProgress();
+        this.showSyncMessage(`✅ Synced! ${totalQueuedAmount} coins added`, 3000);
     }
     
     // ========== FLUSH TO LOCAL FILE ==========
@@ -215,6 +302,68 @@ class UnifiedBalanceSystem {
         div.style.cssText = 'position:fixed;top:70px;right:20px;background:#4CAF50;color:white;padding:12px 20px;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,0.3);z-index:10001;font-size:14px;';
         document.body.appendChild(div);
         if (duration) setTimeout(() => { if (div.parentNode) div.remove(); }, duration);
+    }
+    
+    showSyncProgress(queuedAmount, secondsRemaining) {
+        let notification = document.getElementById('sync-progress-notification');
+        
+        if (!notification) {
+            notification = document.createElement('div');
+            notification.id = 'sync-progress-notification';
+            notification.style.cssText = `
+                position: fixed;
+                top: 70px;
+                right: 20px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 16px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+                z-index: 10001;
+                font-size: 14px;
+                min-width: 280px;
+            `;
+            document.body.appendChild(notification);
+        }
+        
+        const totalSeconds = 10;
+        const progress = ((totalSeconds - secondsRemaining) / totalSeconds) * 100;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <div class="spinner" style="
+                    border: 3px solid rgba(255,255,255,0.3);
+                    border-top: 3px solid white;
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    animation: spin 1s linear infinite;
+                "></div>
+                <div style="flex: 1;">
+                    <div style="font-weight: bold;">Syncing your balance...</div>
+                    <div style="font-size: 12px; opacity: 0.9;">${queuedAmount} coins queued</div>
+                </div>
+            </div>
+            <div style="background: rgba(255,255,255,0.2); height: 6px; border-radius: 3px; overflow: hidden;">
+                <div style="background: white; height: 100%; width: ${progress}%; transition: width 0.3s;"></div>
+            </div>
+            <div style="text-align: center; margin-top: 6px; font-size: 12px; opacity: 0.9;">
+                ${secondsRemaining}s remaining
+            </div>
+        `;
+        
+        // Add spinner animation if not already added
+        if (!document.getElementById('spinner-style')) {
+            const style = document.createElement('style');
+            style.id = 'spinner-style';
+            style.textContent = '@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }';
+            document.head.appendChild(style);
+        }
+    }
+    
+    hideSyncProgress() {
+        const notification = document.getElementById('sync-progress-notification');
+        if (notification) notification.remove();
     }
     
     setupCrossSiteSync() {
