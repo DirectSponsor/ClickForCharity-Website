@@ -15,7 +15,8 @@ class UnifiedBalanceSystem {
         this.consecutiveFailures = 0;
         this.isFlushing = false; // Guard flag to prevent double flush
         this.isSyncing = false; // Guard flag for manual sync
-        this.gamesEnabled = false; // Start disabled until sync check complete
+        this.syncInProgress = false; // True during cross-site sync delay
+        this.pendingActions = []; // Queue for actions during sync
         
         console.log(`💰 ClickForCharity Balance System initialized for ${this.isLoggedIn ? 'member' : 'guest'} user`);
         
@@ -64,20 +65,25 @@ class UnifiedBalanceSystem {
         this.saveNetChange();
     }
     
-    canMakeTransaction() {
-        if (!this.gamesEnabled) {
-            console.warn('⚠️ Transaction blocked - waiting for sync to complete');
-            this.showSyncMessage('⏳ Please wait - syncing balance...', 2000);
-            return false;
+    async waitForSyncIfNeeded() {
+        if (!this.syncInProgress) {
+            return; // No sync in progress, proceed immediately
         }
-        return true;
+        
+        console.log('⏳ Action queued - waiting for sync to complete...');
+        this.showSyncMessage('⏳ Waiting for sync to complete...', null);
+        
+        // Wait for sync to finish (check every 100ms)
+        while (this.syncInProgress) {
+            await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        
+        console.log('✅ Sync complete - processing action');
     }
     
-    addToNetChange(amount, source, description) {
-        // Block transactions during sync period
-        if (!this.canMakeTransaction()) {
-            return;
-        }
+    async addToNetChange(amount, source, description) {
+        // Wait for sync if in progress, then proceed
+        await this.waitForSyncIfNeeded();
         
         this.netChange += amount;
         this.saveNetChange();
@@ -239,6 +245,12 @@ class UnifiedBalanceSystem {
     async checkAndWaitForSync() {
         const pageLoadTime = Date.now();
         
+        // Skip sync delay on page refresh (F5) - only check on normal navigation
+        if (performance.navigation.type === 1) {
+            console.log('📊 Page refresh detected - skipping sync delay');
+            return;
+        }
+        
         try {
             // Get initial balance data (includes last_updated timestamp)
             const combinedUserId = this.getCombinedUserIdFromToken();
@@ -257,6 +269,9 @@ class UnifiedBalanceSystem {
                         console.log(`🔄 Balance file is fresh (${Math.round(fileAge/1000)}s old) - waiting for Syncthing sync...`);
                         this.showSyncMessage('⏳ Syncing balance from other site... (10 seconds)', null);
                         
+                        // Set flag to queue any actions during sync
+                        this.syncInProgress = true;
+                        
                         // Wait 10 seconds for Syncthing to propagate changes
                         await new Promise(resolve => setTimeout(resolve, 10000));
                         
@@ -264,8 +279,11 @@ class UnifiedBalanceSystem {
                         await this.getBalance();
                         this.updateBalanceDisplaysSync();
                         
+                        // Clear flag - actions can proceed now
+                        this.syncInProgress = false;
+                        
                         this.showSyncMessage('✅ Balance synced!', 2000);
-                        console.log('✅ Cross-site sync complete');
+                        console.log('✅ Cross-site sync complete - actions can proceed');
                     } else {
                         console.log(`📊 Balance file is old (${Math.round(fileAge/1000)}s) - no sync delay needed`);
                     }
@@ -273,10 +291,7 @@ class UnifiedBalanceSystem {
             }
         } catch (error) {
             console.warn('⚠️ Sync check error:', error);
-        } finally {
-            // Always enable games after check (even if error)
-            this.gamesEnabled = true;
-            console.log('🎮 Games enabled');
+            this.syncInProgress = false; // Clear flag on error
         }
     }
     
