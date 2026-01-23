@@ -263,11 +263,31 @@ class UnifiedBalanceSystem {
             const data = await response.json();
             
             if (data.success && data.has_changes) {
-                // Show sync banner
-                this.showCrossSiteSyncBanner(data.site, data.age_seconds);
+                const changeKey = `crossSiteChange_${data.site}_${data.timestamp}`;
+                const alreadyShown = localStorage.getItem(changeKey);
+                
+                if (!alreadyShown) {
+                    localStorage.setItem(changeKey, 'shown');
+                    this.showCrossSiteSyncBanner(data.site, data.age_seconds);
+                    
+                    this.cleanupOldChangeTracking();
+                }
             }
         } catch (error) {
             console.warn('⚠️ Could not check for cross-site changes:', error);
+        }
+    }
+    
+    cleanupOldChangeTracking() {
+        const cutoff = Date.now() - (60 * 1000);
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('crossSiteChange_')) {
+                const timestamp = parseInt(key.split('_')[2]);
+                if (timestamp && timestamp < cutoff) {
+                    localStorage.removeItem(key);
+                }
+            }
         }
     }
     

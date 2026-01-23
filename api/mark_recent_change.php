@@ -1,7 +1,7 @@
 <?php
 /**
  * Mark a user's balance as recently changed
- * Maintains a list of user IDs that changed in the last 30 seconds
+ * Maintains a list of user IDs that changed in the last 15 seconds
  * This allows other sites to detect cross-site balance updates
  */
 
@@ -41,8 +41,8 @@ if (file_exists($changesFile)) {
 $newLine = time() . ':' . $userId;
 array_unshift($lines, $newLine);
 
-// Remove entries older than 30 seconds
-$cutoff = time() - 30;
+// Remove entries older than 15 seconds
+$cutoff = time() - 15;
 $lines = array_filter($lines, function($line) use ($cutoff) {
     if (empty($line)) return false;
     $parts = explode(':', $line, 2);
