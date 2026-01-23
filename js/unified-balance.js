@@ -115,9 +115,6 @@ class UnifiedBalanceSystem {
                 
                 console.log('✅ Flush successful, new balance:', result.balance);
                 
-                // Mark this user as having recent changes (for cross-site detection)
-                this.markRecentChange(combinedUserId);
-                
                 this.consecutiveFailures = 0;
                 this.hideHubWarning();
             } else {
@@ -222,9 +219,8 @@ class UnifiedBalanceSystem {
     }
     
     setupCrossSiteSync() {
-        // Check for recent changes on other sites when user focuses this tab
+        // Reload balance when user focuses this tab
         window.addEventListener('focus', async () => {
-            await this.checkForCrossSiteChanges();
             await this.getBalance();
             this.updateBalanceDisplaysSync();
         });
@@ -235,111 +231,6 @@ class UnifiedBalanceSystem {
                 this.updateBalanceDisplaysSync();
             }
         });
-    }
-    
-    async markRecentChange(userId) {
-        try {
-            await fetch(`/api/mark_recent_change.php?user_id=${userId}`, {
-                method: 'GET',
-                cache: 'no-cache'
-            });
-        } catch (error) {
-            console.warn('⚠️ Could not mark recent change:', error);
-        }
-    }
-    
-    async checkForCrossSiteChanges() {
-        if (!this.isLoggedIn) return;
-        
-        const combinedUserId = this.getCombinedUserIdFromToken();
-        
-        try {
-            const response = await fetch(`/api/check_cross_site_changes.php?user_id=${combinedUserId}`, {
-                cache: 'no-cache'
-            });
-            
-            if (!response.ok) return;
-            
-            const data = await response.json();
-            
-            if (data.success && data.has_changes) {
-                const changeKey = `crossSiteChange_${data.site}_${data.timestamp}`;
-                const alreadyShown = localStorage.getItem(changeKey);
-                
-                if (!alreadyShown) {
-                    localStorage.setItem(changeKey, 'shown');
-                    this.showCrossSiteSyncBanner(data.site, data.age_seconds);
-                    
-                    this.cleanupOldChangeTracking();
-                }
-            }
-        } catch (error) {
-            console.warn('⚠️ Could not check for cross-site changes:', error);
-        }
-    }
-    
-    cleanupOldChangeTracking() {
-        const cutoff = Date.now() - (60 * 1000);
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (key && key.startsWith('crossSiteChange_')) {
-                const timestamp = parseInt(key.split('_')[2]);
-                if (timestamp && timestamp < cutoff) {
-                    localStorage.removeItem(key);
-                }
-            }
-        }
-    }
-    
-    showCrossSiteSyncBanner(site, ageSeconds) {
-        const siteName = site === 'roflfaucet' ? 'ROFLFaucet' : 
-                        site === 'clickforcharity' ? 'ClickForCharity' : site;
-        
-        const banner = document.createElement('div');
-        banner.id = 'cross-site-sync-banner';
-        banner.style.cssText = `
-            position: fixed;
-            top: 60px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            z-index: 10001;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        `;
-        
-        banner.innerHTML = `
-            <div>⚠️ Balance updated on ${siteName} ${ageSeconds}s ago</div>
-            <button onclick="window.unifiedBalance.syncNow()" style="
-                background: white;
-                color: #667eea;
-                border: none;
-                padding: 6px 12px;
-                border-radius: 4px;
-                font-weight: bold;
-                cursor: pointer;
-            ">Sync Now</button>
-            <button onclick="this.parentElement.remove()" style="
-                background: rgba(255,255,255,0.2);
-                color: white;
-                border: none;
-                padding: 6px 12px;
-                border-radius: 4px;
-                cursor: pointer;
-            ">Dismiss</button>
-        `;
-        
-        // Remove existing banner if present
-        const existing = document.getElementById('cross-site-sync-banner');
-        if (existing) existing.remove();
-        
-        document.body.appendChild(banner);
     }
     
     async syncNow() {
