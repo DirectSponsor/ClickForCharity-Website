@@ -38,7 +38,7 @@ if (!preg_match('/^[0-9]+-[a-zA-Z0-9_-]+$/', $userId)) {
 }
 
 // Query centralized auth server
-$authServerUrl = 'https://auth.directsponsor.net/api/get_balance.php?user_id=' . urlencode($userId);
+$authServerUrl = 'https://auth.directsponsor.org/api/get_balance.php?user_id=' . urlencode($userId);
 
 $ch = curl_init($authServerUrl);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

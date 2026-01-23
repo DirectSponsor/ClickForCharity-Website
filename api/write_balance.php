@@ -41,7 +41,7 @@ if (!preg_match('/^\d+-[a-zA-Z0-9_-]+$/', $userId)) {
 }
 
 // Forward to centralized auth server
-$authServerUrl = 'https://auth.directsponsor.net/api/update_balance.php';
+$authServerUrl = 'https://auth.directsponsor.org/api/update_balance.php';
 
 $postData = json_encode([
     'user_id' => $userId,
