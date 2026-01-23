@@ -28,16 +28,34 @@ if ($content === false) {
 }
 
 $lines = explode("\n", trim($content));
+$cutoff = time() - 15;
+$validLines = [];
+$found = false;
+$foundAge = 0;
+
 foreach ($lines as $line) {
     if (empty($line)) continue;
     
-    // Format: timestamp:userId
-    if (strpos($line, ':' . $userId) !== false) {
-        list($timestamp) = explode(':', $line, 2);
-        $age = time() - intval($timestamp);
-        echo $age;
-        exit;
+    $parts = explode(':', $line, 2);
+    if (!isset($parts[0]) || !is_numeric($parts[0])) continue;
+    
+    $timestamp = intval($parts[0]);
+    
+    // Skip expired entries
+    if ($timestamp <= $cutoff) continue;
+    
+    $validLines[] = $line;
+    
+    // Check if this is the user we're looking for
+    if (isset($parts[1]) && $parts[1] === $userId && !$found) {
+        $foundAge = time() - $timestamp;
+        $found = true;
     }
 }
 
-echo 'n';
+// Write back cleaned list
+if (count($validLines) !== count($lines)) {
+    file_put_contents($file, implode("\n", $validLines) . "\n");
+}
+
+echo $found ? $foundAge : 'n';
