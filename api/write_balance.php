@@ -1,6 +1,6 @@
 <?php
-// Write Balance API - Local file write for balance updates
-// Receives net change, applies it to current balance, writes to file
+// Write Balance API - Proxy to centralized auth server
+// Receives net change and forwards to auth server for centralized balance management
 
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
@@ -29,63 +29,49 @@ if (!isset($input['user_id']) || !isset($input['net_change'])) {
 }
 
 $userId = $input['user_id'];
-$netChange = floatval($input['net_change']);
+$amount = floatval($input['net_change']);
+$source = isset($input['source']) ? $input['source'] : 'unknown';
+$serverId = isset($input['server_id']) ? $input['server_id'] : 'clickforcharity';
 
-// Validate user_id format (should be "123-username")
+// Validate user_id format
 if (!preg_match('/^\d+-[a-zA-Z0-9_-]+$/', $userId)) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid user_id format']);
     exit();
 }
 
-// Balance file path
-$dataDir = '/var/clickforcharity-data/userdata/balances';
-$balanceFile = $dataDir . '/' . $userId . '.txt';
+// Forward to centralized auth server
+$authServerUrl = 'https://auth.directsponsor.net/api/update_balance.php';
 
-// Ensure directory exists
-if (!is_dir($dataDir)) {
-    mkdir($dataDir, 0755, true);
-}
-
-// Read current balance
-$currentBalance = 0;
-if (file_exists($balanceFile)) {
-    $data = json_decode(file_get_contents($balanceFile), true);
-    if ($data && isset($data['balance'])) {
-        $currentBalance = floatval($data['balance']);
-    }
-}
-
-// Calculate new balance
-$newBalance = $currentBalance + $netChange;
-
-// Prevent negative balance
-if ($newBalance < 0) {
-    $newBalance = 0;
-}
-
-// Prepare balance data
-$balanceData = [
+$postData = json_encode([
     'user_id' => $userId,
-    'balance' => $newBalance,
-    'last_updated' => time()
-];
+    'amount' => $amount,
+    'source' => $source,
+    'server_id' => $serverId
+]);
 
-// Write to file
-$writeSuccess = file_put_contents($balanceFile, json_encode($balanceData, JSON_PRETTY_PRINT));
+$ch = curl_init($authServerUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+curl_setopt($ch, CURLOPT_TIMEOUT, 5);
 
-if ($writeSuccess === false) {
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+$curlError = curl_error($ch);
+curl_close($ch);
+
+if ($response === false || $httpCode !== 200) {
     http_response_code(500);
-    echo json_encode(['success' => false, 'error' => 'Failed to write balance file']);
+    echo json_encode([
+        'success' => false,
+        'error' => 'Failed to update balance on auth server',
+        'details' => $curlError
+    ]);
     exit();
 }
 
-// Return success with new balance and timestamp
-echo json_encode([
-    'success' => true,
-    'balance' => $newBalance,
-    'previous_balance' => $currentBalance,
-    'net_change' => $netChange,
-    'timestamp' => time()
-]);
+// Return auth server response
+echo $response;
 ?>

@@ -62,6 +62,7 @@ class UnifiedBalanceSystem {
     
     addToNetChange(amount, source, description) {
         this.netChange += amount;
+        this.lastTransactionSource = source || 'unknown';
         this.saveNetChange();
         
         // Update display optimistically
@@ -97,7 +98,9 @@ class UnifiedBalanceSystem {
                 headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     user_id: combinedUserId,
-                    net_change: this.netChange
+                    net_change: this.netChange,
+                    source: this.lastTransactionSource || 'unknown',
+                    server_id: 'clickforcharity'
                 })
             });
             
