@@ -222,11 +222,20 @@ class UnifiedBalanceSystem {
     }
     
     setupCrossSiteSync() {
-        // Reload balance when user focuses this tab
+        // Reload balance when user focuses this tab or switches to it
         window.addEventListener('focus', async () => {
             await this.getBalance();
             this.updateBalanceDisplaysSync();
         });
+        
+        // Also reload when tab becomes visible (tab switching)
+        document.addEventListener('visibilitychange', async () => {
+            if (!document.hidden) {
+                await this.getBalance();
+                this.updateBalanceDisplaysSync();
+            }
+        });
+        
         // Keep storage listener for multi-tab
         window.addEventListener('storage', (e) => {
             if (e.key === this.getNetChangeKey()) {
