@@ -82,8 +82,8 @@ pre_deploy_checks() {
     log "Running pre-deployment checks..."
     
     # Check if we're in the CFC directory
-    if [[ ! -f "index.html" ]] || [[ ! -d "api" ]]; then
-        error "Not in ClickForCharity directory. Missing index.html or api/"
+    if [[ ! -d "site" ]] || [[ ! -f "site/index.html" ]] || [[ ! -d "site/api" ]]; then
+        error "Not in ClickForCharity directory. Missing site/, site/index.html or site/api/"
     fi
     
     # Check server connectivity
@@ -109,6 +109,7 @@ create_local_backup() {
         --exclude='*.tmp' \
         --exclude='*.log' \
         --exclude='deploy.sh' \
+        --exclude='site' \
         -C "$(dirname "$LOCAL_PATH")" \
         "$(basename "$LOCAL_PATH")"
     
@@ -132,8 +133,9 @@ deploy_files() {
         --exclude='deploy.sh' \
         --exclude='.DS_Store' \
         --exclude='Thumbs.db' \
+        --exclude='site/' \
         --progress \
-        "$LOCAL_PATH/" "$REMOTE_HOST:$REMOTE_PATH/"
+        "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/"
     
     success "Files deployed successfully"
 }

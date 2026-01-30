@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/ptc.html">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content="https://clickforcharity.net/ptc.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
+    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/ptc.html">
+    <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
+    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <title>Surf Ads – Click for Charity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+<!-- include start sidebar.incl -->
+        <aside class="sidebar" id="site-navigation">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </a>
+            <nav>
+                <ul>
+                    <li ><a href="index.html">Home</a></li>
+                    <li class="active"><a href="ptc.html">Surf Ads</a></li>
+                    <li ><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            
+            <!-- User Menu Area (bottom of sidebar) -->
+            <div class="user-select-container">
+                <!-- Login Button (shown when not logged in) -->
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <!-- User Menu (shown when logged in) -->
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <!-- Dropdown Menu (pops upward) -->
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <!-- Guest Mode Notice -->
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+<!-- include end sidebar.incl -->
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>Surf Ads</h1>
+                <div class="user-stats">
+                    <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
+                </div>
+            </header>
+            <section class="task-list-container">
+                <h2>Available Tasks</h2>
+                <div id="task-list" class="task-list">
+                    <!-- Ads will be dynamically inserted here by JavaScript -->
+                </div>
+                <p style="margin-top: 20px; text-align: center;">Please check out the <a href="thank-you/">thank-you page</a> as well.</p>
+            </section>
+        </main>
+    </div>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <script src="js/app.js"></script>
+    <!-- include start footer.incl -->
+    <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">View site map</a>
+        </div>
+        <div style="display:inline-block;margin:0 0 0.5rem 0;">
+            <a href="https://lightning.news" target="_blank" rel="noopener">
+                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
+            </a>
+        </div>
+    </footer>
+    <!-- include end footer.incl -->
+</body>
+</html>

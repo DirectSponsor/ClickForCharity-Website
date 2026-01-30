@@ -114,7 +114,8 @@ process_file() {
 main() {
     log "Starting include processing..."
     
-    # Process all HTML files in root directory
+    # Process all HTML files in site/ directory
+    cd site
     for file in *.html; do
         # Skip admin pages and sitemap
         if [[ "$file" == admin*.html ]] || [[ "$file" == "sitemap.html" ]]; then
@@ -126,6 +127,7 @@ main() {
             process_file "$file"
         fi
     done
+    cd ..
     
     success "All files processed!"
 }

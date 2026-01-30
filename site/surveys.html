@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://clickforcharity.net/skipped-tasks.html">
+    <link rel="canonical" href="https://clickforcharity.net/surveys.html">
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" content="https://clickforcharity.net/skipped-tasks.html">
+    <meta property="og:url" content="https://clickforcharity.net/surveys.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
     <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
@@ -14,11 +14,13 @@
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="clickforcharity.net">
-    <meta property="twitter:url" content="https://clickforcharity.net/skipped-tasks.html">
+    <meta property="twitter:url" content="https://clickforcharity.net/surveys.html">
     <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
     <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
-    <title>Skipped Tasks – Click for Charity</title>
+
+    <title>Surveys – Click for Charity</title>
+    <meta name="description" content="Earn tokens by completing surveys and support charities. Coming soon to Click for Charity.">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -36,11 +38,10 @@
                     <li ><a href="index.html">Home</a></li>
                     <li ><a href="ptc.html">Surf Ads</a></li>
                     <li ><a href="simple-tasks.html">Simple Tasks</a></li>
-                    <li class="active"><a href="skipped-tasks.html">Skipped Tasks</a></li>
-                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li class="active"><a href="surveys.html">Surveys</a></li>
                     <li ><a href="offers.html">Offers</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
-                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="display:inline-block;font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
                 </ul>
             </nav>
             
@@ -76,15 +77,37 @@
 <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
             <header class="dashboard-header">
-                <h1>Skipped Tasks</h1>
+                <h1>Surveys</h1>
                 <div class="user-stats">
                     <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
                 </div>
             </header>
-            <section class="task-list-container">
-                <h2>Previously Skipped Tasks</h2>
-                <div id="skipped-task-list" class="task-list skipped-task-list">
-                    <!-- Skipped tasks will be dynamically inserted here by JavaScript -->
+            
+            <section class="coming-soon-section">
+                <div class="coming-soon-content">
+                    <h2>📋 Surveys Coming Soon</h2>
+                    <p>We're building a survey system that lets you earn tokens while sharing your opinions.</p>
+                    
+                    <div class="feature-preview">
+                        <h3>What to Expect:</h3>
+                        <ul>
+                            <li>✅ Quick surveys (2-10 minutes)</li>
+                            <li>✅ Higher token rewards than surf ads</li>
+                            <li>✅ Help real organizations with market research</li>
+                            <li>✅ Mobile-friendly interface</li>
+                            <li>✅ Track your survey completion history</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="meanwhile">
+                        <h3>In the Meanwhile:</h3>
+                        <p>Try our <a href="ptc.html" class="inline-link">Surf Ads</a> to start earning tokens today!</p>
+                    </div>
+                    
+                    <div class="notify-box">
+                        <p><strong>Want to know when surveys launch?</strong></p>
+                        <p>Follow updates at <a href="https://directsponsor.net/" target="_blank" rel="noopener" class="inline-link">DirectSponsor.net</a></p>
+                    </div>
                 </div>
             </section>
         </main>
@@ -92,7 +115,6 @@
     <script src="js/unified-balance.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
-    <script src="js/skipped-tasks.js"></script>
     <!-- include start footer.incl -->
     <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
         <div style="display:inline-block;margin:0 1rem 0.5rem 0;">

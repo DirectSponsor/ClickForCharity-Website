@@ -3,24 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://clickforcharity.net/surveys.html">
+    <link rel="canonical" href="https://clickforcharity.net/about.html">
+    <title>About – Click for Charity</title>
+    <meta name="description" content="Learn about Click for Charity's mission to connect sponsors with volunteers through simple tasks and transparent Bitcoin micropayments.">
+
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" content="https://clickforcharity.net/surveys.html">
+    <meta property="og:url" content="https://clickforcharity.net/about.html">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:title" content="About – Click for Charity">
+    <meta property="og:description" content="Learn about Click for Charity's mission to connect sponsors with volunteers through simple tasks and transparent Bitcoin micropayments.">
     <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="clickforcharity.net">
-    <meta property="twitter:url" content="https://clickforcharity.net/surveys.html">
-    <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="twitter:url" content="https://clickforcharity.net/about.html">
+    <meta name="twitter:title" content="About – Click for Charity">
+    <meta name="twitter:description" content="Learn about Click for Charity's mission to connect sponsors with volunteers through simple tasks and transparent Bitcoin micropayments.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
-
-    <title>Surveys – Click for Charity</title>
-    <meta name="description" content="Earn tokens by completing surveys and support charities. Coming soon to Click for Charity.">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -39,10 +39,9 @@
                     <li ><a href="ptc.html">Surf Ads</a></li>
                     <li ><a href="simple-tasks.html">Simple Tasks</a></li>
                     <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
-                    <li class="active"><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
                     <li ><a href="offers.html">Offers</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
-                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="display:inline-block;font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
                 </ul>
             </nav>
             
@@ -78,38 +77,46 @@
 <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
             <header class="dashboard-header">
-                <h1>Surveys</h1>
-                <div class="user-stats">
-                    <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
-                </div>
+                <h1>About Click for Charity</h1>
             </header>
             
-            <section class="coming-soon-section">
-                <div class="coming-soon-content">
-                    <h2>📋 Surveys Coming Soon</h2>
-                    <p>We're building a survey system that lets you earn tokens while sharing your opinions.</p>
+            <section class="about-content">
+                <article>
+                    <h2>Our Mission</h2>
+                    <p>Content coming soon... This page will explain the Click for Charity mission, how the platform works, and the impact we're making together.</p>
+                </article>
+                
+                <article>
+                    <h2>How It Works</h2>
+                    <p>Content coming soon... Detailed explanation of the sponsor-volunteer model and Bitcoin micropayment system.</p>
+                </article>
+                
+                <article>
+                    <h2>Impact & Transparency</h2>
+                    <p>Content coming soon... Information about how funds are distributed and the real-world impact of your participation.</p>
+                </article>
+                
+                <article>
+                    <h2>Data Synchronization</h2>
+                    <p>ClickForCharity uses a hybrid system to keep your data safe and synchronized across all DirectSponsor sites:</p>
                     
-                    <div class="feature-preview">
-                        <h3>What to Expect:</h3>
-                        <ul>
-                            <li>✅ Quick surveys (2-10 minutes)</li>
-                            <li>✅ Higher token rewards than surf ads</li>
-                            <li>✅ Help real organizations with market research</li>
-                            <li>✅ Mobile-friendly interface</li>
-                            <li>✅ Track your survey completion history</li>
-                        </ul>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-top: 0;">💰 Balance (Instant)</h4>
+                        <p>Your balance is managed centrally on our secure auth server and updates in real-time across all sites. No manual sync needed - your earnings are available immediately on any DirectSponsor site.</p>
                     </div>
                     
-                    <div class="meanwhile">
-                        <h3>In the Meanwhile:</h3>
-                        <p>Try our <a href="ptc.html" class="inline-link">Surf Ads</a> to start earning tokens today!</p>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-top: 0;">📁 Profile & Tasks (Automatic)</h4>
+                        <p>Your profile settings, completed tasks, and platform preferences are stored locally and synchronized automatically via secure file sync. This happens in the background - no action required from you.</p>
                     </div>
                     
-                    <div class="notify-box">
-                        <p><strong>Want to know when surveys launch?</strong></p>
-                        <p>Follow updates at <a href="https://directsponsor.net/" target="_blank" rel="noopener" class="inline-link">DirectSponsor.net</a></p>
-                    </div>
-                </div>
+                    <p><strong>Why this approach?</strong> Balance needs instant access for rewards, while profile data benefits from local storage for privacy and reliability. The system gives you the best of both worlds: instant balance updates plus secure, automatic profile synchronization.</p>
+                </article>
+                
+                <article>
+                    <h2>Get Involved</h2>
+                    <p>Content coming soon... Ways to participate as a sponsor, volunteer, or partner.</p>
+                </article>
             </section>
         </main>
     </div>

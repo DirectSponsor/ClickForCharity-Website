@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://clickforcharity.net/profile.html">
+    <link rel="canonical" href="https://clickforcharity.net/skipped-tasks.html">
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" content="https://clickforcharity.net/profile.html">
+    <meta property="og:url" content="https://clickforcharity.net/skipped-tasks.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
     <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
@@ -14,12 +14,11 @@
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="clickforcharity.net">
-    <meta property="twitter:url" content="https://clickforcharity.net/profile.html">
+    <meta property="twitter:url" content="https://clickforcharity.net/skipped-tasks.html">
     <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
     <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
-    <title>Profile – Click for Charity</title>
-    <meta name="description" content="Manage your Click for Charity profile and preferences.">
+    <title>Skipped Tasks – Click for Charity</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -37,11 +36,10 @@
                     <li ><a href="index.html">Home</a></li>
                     <li ><a href="ptc.html">Surf Ads</a></li>
                     <li ><a href="simple-tasks.html">Simple Tasks</a></li>
-                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li class="active"><a href="skipped-tasks.html">Skipped Tasks</a></li>
                     <li ><a href="surveys.html">Surveys</a></li>
                     <li ><a href="offers.html">Offers</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
-                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="display:inline-block;font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
                 </ul>
             </nav>
             
@@ -77,38 +75,15 @@
 <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
             <header class="dashboard-header">
-                <h1>Profile</h1>
+                <h1>Skipped Tasks</h1>
                 <div class="user-stats">
                     <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
                 </div>
             </header>
-            
-            <section class="coming-soon-section">
-                <div class="coming-soon-content">
-                    <h2>👤 Profile Management Coming Soon</h2>
-                    <p>We're building a comprehensive profile system for managing your account and preferences.</p>
-                    
-                    <div class="feature-preview">
-                        <h3>What to Expect:</h3>
-                        <ul>
-                            <li>✅ View and edit your profile information</li>
-                            <li>✅ Track your earnings history</li>
-                            <li>✅ Manage notification preferences</li>
-                            <li>✅ View completed tasks and surveys</li>
-                            <li>✅ Set up payout methods</li>
-                            <li>✅ Review your activity across all DirectSponsor sites</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="meanwhile">
-                        <h3>Current Status:</h3>
-                        <p>Your account is active and earning tokens! The full profile page will launch soon with advanced features and settings.</p>
-                    </div>
-                    
-                    <div class="notify-box">
-                        <p><strong>Questions about your account?</strong></p>
-                        <p>Visit <a href="https://directsponsor.net/" target="_blank" rel="noopener" class="inline-link">DirectSponsor.net</a> for support and updates</p>
-                    </div>
+            <section class="task-list-container">
+                <h2>Previously Skipped Tasks</h2>
+                <div id="skipped-task-list" class="task-list skipped-task-list">
+                    <!-- Skipped tasks will be dynamically inserted here by JavaScript -->
                 </div>
             </section>
         </main>
@@ -116,6 +91,7 @@
     <script src="js/unified-balance.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
+    <script src="js/skipped-tasks.js"></script>
     <!-- include start footer.incl -->
     <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
         <div style="display:inline-block;margin:0 1rem 0.5rem 0;">

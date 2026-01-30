@@ -31,12 +31,12 @@ Can we add a banner ad, its probably best to have one that will be ok for mobile
             <script async src="https://api.surfvisits.com/banner_ads.js?pw=247&size=468x60"></script>
         </div>
 
-or, could we do different when it is narrower for mobile? I.e. we have a 300x250 in the sidebar, and when we switch to mobile (responsove) and drop the side bar, we add the small 468x60... would that work? that would preserve the looks more if it is.
+or, could we do different when it is narrower for mobile? I.e. we have a 300x250 in the sidebar, and when we switch to mobile (responsive) and drop the side bar, we add the small 468x60... would that work? that would preserve the looks more if it is.
 
-In fact, can we do the rotation systme - may a swell get it done. There si a doc about it somewhere, here it is /home/andy/work/projects/ad-system
-I think tha tmainly had roflfaucet in mind but clickforcharity cna use it too, we could even set it all up on clickforcharity and have that serve as a ad network... how do the ad networks get over the cross site scripting stuff? 
+In fact, can we do the rotation systme - may as well get it done. There is a doc about it somewhere, here it is /home/andy/work/projects/ad-system
+I think that mainly had roflfaucet in mind but clickforcharity can use it too, we could even set it all up on clickforcharity and have that serve as an ad network... how do the ad networks get over the cross site scripting stuff? 
 
-further thought... Surely we dont need js even, we can do an img from another site can't we? thats not scripting! In any case, we cna do it loaclly to clickforcharity for now and see later if a network is appropriate
+further thought... Surely we dont need js even, we can do an img from another site can't we? thats not scripting! In any case, we cna do it locally to clickforcharity for now and see later if a network is appropriate
       
 
 
