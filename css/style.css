@@ -1541,6 +1541,32 @@ body {
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
 }
 
+.complex-task-card.completed {
+    background-color: var(--task-done-bg);
+    opacity: 0.7;
+    border-color: #ddd;
+}
+
+.complex-task-card.completed .task-title {
+    color: #666;
+    text-decoration: line-through;
+}
+
+.complex-task-card.completed .task-short-desc {
+    color: #999;
+}
+
+.completed-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    background-color: #28a745;
+    color: white;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
 .task-compact {
     padding: 14px 16px;
     cursor: pointer;

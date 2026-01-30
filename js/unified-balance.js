@@ -1,5 +1,6 @@
-// ClickForCharity Unified Balance System - File-Based Sync
-// Simple architecture: track running total, flush to local file, Syncthing handles cross-site sync
+// ClickForCharity Unified Balance System - Hybrid Architecture
+// Balance: Centralized auth server (auth.directsponsor.org) for real-time sync
+// User Data: File-based sync via Syncthing for profiles, tasks, and preferences
 // CFC-specific: No balance locking needed (tasks take 10+ seconds anyway)
 
 class UnifiedBalanceSystem {
@@ -10,7 +11,7 @@ class UnifiedBalanceSystem {
         this.siteId = 'cfc'; // ClickForCharity identifier
         
         // Balance state
-        this.fileBalance = 0; // Balance from file
+        this.serverBalance = 0; // Balance from centralized auth server
         this.netChange = 0; // Running total of changes since last flush
         this.consecutiveFailures = 0;
         this.isFlushing = false; // Guard flag to prevent double flush
@@ -71,7 +72,7 @@ class UnifiedBalanceSystem {
         console.log(`📝 Net change: ${this.netChange > 0 ? '+' : ''}${amount} from ${source || 'unknown'} (total: ${this.netChange})`);
     }
     
-    // ========== FLUSH TO LOCAL FILE ==========
+    // ========== FLUSH TO AUTH SERVER ==========
     
     async flushNetChange(trigger = 'manual') {
         if (!this.isLoggedIn) return;
@@ -111,9 +112,9 @@ class UnifiedBalanceSystem {
             const result = await response.json();
             
             if (result.success) {
-                // Update file balance and reset net change
+                // Update server balance and reset net change
                 const previousNetChange = this.netChange;
-                this.fileBalance = result.balance;
+                this.serverBalance = result.balance;
                 this.resetNetChange();
                 
                 console.log('✅ Flush successful, new balance:', result.balance);
@@ -175,14 +176,17 @@ class UnifiedBalanceSystem {
         try {
             this.updateSyncButton('syncing');
             await this.flushNetChange('manual-sync');
-            this.showSyncMessage('⏳ Syncing balance... (10 seconds)');
+            this.showSyncMessage('⏳ Syncing balance and user data...');
+            
+            // Wait 10 seconds only for user data sync (Syncthing), not balance
             await new Promise(resolve => setTimeout(resolve, 10000));
+            
             await this.getBalance();
             this.updateBalanceDisplaysSync();
-            this.showSyncMessage('✅ Balance synced!', 2000);
+            this.showSyncMessage('✅ Balance and user data synced!', 2000);
             this.updateSyncButton('success');
             setTimeout(() => this.updateSyncButton('normal'), 2000);
-            console.log('✅ Manual balance sync completed');
+            console.log('✅ Manual sync completed');
         } catch (error) {
             console.error('❌ Sync error:', error);
             this.showSyncMessage('❌ Sync failed. Please try again.', 3000);
@@ -248,18 +252,18 @@ class UnifiedBalanceSystem {
     async syncNow() {
         const banner = document.getElementById('cross-site-sync-banner');
         if (banner) {
-            banner.innerHTML = '<div>⏳ Syncing... waiting 10 seconds for file propagation</div>';
+            banner.innerHTML = '<div>⏳ Syncing user data... waiting 10 seconds for file propagation</div>';
         }
         
-        // Wait 10 seconds for Syncthing
+        // Wait 10 seconds for Syncthing (user data only, not balance)
         await new Promise(resolve => setTimeout(resolve, 10000));
         
-        // Reload balance
+        // Reload balance from auth server and user data from files
         await this.getBalance();
         this.updateBalanceDisplaysSync();
         
         if (banner) {
-            banner.innerHTML = '<div>✅ Balance synced!</div>';
+            banner.innerHTML = '<div>✅ User data synced!</div>';
             setTimeout(() => banner.remove(), 2000);
         }
     }
@@ -349,15 +353,15 @@ class UnifiedBalanceSystem {
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
-                    this.fileBalance = parseFloat(data.balance) || 0;
+                    this.serverBalance = parseFloat(data.balance) || 0;
                     // Always add net change for consistent display
-                    const displayBalance = this.fileBalance + this.netChange;
-                    console.log(`✅ Balance loaded: ${this.fileBalance} (file) + ${this.netChange} (pending) = ${displayBalance}`);
+                    const displayBalance = this.serverBalance + this.netChange;
+                    console.log(`✅ Balance loaded: ${this.serverBalance} (server) + ${this.netChange} (pending) = ${displayBalance}`);
                     return displayBalance;
                 }
             }
             
-            this.fileBalance = 0;
+            this.serverBalance = 0;
             return this.netChange;
         } catch (error) {
             console.warn('⚠️ Balance API error:', error);
@@ -367,19 +371,19 @@ class UnifiedBalanceSystem {
     
     getGuestBalance() {
         const transactions = this.getGuestTransactions();
-        this.fileBalance = transactions.reduce((total, tx) => {
+        this.serverBalance = transactions.reduce((total, tx) => {
             return total + (tx.type === 'spend' ? -tx.amount : tx.amount);
         }, 0);
         
-        console.log('👤 Guest balance calculated:', this.fileBalance);
-        return this.fileBalance;
+        console.log('👤 Guest balance calculated:', this.serverBalance);
+        return this.serverBalance;
     }
     
     async addBalance(amount, source, description) {
         // CFC: No balance locking - tasks take 10+ seconds anyway
         if (this.isLoggedIn) {
             this.addToNetChange(amount, source, description);
-            return { success: true, balance: this.fileBalance + this.netChange };
+            return { success: true, balance: this.serverBalance + this.netChange };
         } else {
             return this.addGuestBalance(amount, source, description);
         }
@@ -389,7 +393,7 @@ class UnifiedBalanceSystem {
         // CFC: No balance locking - tasks take 10+ seconds anyway
         if (this.isLoggedIn) {
             this.addToNetChange(-amount, source, description);
-            return { success: true, balance: this.fileBalance + this.netChange };
+            return { success: true, balance: this.serverBalance + this.netChange };
         } else {
             return this.subtractGuestBalance(amount, source, description);
         }
@@ -422,24 +426,24 @@ class UnifiedBalanceSystem {
     
     addGuestBalance(amount, source, description) {
         this.saveGuestTransaction('earn', amount, source, description);
-        this.fileBalance += amount;
+        this.serverBalance += amount;
         this.updateBalanceDisplaysSync();
         
         console.log('🎁 Guest balance added:', amount);
-        return { success: true, balance: this.fileBalance };
+        return { success: true, balance: this.serverBalance };
     }
     
     subtractGuestBalance(amount, source, description) {
-        if (this.fileBalance < amount) {
+        if (this.serverBalance < amount) {
             return { success: false, error: 'Insufficient balance' };
         }
         
         this.saveGuestTransaction('spend', amount, source, description);
-        this.fileBalance -= amount;
+        this.serverBalance -= amount;
         this.updateBalanceDisplaysSync();
         
         console.log('💸 Guest balance subtracted:', amount);
-        return { success: true, balance: this.fileBalance };
+        return { success: true, balance: this.serverBalance };
     }
     
     // ========== USER MANAGEMENT ==========
@@ -522,7 +526,7 @@ class UnifiedBalanceSystem {
     }
     
     updateBalanceDisplaysSync() {
-        const balance = this.fileBalance + this.netChange;
+        const balance = this.serverBalance + this.netChange;
         const terminology = this.getTerminology();
         
         const balanceElements = document.querySelectorAll('.balance, #user-balance, #balance-display');

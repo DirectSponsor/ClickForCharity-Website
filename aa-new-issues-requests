@@ -3,8 +3,41 @@
 *Add your notes here - AI will process and clear them automatically*
 *Just write naturally, no formatting required*
 
----
+----------------
+
+The signup doesnt work the link currently goes to clickforcharity.net -- we need to hook it up to the auth server. The login link is ok
+----------------
+
+balance-sync-help.html - we have hopefully fixed the balance problems, so we need to change the balance sync help page, o rmaybe remove the balance sync altogether, I think there is no balance sync any more, its all on the auth server but can you check first?
 
 The simple tasks -- I completed the Like our latest post task and it does not go away, its still there when i return and click completed. Maybe it should be kept but greyed out and made inactive, and then disappear on next page load, because it would seems trange if it jsut vanishes when the user clicks to say it is completed, but at the moment I can do it over and over again. 
+
+-- that above is old and may have been fixed but please check,,
+
+----------------
+This one, can we just discuss it for now? And document when sorted out?
+
+Can we add a banner ad, its probably best to have one that will be ok for mobile too, so prob the first one will be best, in the ptc page at the top, what if we move the balance to the sidebar with no "balance" but the number with "coins" underneath, maybe separated out by a background color to distinguish it a bit, a very light blue would probably fit in ok, and still be readable, - that would leave room for the banner ad without giving it the whole width of the main section, as it could go inline with the title, and if its inline it would make 2 lines if it really had to, wouldnt it?
+
+        <!-- Banner Ads 468x60 -->
+        <script async src="https://api.surfvisits.com/banner_ads.js?pw=247&size=468x60"></script>
+        <!-- Banner Ads 728x90 -->
+        <script async src="https://api.surfvisits.com/banner_ads.js?pw=247&size=728x90"></script>
+        <!-- Banner Ads 300x250 -->
+        <script async src="https://api.surfvisits.com/banner_ads.js?pw=247&size=300x250"></script>
+
+        <!-- Example of integration (center banner) -->
+        <div style="display:flex; justify-content:center; margin:15px">
+            <script async src="https://api.surfvisits.com/banner_ads.js?pw=247&size=468x60"></script>
+        </div>
+
+or, could we do different when it is narrower for mobile? I.e. we have a 300x250 in the sidebar, and when we switch to mobile (responsove) and drop the side bar, we add the small 468x60... would that work? that would preserve the looks more if it is.
+
+In fact, can we do the rotation systme - may a swell get it done. There si a doc about it somewhere, here it is /home/andy/work/projects/ad-system
+I think tha tmainly had roflfaucet in mind but clickforcharity cna use it too, we could even set it all up on clickforcharity and have that serve as a ad network... how do the ad networks get over the cross site scripting stuff? 
+
+further thought... Surely we dont need js even, we can do an img from another site can't we? thats not scripting! In any case, we cna do it loaclly to clickforcharity for now and see later if a network is appropriate
+      
+
 
 

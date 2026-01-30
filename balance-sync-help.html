@@ -83,38 +83,50 @@
             <section class="help-section">
                 <div class="help-content">
                     <h2>🔄 How Balance Sync Works</h2>
-                    <p>Logged in members' balances are automatically synchronized across all DirectSponsor sites using a file-based system. Here's what you need to know:</p>
+                    <p>ClickForCharity uses a hybrid system: centralized balance management via auth server, and file-based sync for user data. Here's what you need to know:</p>
                     
                     <div class="help-box">
-                        <h3>Automatic Synchronization</h3>
-                        <p>Your balance syncs automatically in these situations:</p>
+                        <h3>💰 Balance Synchronization (Centralized)</h3>
+                        <p>Your balance is managed centrally on the auth server and updates in real-time:</p>
                         <ul>
-                            <li><strong>Every 2 minutes</strong> – Background timer saves your progress</li>
-                            <li><strong>When switching tabs</strong> – Balance is saved when you leave the page</li>
-                            <li><strong>When closing the page</strong> – Final save before exit</li>
-                            <li><strong>When returning to the site</strong> – Balance is refreshed from the server</li>
+                            <li><strong>Instant updates</strong> – Balance changes are sent immediately to the auth server</li>
+                            <li><strong>Real-time sync</strong> – Your balance is the same across all DirectSponsor sites</li>
+                            <li><strong>No waiting required</strong> – Balance updates are immediate, no 10-second delays</li>
+                            <li><strong>Reliable storage</strong> – Centralized database prevents data loss</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="help-box">
+                        <h3>📁 User Data Synchronization (File-Based)</h3>
+                        <p>Your profile, tasks, and platform preferences are stored locally and synced via Syncthing:</p>
+                        <ul>
+                            <li><strong>Profile data</strong> – Your platforms, completed tasks, and preferences</li>
+                            <li><strong>Task progress</strong> – Complex tasks completion and skip status</li>
+                            <li><strong>Syncthing sync</strong> – Files synchronized across DirectSponsor sites</li>
+                            <li><strong>Event-based updates</strong> – Syncs when switching tabs or closing pages</li>
                         </ul>
                     </div>
                     
                     <div class="help-box">
                         <h3>Manual Sync Button</h3>
-                        <p>Click the <strong>🔄 Sync</strong> button in the sidebar to manually refresh your balance:</p>
+                        <p>Click the <strong>🔄 Sync</strong> button in the sidebar to manually refresh your data:</p>
                         <ol>
-                            <li>Saves any pending earnings to the server</li>
-                            <li>Waits 10 seconds for cross-site synchronization</li>
-                            <li>Refreshes your balance from the server</li>
+                            <li>Saves any pending user data changes to local files</li>
+                            <li>Waits 10 seconds for Syncthing to propagate user data files</li>
+                            <li>Refreshes your balance from the centralized auth server</li>
+                            <li>Updates your user data from the latest local files</li>
                         </ol>
                         <p><em>Note: You must be logged in to use manual sync.</em></p>
                     </div>
                     
                     <div class="help-box">
                         <h3>How It Works Behind the Scenes</h3>
-                        <p>The system uses a simple but reliable architecture:</p>
+                        <p>The system uses a hybrid architecture for optimal performance:</p>
                         <ul>
-                            <li><strong>Local tracking</strong> – Your browser keeps a running total of earnings</li>
-                            <li><strong>File-based storage</strong> – Balance is saved to a file on the server</li>
-                            <li><strong>Syncthing sync</strong> – Files are synchronized across DirectSponsor sites</li>
-                            <li><strong>No database locks</strong> – Simple design works reliably even with slow connections</li>
+                            <li><strong>Balance API</strong> – Direct communication with auth.directsponsor.org</li>
+                            <li><strong>Local files</strong> – User profiles and task data stored locally</li>
+                            <li><strong>Syncthing sync</strong> – User data files synchronized across sites</li>
+                            <li><strong>Best of both worlds</strong> – Instant balance sync + reliable user data sync</li>
                         </ul>
                     </div>
                     
@@ -122,10 +134,10 @@
                         <h3>⚠️ Connection Issues</h3>
                         <p>If you see a warning banner about sync failures:</p>
                         <ul>
-                            <li><strong>Orange banner</strong> – Temporary connection issue. Your earnings are still being saved locally and will sync when reconnected.</li>
-                            <li><strong>Red banner</strong> – Multiple sync failures detected. Earning activities may be disabled until resolved. Click "Retry Now" to attempt reconnection.</li>
+                            <li><strong>Orange banner</strong> – Temporary connection issue with auth server. Your earnings are saved locally and will sync when reconnected.</li>
+                            <li><strong>Red banner</strong> – Multiple auth server failures detected. Earning activities may be disabled until resolved. Click "Retry Now" to attempt reconnection.</li>
                         </ul>
-                        <p>Your earnings are never lost – they're saved locally and will sync once the connection is restored.</p>
+                        <p>Your balance and earnings are never lost – they're cached locally and will sync once the connection is restored.</p>
                     </div>
                     
                     <div class="help-box">
@@ -134,8 +146,8 @@
                     </div>
                     
                     <div class="help-box">
-                        <h3>Why 10 Seconds?</h3>
-                        <p>When you manually sync, the system waits 10 seconds to allow Syncthing to propagate your balance file across all DirectSponsor sites. This ensures your balance is consistent everywhere.</p>
+                        <h3>Why 10 Seconds for User Data?</h3>
+                        <p>When you manually sync, the system waits 10 seconds to allow Syncthing to propagate your user data files (profiles, tasks, platforms) across all DirectSponsor sites. Your balance updates instantly – the wait only applies to user data synchronization.</p>
                     </div>
                     
                     <div class="notify-box">
