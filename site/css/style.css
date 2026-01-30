@@ -1846,3 +1846,56 @@ body {
         text-align: center;
     }
 }
+
+/* ========== AD SLOTS ========== */
+
+.ad-slot-container {
+    margin: 0.5rem 0;
+    text-align: center;
+}
+
+.header-banner {
+    margin-bottom: 0.75rem;
+}
+
+.content-banner {
+    margin: 0.5rem 0;
+}
+
+.ad-slot {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.ad-slot img {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Responsive ad behavior */
+@media (max-width: 768px) {
+    #ad-header-desktop {
+        display: none !important;
+    }
+    
+    #ad-header-mobile {
+        display: block !important;
+    }
+    
+    .ad-slot-container {
+        margin: 0.5rem 0;
+    }
+}
+
+@media (min-width: 769px) {
+    #ad-header-desktop {
+        display: block !important;
+    }
+    
+    #ad-header-mobile {
+        display: none !important;
+    }
+}
