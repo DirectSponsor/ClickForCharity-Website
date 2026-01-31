@@ -81,7 +81,35 @@
         }
         
         const index = getNextAdIndex(ads.length);
-        container.innerHTML = ads[index];
+        const adHtml = ads[index];
+        
+        // Clear container
+        container.innerHTML = '';
+        
+        // Check if ad contains script tag
+        if (adHtml.includes('<script')) {
+            // Parse and execute script tags properly
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = adHtml;
+            
+            // Move all nodes to container, handling scripts specially
+            Array.from(tempDiv.childNodes).forEach(node => {
+                if (node.tagName === 'SCRIPT') {
+                    // Create new script element to ensure execution
+                    const script = document.createElement('script');
+                    Array.from(node.attributes).forEach(attr => {
+                        script.setAttribute(attr.name, attr.value);
+                    });
+                    script.textContent = node.textContent;
+                    container.appendChild(script);
+                } else {
+                    container.appendChild(node.cloneNode(true));
+                }
+            });
+        } else {
+            // Simple HTML without scripts
+            container.innerHTML = adHtml;
+        }
     }
     
     // Handle window resize
