@@ -162,6 +162,7 @@ Allow users to purchase and submit their own banner ads via Lightning payment.
 - Email notifications
 - Refund policy
 - Content moderation (automated or manual)
+- **Browser cache handling:** Display message to user after payment: "Your ad is now live! If you don't see it immediately, please refresh your browser (Ctrl+Shift+R or Cmd+Shift+R)"
 
 **Benefits:**
 - Instant ad activation (no manual approval)
@@ -254,6 +255,12 @@ Copy the text files:
 - Clear localStorage in browser
 - Check that multiple ads exist in text file
 - Verify `---` separator is present between ads
+
+**New ad not showing immediately:**
+- Browser may be caching the old text file
+- Force refresh: Ctrl+Shift+R (Windows/Linux) or Cmd+Shift+R (Mac)
+- Clear browser cache if issue persists
+- Note: This is normal behavior and users should be instructed to refresh after adding ads
 
 **Admin interface not working:**
 - Verify PHP files have correct permissions
