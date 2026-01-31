@@ -181,6 +181,44 @@ Allow users to purchase and submit their own banner ads via Lightning payment.
 
 ## Known Issues & Resolutions
 
+### Issue: Ad Management UX - Separate Lists vs Paired Slots
+**Problem:** Current admin interface manages desktop and mobile ads in separate lists. This can cause confusion when trying to create paired ads (one desktop version + one mobile version for the same advertiser/campaign).
+
+**Current Behavior:**
+- Desktop ads and mobile ads are completely independent
+- Adding ad #5 to mobile doesn't necessarily pair with desktop ad #5
+- Each list rotates independently
+- Can lead to mismatched pairings
+
+**Future Improvement - Paired Slot Design:**
+Instead of two separate lists, redesign admin interface to manage "ad slots" where each slot contains:
+- Desktop version (728×90 or 468×60)
+- Mobile version (320×50 or 468×60)
+- Both versions rotate together as a pair
+- Easier to manage campaigns with responsive versions
+
+**Implementation Concept:**
+```
+Ad Slot #1:
+  Desktop: <script src="...728x90"></script>
+  Mobile:  <script src="...320x50"></script>
+  
+Ad Slot #2:
+  Desktop: <img src="banner-desktop.png">
+  Mobile:  <img src="banner-mobile.png">
+```
+
+**Observed Behavior:**
+- During testing, adding what should be banner #5 to mobile section replaced banner #4 instead
+- This suggests possible issue with PHP backend indexing or file writing
+- May need to investigate `save-banner-ad.php` logic
+
+**Workaround Until Redesign:**
+- Manually ensure desktop ad #1 corresponds to mobile ad #1
+- Keep lists synchronized manually
+- Document which ads are paired in a separate note
+- Check text files directly after adding ads to verify correct placement
+
 ### Issue: CORS Errors with file:// Protocol
 **Problem:** Banner rotation fails when viewing files locally with `file://` protocol.
 **Solution:** System requires HTTP server. Works correctly when deployed to web server.
