@@ -2,9 +2,9 @@
 (function() {
     // List of banner HTML snippets to rotate through
     const ads = [
-        '<img src="banner-placeholders/728x90-red.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">',
-        '<img src="banner-placeholders/728x90-green.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">',
-        '<img src="banner-placeholders/728x90-blue.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">'
+        '<img src="banners/728x90-red.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">',
+        '<img src="banners/728x90-green.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">',
+        '<img src="banners/728x90-blue.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">'
     ];
     
     // Get current position from localStorage, default to 0

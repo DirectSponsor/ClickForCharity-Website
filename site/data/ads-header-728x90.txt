@@ -1,9 +1,9 @@
 <a href="https://example-advertiser1.com" target="_blank" rel="noopener sponsored">
-    <img src="banner-placeholders/728x90-red.png" alt="Advertisement" width="728" height="90" style="border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+    <img src="banners/728x90-red.png" alt="Advertisement" width="728" height="90" style="border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
 </a>
 <a href="https://example-advertiser2.com" target="_blank" rel="noopener sponsored">
-    <img src="banner-placeholders/728x90-green.png" alt="Advertisement" width="728" height="90" style="border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+    <img src="banners/728x90-green.png" alt="Advertisement" width="728" height="90" style="border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
 </a>
 <a href="https://example-advertiser3.com" target="_blank" rel="noopener sponsored">
-    <img src="banner-placeholders/728x90-blue.png" alt="Advertisement" width="728" height="90" style="border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+    <img src="banners/728x90-blue.png" alt="Advertisement" width="728" height="90" style="border-radius:8px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
 </a>
