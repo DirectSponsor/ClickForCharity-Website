@@ -28,9 +28,9 @@ if (empty($html)) {
 
 // Determine file path
 $files = [
-    'desktop' => '../data/ads-desktop.txt',
-    'mobile' => '../data/ads-mobile.txt',
-    'floating' => '../data/ads-floating.txt'
+    'desktop' => '../../data/ads-desktop.txt',
+    'mobile' => '../../data/ads-mobile.txt',
+    'floating' => '../../data/ads-floating.txt'
 ];
 $file = $files[$type];
 

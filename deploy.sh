@@ -134,7 +134,6 @@ deploy_files() {
         --exclude='.DS_Store' \
         --exclude='Thumbs.db' \
         --exclude='site/' \
-        --exclude='data/' \
         --progress \
         "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/"
     
