@@ -34,30 +34,20 @@ $files = [
 ];
 $file = $files[$type];
 
-// Read existing ads
-$ads = [];
+// Read existing content
+$content = "";
 if (file_exists($file)) {
     $content = file_get_contents($file);
-    $ads = array_filter(
-        array_map('trim', explode('---', $content)),
-        function($ad) { return !empty($ad); }
-    );
-    $ads = array_values($ads); // Re-index
 }
 
-if ($index !== null) {
-    // Update existing ad
-    if ($index < 0 || $index >= count($ads)) {
-        echo json_encode(['success' => false, 'error' => 'Invalid index']);
-        exit;
-    }
-    $ads[$index] = $html;
-    $message = 'Banner ad updated successfully';
+// Prepare new entry
+$entry = $html;
+if (!empty($content) && substr(trim($content), -3) !== '---') {
+    $newContent = trim($content) . "\n---\n" . $entry . "\n";
 } else {
-    // Append new ad
-    $ads[] = $html;
-    $message = 'Banner ad added successfully';
+    $newContent = trim($content) . ($content ? "\n---\n" : "") . $entry . "\n";
 }
+$message = 'Banner ad added successfully';
 
 // Rebuild content with separators
 $newContent = implode("\n---\n", $ads);

@@ -206,18 +206,10 @@ or
                         <div class="ad-item-header">
                             <strong>Banner #${index + 1}</strong>
                             <div>
-                                <button class="btn" style="background:#2980b9;color:#fff;padding:0.3rem 0.8rem;margin-right:0.5rem;" onclick="editAd('${type}', ${index})">Edit</button>
                                 <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd('${type}', ${index})">Delete</button>
                             </div>
                         </div>
                         <div class="ad-item-code" id="${type}-code-${index}">${escapeHtml(ad)}</div>
-                        <div class="ad-edit-form" id="${type}-edit-${index}" style="display:none; margin-top:0.5rem;">
-                            <textarea id="${type}-input-${index}" style="width:100%; min-height:100px; font-family:monospace; margin-bottom:0.5rem;">${ad}</textarea>
-                            <div>
-                                <button class="btn primary" onclick="updateAd('${type}', ${index})">Save Changes</button>
-                                <button class="btn secondary" onclick="cancelEdit('${type}', ${index})">Cancel</button>
-                            </div>
-                        </div>
                     </div>
                 `).join('');
             } catch (error) {
