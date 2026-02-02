@@ -122,59 +122,7 @@
 
 <div id="floating-ad" class="floating-ad-container">
     <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
-    <div class="floating-ad-content">
-        <iframe src="https://litebits.io/banners/300x250/?ref=J61UMX3M" width="300" height="250" frameborder="0" scrolling="no" style="border: none;"></iframe>
-    </div>
+    <div class="floating-ad-content"></div>
 </div>
-<script>
-(function() {
-    const STORAGE_KEY = 'clickforcharity_floating_closed_ts';
-    const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
-
-    function initFloatingAd() {
-        const adElement = document.getElementById('floating-ad');
-        if (!adElement) return;
-
-        // Check if previously closed
-        const closedTs = localStorage.getItem(STORAGE_KEY);
-        if (closedTs) {
-            const timeSinceClose = Date.now() - parseInt(closedTs, 10);
-            if (timeSinceClose < HIDE_DURATION) {
-                // Keep hidden
-                return;
-            }
-        }
-
-        // Show ad
-        adElement.style.display = 'block';
-        
-        // Dynamic Footer Adjustment
-        // Wait for render to ensure dimensions are accurate
-        requestAnimationFrame(() => {
-            const height = adElement.offsetHeight;
-            const footer = document.querySelector('footer');
-            if (footer && height > 0) {
-                 // Add 30px buffer to the ad height
-                 footer.style.paddingBottom = (height + 30) + 'px';
-            }
-        });
-    }
-
-    window.closeFloatingAd = function() {
-        const adElement = document.getElementById('floating-ad');
-        if (adElement) {
-            adElement.style.display = 'none';
-            // Save timestamp
-            localStorage.setItem(STORAGE_KEY, Date.now().toString());
-        }
-    };
-
-    // Initialize
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initFloatingAd);
-    } else {
-        initFloatingAd();
-    }
-})();
-</script>
+<script src="js/floating-ad.js"></script>
     <!-- include end footer.incl -->
