@@ -49,11 +49,7 @@ if (!empty($content) && substr(trim($content), -3) !== '---') {
 }
 $message = 'Banner ad added successfully';
 
-// Rebuild content with separators
-$newContent = implode("\n---\n", $ads);
-if (!empty($newContent)) {
-    $newContent .= "\n";
-}
+
 
 // Write to file
 if (file_put_contents($file, $newContent) === false) {
