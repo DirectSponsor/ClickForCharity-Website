@@ -3,14 +3,14 @@
     const STORAGE_KEY_TIMER = 'clickforcharity_floating_closed_ts';
     const STORAGE_KEY_ROTATION = 'clickforcharity_floating_rotation_index';
     const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes
-    const ADS_FILE = 'data/ads-floating.txt';
+    const ADS_API = '/api/get-banner-ads.php?type=floating';
 
     async function loadAds() {
         try {
-            const response = await fetch(`${ADS_FILE}?t=${Date.now()}`);
+            const response = await fetch(`${ADS_API}&t=${Date.now()}`);
             if (!response.ok) return [];
-            const text = await response.text();
-            return text.split('---').map(ad => ad.trim()).filter(ad => ad.length > 0);
+            const data = await response.json();
+            return (data.success && data.ads) ? data.ads : [];
         } catch (e) {
             console.error('Failed to load floating ads', e);
             return [];

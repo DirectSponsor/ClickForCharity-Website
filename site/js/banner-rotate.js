@@ -6,29 +6,28 @@
     window.BannerRotateInitialized = true;
 
     const DESKTOP_BREAKPOINT = 768;
-    const DESKTOP_ADS_FILE = 'data/ads-desktop.txt';
-    const MOBILE_ADS_FILE = 'data/ads-mobile.txt';
+    const ADS_API = '/api/get-banner-ads.php?type=desktop';
 
     let currentAds = [];
     let currentSize = null;
 
-    // Load ads from file
+    // Load ads from API
     async function loadAds() {
-        const adsFile = DESKTOP_ADS_FILE;
-
         // Prevent redundant loading if already loaded
         if (currentAds.length > 0) {
             return currentAds;
         }
 
         try {
-            const response = await fetch(`${adsFile}?t=${Date.now()}`);
+            const response = await fetch(`${ADS_API}&t=${Date.now()}`);
             if (!response.ok) {
                 console.error('Failed to load ads:', response.status);
                 return [];
             }
-            const text = await response.text();
-            currentAds = parseAds(text);
+            const data = await response.json();
+            if (data.success && data.ads) {
+                currentAds = data.ads;
+            }
             return currentAds;
         } catch (error) {
             console.error('Error loading ads:', error);
