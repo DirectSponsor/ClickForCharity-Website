@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/my-platforms.html">
+    <meta property="og:url" content="https://clickforcharity.net/my-platforms.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="My Platforms – Click for Charity">
+    <meta property="og:description" content="Manage your platform memberships to personalize your task experience.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/my-platforms.html">
+    <meta name="twitter:title" content="My Platforms – Click for Charity">
+    <meta name="twitter:description" content="Manage your platform memberships to personalize your task experience.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <title>My Platforms – Click for Charity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+<!-- include start sidebar.incl -->
+        <aside class="sidebar" id="site-navigation">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </a>
+            
+            <!-- Beta Warning -->
+            <div style="background: #dc3545; color: white; padding: 8px 12px; margin: 10px 0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: bold;">
+                🚧 BETA TESTING
+            </div>
+            <nav>
+                <ul>
+                    <li ><a href="index.html">Home</a></li>
+                    <li ><a href="ptc.html">Surf Ads</a></li>
+                    <li ><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            
+            <!-- User Menu Area (bottom of sidebar) -->
+            <div class="user-select-container">
+                <!-- Login Button (shown when not logged in) -->
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <!-- User Menu (shown when logged in) -->
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <!-- Dropdown Menu (pops upward) -->
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <!-- Guest Mode Notice -->
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+<!-- include end sidebar.incl -->
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>My Platforms</h1>
+                <p class="member-only">Select the platforms you're a member of to see relevant tasks</p>
+            </header>
+
+            <div class="member-only" id="platforms-content">
+                <div class="platforms-intro">
+                    <h2>Select Your Platforms</h2>
+                    <p>Check the platforms you're already a member of. This helps us show you relevant tasks you can complete.</p>
+                    <p><strong>Not a member yet?</strong> Click the "Join" link next to rewarded platforms to sign up and earn bonus coins!</p>
+                    <p><strong>Bonus:</strong> Earn 25 coins for each new platform you join from the rewarded list!</p>
+                    <p style="margin-top: 12px; padding: 12px; background: #f0f2f5; border-radius: 6px;"><strong>New to these platforms?</strong> Read our <a href="platform-guide.html" style="color: #007bff; text-decoration: underline;">Platform Usage Guide</a> to learn how to use them properly and support both the platforms and our charitable projects.</p>
+                </div>
+
+                <div id="reward-notification" class="reward-notification" style="display: none;"></div>
+
+                <section class="platform-section">
+                    <h2>Common Platforms</h2>
+                    <p class="section-description">Most people already have accounts on these platforms</p>
+                    <div class="platform-grid" id="common-platforms">
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="x" data-rewarded="false">
+                            <span class="platform-name">X / Twitter</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="facebook" data-rewarded="false">
+                            <span class="platform-name">Facebook</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="youtube" data-rewarded="false">
+                            <span class="platform-name">YouTube</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="instagram" data-rewarded="false">
+                            <span class="platform-name">Instagram</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="tiktok" data-rewarded="false">
+                            <span class="platform-name">TikTok</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="reddit" data-rewarded="false">
+                            <span class="platform-name">Reddit</span>
+                        </label>
+                        <label class="platform-checkbox">
+                            <input type="checkbox" name="platform" value="linkedin" data-rewarded="false">
+                            <span class="platform-name">LinkedIn</span>
+                        </label>
+                    </div>
+                </section>
+
+                <section class="platform-section">
+                    <h2>Rewarded Platforms <span class="reward-badge">+25 coins each</span></h2>
+                    <p class="section-description">Join these platforms and earn 25 coins (one-time reward)</p>
+                    <div class="platform-grid" id="rewarded-platforms">
+                        <label class="platform-checkbox rewarded">
+                            <input type="checkbox" name="platform" value="odysee" data-rewarded="true">
+                            <span class="platform-name">Odysee <a href="https://odysee.com/$/invite/@clickforafrica:7" target="_blank" class="join-link">(Join)</a></span>
+                            <span class="coin-icon">🪙</span>
+                        </label>
+                        <label class="platform-checkbox rewarded">
+                            <input type="checkbox" name="platform" value="publish0x" data-rewarded="true">
+                            <span class="platform-name">Publish0x <a href="https://www.publish0x.com?a=WZdPjoWaKg" target="_blank" class="join-link">(Join)</a></span>
+                            <span class="coin-icon">🪙</span>
+                        </label>
+                        <label class="platform-checkbox rewarded">
+                            <input type="checkbox" name="platform" value="minds" data-rewarded="true">
+                            <span class="platform-name">Minds <a href="https://www.minds.com/register?referrer=ClickForAfrica" target="_blank" class="join-link">(Join)</a></span>
+                            <span class="coin-icon">🪙</span>
+                        </label>
+                    </div>
+                </section>
+
+                <div class="save-section">
+                    <button id="save-platforms-btn" class="btn-primary">Save My Platforms</button>
+                    <p class="save-hint">Changes are saved automatically when you click Save</p>
+                </div>
+            </div>
+
+            <div class="guest-only">
+                <div class="login-prompt">
+                    <h2>Login Required</h2>
+                    <p>You need to be logged in to manage your platform memberships.</p>
+                    <button class="btn-primary" onclick="window.auth.login()">Login Now</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/my-platforms.js"></script>
+    <script src="js/nav.js"></script>
+    <!-- include start footer.incl -->
+    <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">View site map</a>
+        </div>
+        <div style="display:inline-block;margin:0 0 0.5rem 0;">
+            <a href="https://lightning.news" target="_blank" rel="noopener">
+                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
+            </a>
+        </div>
+    </footer>
+    <!-- include end footer.incl -->
+</body>
+</html>

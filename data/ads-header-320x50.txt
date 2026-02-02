@@ -1,0 +1,9 @@
+<a href="https://example-advertiser1.com" target="_blank" rel="noopener sponsored">
+    <img src="banners/320x50-red.png" alt="Advertisement" width="320" height="50" style="border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+</a>
+<a href="https://example-advertiser2.com" target="_blank" rel="noopener sponsored">
+    <img src="banners/320x50-green.png" alt="Advertisement" width="320" height="50" style="border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+</a>
+<a href="https://example-advertiser3.com" target="_blank" rel="noopener sponsored">
+    <img src="banners/320x50-blue.png" alt="Advertisement" width="320" height="50" style="border-radius:6px;box-shadow:0 2px 4px rgba(0,0,0,0.1);">
+</a>

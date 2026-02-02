@@ -1,0 +1,5 @@
+<img src="banners/728x90-red.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">
+---
+<img src="banners/728x90-green.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">
+---
+<img src="banners/728x90-blue.png" width="728" height="90" style="max-width:100%;height:auto;" alt="Advertisement">

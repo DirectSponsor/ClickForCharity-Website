@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/admin-dashboard.html">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content="https://clickforcharity.net/admin-dashboard.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
+    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/admin-dashboard.html">
+    <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
+    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <title>Admin Dashboard – Click for Charity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+        <header style="margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 20px;">
+            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </a>
+        </header>
+        <main>
+            <section class="admin-dashboard" aria-labelledby="admin-dashboard-heading">
+                <h1 id="admin-dashboard-heading">Admin Dashboard</h1>
+                <p class="description">Manage your Click for Charity site. Create and monitor tasks, ads, and user activity.</p>
+                
+                <div class="admin-grid">
+                    <div class="admin-card">
+                        <h3>🎯 Surf Ads Management</h3>
+                        <p>Create and manage PTC (Paid-to-Click) advertisements. Set timers, rewards, and duration.</p>
+                        <div class="admin-card-actions">
+                            <a href="admin-ads.html" class="btn-primary">Manage Ads</a>
+                            <a href="ptc.html" target="_blank" class="btn-secondary">View Live</a>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card">
+                        <h3>📋 Simple Tasks Management</h3>
+                        <p>Create and manage simple tasks like social media follows, sign-ups, and other one-time actions.</p>
+                        <div class="admin-card-actions">
+                            <a href="admin-simple-tasks.html" class="btn-primary">Manage Tasks</a>
+                            <a href="simple-tasks.html" target="_blank" class="btn-secondary">View Live</a>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card disabled">
+                        <h3>👥 User Management</h3>
+                        <p>View user statistics, manage accounts, and monitor activity. (Coming soon)</p>
+                        <div class="admin-card-actions">
+                            <button class="btn-disabled" disabled>Coming Soon</button>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-card disabled">
+                        <h3>📊 Analytics & Reports</h3>
+                        <p>View site statistics, earnings reports, and user engagement metrics. (Coming soon)</p>
+                        <div class="admin-card-actions">
+                            <button class="btn-disabled" disabled>Coming Soon</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="admin-quick-stats">
+                    <h3>Quick Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-ads">-</span>
+                            <span class="stat-label">Active Ads</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-tasks">-</span>
+                            <span class="stat-label">Active Tasks</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-users">-</span>
+                            <span class="stat-label">Total Users</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="total-payouts">-</span>
+                            <span class="stat-label">Total Paid</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <script>
+        // Load quick stats
+        async function loadQuickStats() {
+            try {
+                // Load ads count
+                const adsResponse = await fetch('/api/get-ads.php');
+                const ads = await adsResponse.json();
+                document.getElementById('total-ads').textContent = ads ? ads.length : 0;
+                
+                // Load tasks count (will be 0 until backend is ready)
+                document.getElementById('total-tasks').textContent = '0';
+                
+                // Placeholder for other stats
+                document.getElementById('total-users').textContent = '-';
+                document.getElementById('total-payouts').textContent = '-';
+            } catch (error) {
+                console.error('Failed to load stats:', error);
+                document.getElementById('total-ads').textContent = '?';
+                document.getElementById('total-tasks').textContent = '?';
+            }
+        }
+        
+        // Load stats when page loads
+        document.addEventListener('DOMContentLoaded', loadQuickStats);
+    </script>
+</body>
+</html>

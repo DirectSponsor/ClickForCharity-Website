@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/about.html">
+    <title>About – Click for Charity</title>
+    <meta name="description" content="Learn about Click for Charity's mission to connect sponsors with volunteers through simple tasks and transparent Bitcoin micropayments.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content="https://clickforcharity.net/about.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="About – Click for Charity">
+    <meta property="og:description" content="Learn about Click for Charity's mission to connect sponsors with volunteers through simple tasks and transparent Bitcoin micropayments.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/about.html">
+    <meta name="twitter:title" content="About – Click for Charity">
+    <meta name="twitter:description" content="Learn about Click for Charity's mission to connect sponsors with volunteers through simple tasks and transparent Bitcoin micropayments.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+<!-- include start sidebar.incl -->
+        <aside class="sidebar" id="site-navigation">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </a>
+            
+            <!-- Beta Warning -->
+            <div style="background: #dc3545; color: white; padding: 8px 12px; margin: 10px 0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: bold;">
+                🚧 BETA TESTING
+            </div>
+            <nav>
+                <ul>
+                    <li ><a href="index.html">Home</a></li>
+                    <li ><a href="ptc.html">Surf Ads</a></li>
+                    <li ><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            
+            <!-- User Menu Area (bottom of sidebar) -->
+            <div class="user-select-container">
+                <!-- Login Button (shown when not logged in) -->
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <!-- User Menu (shown when logged in) -->
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <!-- Dropdown Menu (pops upward) -->
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <!-- Guest Mode Notice -->
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+<!-- include end sidebar.incl -->
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>About Click for Charity</h1>
+            </header>
+            
+            <section class="about-content">
+                <article>
+                    <h2>Support Projects Through Action</h2>
+                    <p>Welcome to ClickForCharity - where your everyday actions create real impact. Instead of asking for donations, we let you earn coins by completing simple tasks and viewing ads. Your earned coins can then support meaningful projects working toward financial independence.</p>
+                </article>
+                
+                <article>
+                    <h2>How It Works</h2>
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-top: 0;">🎯 Step 1: Complete Tasks</h4>
+                        <p>View websites, complete simple tasks, and engage with content. Each action earns you coins representing your share of the platform's revenue.</p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-top: 0;">💰 Step 2: Earn Coins</h4>
+                        <p>Your coins accumulate in your balance, ready to be allocated to projects you care about. No direct payment required - you earn through participation.</p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                        <h4 style="margin-top: 0;">🤝 Step 3: Support Projects</h4>
+                        <p>Allocate your earned coins to recipient projects through our chat system. Watch as collective support helps projects reach their goals.</p>
+                    </div>
+                </article>
+                
+                <article>
+                    <h2>Three Sites, One Mission</h2>
+                    <p>ClickForCharity is part of a larger ecosystem designed to create multiple pathways for supporting meaningful projects:</p>
+                    
+                    <div style="background: #e8f5e8; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #4CAF50;">
+                        <h4 style="margin-top: 0;">🎯 ClickForCharity.net - Earn & Contribute</h4>
+                        <p><strong>What you do here:</strong> Complete tasks, view ads, earn coins through action. Perfect for when you want to contribute time and attention rather than money.</p>
+                    </div>
+                    
+                    <div style="background: #e3f2fd; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #2196F3;">
+                        <h4 style="margin-top: 0;">🎮 RoflFaucet.com - Play & Support</h4>
+                        <p><strong>What you do there:</strong> Play games, use faucet features, earn coins through entertainment. Great for having fun while generating ad revenue for projects.</p>
+                    </div>
+                    
+                    <div style="background: #fff3e0; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; border-left: 4px solid #FF9800;">
+                        <h4 style="margin-top: 0;">🤝 DirectSponsor.net - Connect & Sponsor</h4>
+                        <p><strong>What happens there:</strong> Direct sponsorships, social features, project updates. This is where recipients share their progress and connect with supporters.</p>
+                    </div>
+                    
+                    <p><strong>Your coins work across all sites:</strong> Earn on ClickForCharity or RoflFaucet, then allocate to projects through DirectSponsor's social features.</p>
+                </article>
+                
+                <article>
+                    <h2>Real Impact, Real People</h2>
+                    <p>We support individuals working toward financial independence through their own projects. These aren't faceless organizations - they're people building businesses, learning skills, and creating lasting change in their communities.</p>
+                    
+                    <p><strong>3-Year Goal:</strong> Each recipient aims to become self-sufficient through regular support while they build their future. Your contributions provide the stable income they need to focus on their path to independence.</p>
+                </article>
+                
+                <article>
+                    <h2>Why Bitcoin?</h2>
+                    <p>We use Bitcoin Lightning for fast, low-cost payments that maximize the amount reaching recipients. No traditional banking fees, no delays - just efficient support that goes where it's needed most.</p>
+                    
+                    <p><strong>Transparent:</strong> Every transaction is visible on the blockchain. <strong>Efficient:</strong> Near-instant payments with minimal fees. <strong>Global:</strong> Support projects anywhere in the world.</p>
+                </article>
+                
+                <article>
+                    <h2>Get Started Today</h2>
+                    <p>Ready to turn your online time into meaningful impact?</p>
+                    
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <a href="ptc.html" class="btn" style="background: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 0.5rem;">🎯 Start Earning</a>
+                        <a href="https://roflfaucet.com" target="_blank" class="btn" style="background: #2196F3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 0.5rem;">🎮 Play & Earn</a>
+                        <a href="https://directsponsor.net" target="_blank" class="btn" style="background: #FF9800; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 0.5rem;">🤝 View Projects</a>
+                    </div>
+                    
+                    <p><strong>Beta Phase:</strong> We're currently testing and improving the system. Your participation helps us build something that creates real, lasting impact.</p>
+                </article>
+                
+                <!-- A-ads Compliance Section -->
+                <section style="margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e0e0e0;">
+                    <h3>Support Our Partners</h3>
+                    <p>Help us keep the platform running by visiting our trusted advertising partners:</p>
+                    
+                    <div style="display: flex; justify-content: center; align-items: center; margin: 2rem 0;">
+                        <!-- Static A-ads Banner 728x90 -->
+                        <div style="width:728px;height:90px;border:2px solid #4CAF50;background:#f8f9fa;display:flex;align-items:center;justify-content:center;color:#333;font-family:Arial,sans-serif;">
+                            <div style="text-align:center;">
+                                <div style="font-size:18px;font-weight:bold;color:#4CAF50;">🎯 A-ads Verification Banner</div>
+                                <div style="font-size:14px;margin-top:4px;">Static ad for compliance verification</div>
+                                <div style="font-size:12px;color:#666;margin-top:2px;">Replace with actual A-ads code</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; align-items: center; margin: 2rem 0;">
+                        <!-- Static A-ads Square 300x250 -->
+                        <div style="width:300px;height:250px;border:2px solid #2196F3;background:#f8f9fa;display:flex;align-items:center;justify-content:center;color:#333;font-family:Arial,sans-serif;">
+                            <div style="text-align:center;padding:20px;">
+                                <div style="font-size:20px;font-weight:bold;color:#2196F3;margin-bottom:10px;">🚀 Partner With Us</div>
+                                <div style="font-size:14px;margin-bottom:8px;">Static A-ads placement</div>
+                                <div style="font-size:12px;color:#666;margin-bottom:12px;">300×250 verification spot</div>
+                                <div style="font-size:11px;color:#888;border-top:1px solid #ddd;padding-top:8px;">Replace with A-ads code</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <p style="text-align: center; font-size: 12px; color: #666; margin-top: 2rem;">
+                        <em>This section contains static advertisements for compliance verification. 
+                        Other pages may feature rotating promotional content.</em>
+                    </p>
+                </section>
+            </section>
+        </main>
+    </div>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <!-- include start footer.incl -->
+    <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">View site map</a>
+        </div>
+        <div style="display:inline-block;margin:0 0 0.5rem 0;">
+            <a href="https://lightning.news" target="_blank" rel="noopener">
+                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
+            </a>
+        </div>
+    </footer>
+    <!-- include end footer.incl -->
+</body>
+</html>

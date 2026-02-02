@@ -1,5 +1,30 @@
 # Banner Ad System - Clean Documentation
 
+## Terminology & Definitions
+
+**Ad Position** - Fixed location on a page where ads are displayed (e.g., Header Position, Sidebar Position). Each position can contain multiple rotating ads.
+
+**Rotation Pool** - Collection of ads configured for a specific position. All ads in the pool rotate through display when users visit the page.
+
+**Ad Slot** - Individual advertisement within a rotation pool. Each slot contains one banner ad (image, link, or script) that participates in the rotation cycle.
+
+**Rotation Cycle** - Complete loop through all ad slots in a position's rotation pool. Uses localStorage to track which ad was shown last and displays the next one.
+
+**File Structure:**
+```
+data/
+├── position-1/           # Header position
+│   ├── slot-1.txt        # Individual ad banner
+│   ├── slot-2.txt        # Individual ad banner
+│   └── slot-3.txt        # Individual ad banner
+└── position-2/           # Sidebar position
+    ├── slot-1.txt        # Individual ad banner
+    ├── slot-2.txt        # Individual ad banner
+    └── slot-3.txt        # Individual ad banner
+```
+
+---
+
 ## Overview
 
 Network-wide banner advertising system with unified booking platform on ClickForCharity.net and display across all sites.

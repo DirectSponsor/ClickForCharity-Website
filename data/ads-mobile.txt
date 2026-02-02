@@ -1,0 +1,5 @@
+<img src="banners/320x50-red.png" width="320" height="50" style="max-width:100%;height:auto;" alt="Advertisement">
+---
+<img src="banners/320x50-green.png" width="320" height="50" style="max-width:100%;height:auto;" alt="Advertisement">
+---
+<img src="banners/320x50-blue.png" width="320" height="50" style="max-width:100%;height:auto;" alt="Advertisement">

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/sitemap.html">
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content="https://clickforcharity.net/sitemap.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
+    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/sitemap.html">
+    <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
+    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <title>Site Map – Click for Charity</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+<!-- include start sidebar.incl -->
+        <aside class="sidebar" id="site-navigation">
+            <div class="logo">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="ptc.html">Surf Ads</a></li>
+                    <li><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li><a href="surveys.html">Surveys</a></li>
+                    <li><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                    <li><button id="sync-balance-btn" onclick="window.unifiedBalance?.syncBalance()" title="Refresh balance" style="border:none;background:none;cursor:pointer;font-size:13px;padding:8px;width:100%;text-align:left;">🔄 Sync&nbsp;&nbsp;<a href="balance-sync-help.html" class="sync-help" onclick="event.stopPropagation();" style="display:inline-block;font-size:11px;opacity:0.7;text-decoration:none;">(?)</a></button></li>
+                </ul>
+            </nav>
+            
+            <div class="user-select-container">
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">My Profile</a>
+                        <a href="my-platforms.html" class="dropdown-item">My Platforms</a>
+                        <button onclick="window.auth.logout()" class="dropdown-item logout-btn">Logout</button>
+                    </div>
+                </div>
+                
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+<!-- include end sidebar.incl -->
+        <main class="main-content" data-menu-target>
+            <section class="hero">
+                <div class="hero-copy">
+                    <h1>Site Map</h1>
+                    <p>Every page of Click for Charity is listed here so crawlers and visitors can find the right spot quickly.</p>
+                </div>
+            </section>
+
+            <section class="highlights sitemap-list">
+                <article>
+                    <h2>Public Pages</h2>
+                    <ul>
+                        <li><a href="index.html">Home</a> – Overview of the mission and how the project works.</li>
+                        <li><a href="ptc.html">Surf Ads</a> – Primary reward experience where members view ads and earn tokens.</li>
+                        <li><a href="simple-tasks.html">Simple Tasks</a> – Low-effort tasks that refresh frequently for more ways to earn.</li>
+                        <li><a href="skipped-tasks.html">Skipped Tasks</a> – Review and retry any tasks you skipped earlier.</li>
+                        <li><a href="surveys.html">Surveys</a> – Coming soon notice for the survey experience.</li>
+                        <li><a href="offers.html">Offers</a> – Preview for the offer wall being built.</li>
+                    </ul>
+                </article>
+                <article>
+                    <h2>Member & Admin Tools</h2>
+                    <ul>
+                        <li><a href="profile.html">Profile</a> – Account status and upcoming profile features.</li>
+                        <li><a href="admin.html">Admin Dashboard</a> – Central admin hub for managing content.</li>
+                        <li><a href="admin-ads.html">Admin – Surf Ads Management</a> – Create and maintain surf ad tasks.</li>
+                        <li><a href="admin-simple-tasks.html">Admin – Simple Tasks</a> – Control simple task campaigns (mock data).</li>
+                        <li><a href="admin-dashboard.html">Admin Analytics</a> – Quick stats and navigation shortcuts.</li>
+                        <li><a href="admin-old-backup.html">Admin Legacy</a> – Archive dashboard used for earlier experiments.</li>
+                    </ul>
+                </article>
+                <article>
+                    <h2>Support Pages</h2>
+                    <ul>
+                        <li><a href="thank-you/">Thank You</a> – Gratitude page with animated hero and timer.</li>
+                        <li><a href="images/cover1400x500.jpeg" target="_blank" rel="noopener">Hero Cover Image</a> – Shared image used in open graph cards (1400x500px).</li>
+                    </ul>
+                </article>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <!-- include start footer.incl -->
+    <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+        <div style="margin-bottom:0.5rem;">
+            <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">View site map</a>
+        </div>
+        <div style="padding:0.5rem 0;font-size:0.85rem;color:#666;">
+            Supported by <a href="https://lightning.news" target="_blank" rel="noopener" style="color:#0d172a;text-decoration:underline;font-weight:500;">Lightning.news</a> – Fast, decentralized news
+        </div>
+    </footer>
+    <!-- include end footer.incl -->
+</body>
+</html>
