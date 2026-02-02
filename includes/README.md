@@ -38,6 +38,8 @@ All unused variables are removed during processing.
 ## Files
 
 - `sidebar.incl` - The main sidebar navigation component (logo, nav menu, user menu)
+- `footer.incl` - The footer component with sitemap link and Lightning.news badge
+- `banner-ad.incl` - The rotating banner ad container (populated by banner-rotate.js)
 
 ## Adding New Include Files
 

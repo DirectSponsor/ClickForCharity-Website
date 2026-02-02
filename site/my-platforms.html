@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,11 +19,12 @@
     <title>My Platforms – Click for Charity</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
     <div class="menu-overlay" data-menu-overlay></div>
     <div class="container">
-<!-- include start sidebar.incl -->
+        <!-- include start sidebar.incl -->
         <aside class="sidebar" id="site-navigation">
             <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
@@ -74,7 +76,7 @@
                 <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
         </aside>
-<!-- include end sidebar.incl -->
+        <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
             <header class="dashboard-header">
                 <h1>My Platforms</h1>
@@ -84,10 +86,15 @@
             <div class="member-only" id="platforms-content">
                 <div class="platforms-intro">
                     <h2>Select Your Platforms</h2>
-                    <p>Check the platforms you're already a member of. This helps us show you relevant tasks you can complete.</p>
-                    <p><strong>Not a member yet?</strong> Click the "Join" link next to rewarded platforms to sign up and earn bonus coins!</p>
+                    <p>Check the platforms you're already a member of. This helps us show you relevant tasks you can
+                        complete.</p>
+                    <p><strong>Not a member yet?</strong> Click the "Join" link next to rewarded platforms to sign up
+                        and earn bonus coins!</p>
                     <p><strong>Bonus:</strong> Earn 25 coins for each new platform you join from the rewarded list!</p>
-                    <p style="margin-top: 12px; padding: 12px; background: #f0f2f5; border-radius: 6px;"><strong>New to these platforms?</strong> Read our <a href="platform-guide.html" style="color: #007bff; text-decoration: underline;">Platform Usage Guide</a> to learn how to use them properly and support both the platforms and our charitable projects.</p>
+                    <p style="margin-top: 12px; padding: 12px; background: #f0f2f5; border-radius: 6px;"><strong>New to
+                            these platforms?</strong> Read our <a href="platform-guide.html"
+                            style="color: #007bff; text-decoration: underline;">Platform Usage Guide</a> to learn how to
+                        use them properly and support both the platforms and our charitable projects.</p>
                 </div>
 
                 <div id="reward-notification" class="reward-notification" style="display: none;"></div>
@@ -133,17 +140,21 @@
                     <div class="platform-grid" id="rewarded-platforms">
                         <label class="platform-checkbox rewarded">
                             <input type="checkbox" name="platform" value="odysee" data-rewarded="true">
-                            <span class="platform-name">Odysee <a href="https://odysee.com/$/invite/@clickforafrica:7" target="_blank" class="join-link">(Join)</a></span>
+                            <span class="platform-name">Odysee <a href="https://odysee.com/$/invite/@clickforafrica:7"
+                                    target="_blank" class="join-link">(Join)</a></span>
                             <span class="coin-icon">🪙</span>
                         </label>
                         <label class="platform-checkbox rewarded">
                             <input type="checkbox" name="platform" value="publish0x" data-rewarded="true">
-                            <span class="platform-name">Publish0x <a href="https://www.publish0x.com?a=WZdPjoWaKg" target="_blank" class="join-link">(Join)</a></span>
+                            <span class="platform-name">Publish0x <a href="https://www.publish0x.com?a=WZdPjoWaKg"
+                                    target="_blank" class="join-link">(Join)</a></span>
                             <span class="coin-icon">🪙</span>
                         </label>
                         <label class="platform-checkbox rewarded">
                             <input type="checkbox" name="platform" value="minds" data-rewarded="true">
-                            <span class="platform-name">Minds <a href="https://www.minds.com/register?referrer=ClickForAfrica" target="_blank" class="join-link">(Join)</a></span>
+                            <span class="platform-name">Minds <a
+                                    href="https://www.minds.com/register?referrer=ClickForAfrica" target="_blank"
+                                    class="join-link">(Join)</a></span>
                             <span class="coin-icon">🪙</span>
                         </label>
                     </div>
@@ -180,6 +191,60 @@
             </a>
         </div>
     </footer>
+
+<div id="floating-ad" class="floating-ad-container">
+    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <div class="floating-ad-content">
+        <!-- Ad Content Placeholder -->
+        <div style="text-align:center; padding: 20px;">
+            <p style="margin:0; font-weight:bold; color:#555;">Sponsored</p>
+            <div style="margin:10px auto; width:300px; height:150px; background:#eee; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc;">
+                350 x 200 Ad Space
+            </div>
+            <p style="margin:0; font-size:11px; color:#999;">Floating Ad Demo</p>
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    const STORAGE_KEY = 'clickforcharity_floating_closed_ts';
+    const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+    function initFloatingAd() {
+        const adElement = document.getElementById('floating-ad');
+        if (!adElement) return;
+
+        // Check if previously closed
+        const closedTs = localStorage.getItem(STORAGE_KEY);
+        if (closedTs) {
+            const timeSinceClose = Date.now() - parseInt(closedTs, 10);
+            if (timeSinceClose < HIDE_DURATION) {
+                // Keep hidden
+                return;
+            }
+        }
+
+        // Show ad
+        adElement.style.display = 'block';
+    }
+
+    window.closeFloatingAd = function() {
+        const adElement = document.getElementById('floating-ad');
+        if (adElement) {
+            adElement.style.display = 'none';
+            // Save timestamp
+            localStorage.setItem(STORAGE_KEY, Date.now().toString());
+        }
+    };
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFloatingAd);
+    } else {
+        initFloatingAd();
+    }
+})();
+</script>
     <!-- include end footer.incl -->
 </body>
-</html>
+

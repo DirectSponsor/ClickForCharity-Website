@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,8 @@
     <meta property="og:url" content="https://clickforcharity.net/surveys.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:description"
+        content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <!-- Twitter Meta Tags -->
@@ -16,18 +18,21 @@
     <meta property="twitter:domain" content="clickforcharity.net">
     <meta property="twitter:url" content="https://clickforcharity.net/surveys.html">
     <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="twitter:description"
+        content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <title>Surveys – Click for Charity</title>
-    <meta name="description" content="Earn tokens by completing surveys and support charities. Coming soon to Click for Charity.">
+    <meta name="description"
+        content="Earn tokens by completing surveys and support charities. Coming soon to Click for Charity.">
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
     <div class="menu-overlay" data-menu-overlay></div>
     <div class="container">
-<!-- include start sidebar.incl -->
+        <!-- include start sidebar.incl -->
         <aside class="sidebar" id="site-navigation">
             <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
@@ -79,20 +84,24 @@
                 <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
         </aside>
-<!-- include end sidebar.incl -->
+        <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
+            <!-- include start banner-ad.incl -->
+<div id="ad-banner" style="margin:0 0 0.3em 0;"></div>
+<script src="js/banner-rotate.js"></script>
+            <!-- include end banner-ad.incl -->
             <header class="dashboard-header">
                 <h1>Surveys</h1>
                 <div class="user-stats">
                     <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
                 </div>
             </header>
-            
+
             <section class="coming-soon-section">
                 <div class="coming-soon-content">
                     <h2>📋 Surveys Coming Soon</h2>
                     <p>We're building a survey system that lets you earn tokens while sharing your opinions.</p>
-                    
+
                     <div class="feature-preview">
                         <h3>What to Expect:</h3>
                         <ul>
@@ -103,15 +112,17 @@
                             <li>✅ Track your survey completion history</li>
                         </ul>
                     </div>
-                    
+
                     <div class="meanwhile">
                         <h3>In the Meanwhile:</h3>
-                        <p>Try our <a href="ptc.html" class="inline-link">Surf Ads</a> to start earning tokens today!</p>
+                        <p>Try our <a href="ptc.html" class="inline-link">Surf Ads</a> to start earning tokens today!
+                        </p>
                     </div>
-                    
+
                     <div class="notify-box">
                         <p><strong>Want to know when surveys launch?</strong></p>
-                        <p>Follow updates at <a href="https://directsponsor.net/" target="_blank" rel="noopener" class="inline-link">DirectSponsor.net</a></p>
+                        <p>Follow updates at <a href="https://directsponsor.net/" target="_blank" rel="noopener"
+                                class="inline-link">DirectSponsor.net</a></p>
                     </div>
                 </div>
             </section>
@@ -131,6 +142,60 @@
             </a>
         </div>
     </footer>
+
+<div id="floating-ad" class="floating-ad-container">
+    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <div class="floating-ad-content">
+        <!-- Ad Content Placeholder -->
+        <div style="text-align:center; padding: 20px;">
+            <p style="margin:0; font-weight:bold; color:#555;">Sponsored</p>
+            <div style="margin:10px auto; width:300px; height:150px; background:#eee; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc;">
+                350 x 200 Ad Space
+            </div>
+            <p style="margin:0; font-size:11px; color:#999;">Floating Ad Demo</p>
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    const STORAGE_KEY = 'clickforcharity_floating_closed_ts';
+    const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+    function initFloatingAd() {
+        const adElement = document.getElementById('floating-ad');
+        if (!adElement) return;
+
+        // Check if previously closed
+        const closedTs = localStorage.getItem(STORAGE_KEY);
+        if (closedTs) {
+            const timeSinceClose = Date.now() - parseInt(closedTs, 10);
+            if (timeSinceClose < HIDE_DURATION) {
+                // Keep hidden
+                return;
+            }
+        }
+
+        // Show ad
+        adElement.style.display = 'block';
+    }
+
+    window.closeFloatingAd = function() {
+        const adElement = document.getElementById('floating-ad');
+        if (adElement) {
+            adElement.style.display = 'none';
+            // Save timestamp
+            localStorage.setItem(STORAGE_KEY, Date.now().toString());
+        }
+    };
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFloatingAd);
+    } else {
+        initFloatingAd();
+    }
+})();
+</script>
     <!-- include end footer.incl -->
 </body>
-</html>
+

@@ -2,9 +2,12 @@
     box-sizing: border-box;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: inherit;
 }
+
 :root {
     --primary-bg: #f0f2f5;
     --sidebar-bg: #ffffff;
@@ -201,7 +204,7 @@ body {
     background: white;
     border: 1px solid var(--border-color);
     border-radius: 6px;
-    box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.15);
     overflow: hidden;
     z-index: 100;
 }
@@ -231,7 +234,8 @@ body {
     flex: 1 1 360px;
     min-width: 0;
     width: 100%;
-    padding: 20px 40px;
+    padding: 0 40px 20px 40px;
+    /* No top padding - ad sits at very top */
 }
 
 .main-content.landing {
@@ -243,8 +247,9 @@ body {
     color: var(--text-color);
     display: flex;
     flex-direction: column;
-    gap: 60px;
-    padding: 60px 40px;
+    gap: 20px;
+    padding: 0 40px 20px 40px;
+    /* No top padding - ad sits at very top */
 }
 
 .landing .hero {
@@ -642,7 +647,8 @@ body {
 .task-item.done .btn-visit {
     background-color: #ccc;
     cursor: not-allowed;
-    pointer-events: none; /* Disable clicks on viewed links */
+    pointer-events: none;
+    /* Disable clicks on viewed links */
 }
 
 @media (max-width: 640px) {
@@ -682,14 +688,16 @@ body {
     }
 
     .main-content {
-        padding: 20px;
+        padding: 0 20px 20px 20px;
+        /* No top padding on mobile either */
     }
 
     .main-content.landing {
         /* Mobile: no gradient needed */
         background-position: center;
-        padding: 36px 20px;
-        gap: 40px;
+        padding: 0 20px 15px 20px;
+        /* No top padding on mobile either */
+        gap: 15px;
     }
 
     .landing .hero h1 {
@@ -739,7 +747,7 @@ body {
     font-size: 28px;
 }
 
-.coming-soon-content > p {
+.coming-soon-content>p {
     font-size: 16px;
     color: var(--text-light);
     margin-bottom: 30px;
@@ -802,11 +810,11 @@ body {
     .coming-soon-content {
         padding: 20px;
     }
-    
+
     .coming-soon-content h2 {
         font-size: 24px;
     }
-    
+
     .feature-preview,
     .meanwhile,
     .notify-box {
@@ -841,11 +849,13 @@ body {
 
 .task-content {
     width: 100%;
-    padding: 0; /* Remove padding from this wrapper div */
+    padding: 0;
+    /* Remove padding from this wrapper div */
 }
 
 .task-header {
-    padding: 0; /* Match PTC page .info div */
+    padding: 0;
+    /* Match PTC page .info div */
 }
 
 .task-short-description {
@@ -857,7 +867,8 @@ body {
 
 .task-details {
     border-top: 1px solid var(--border-color);
-    padding: 0; /* Match PTC page .actions div */
+    padding: 0;
+    /* Match PTC page .actions div */
     background-color: #fafafa;
     transition: all 0.3s ease;
 }
@@ -914,7 +925,8 @@ body {
     text-align: center;
     background-color: var(--accent-color);
     color: #ffffff;
-    margin-left: auto; /* Push to the right */
+    margin-left: auto;
+    /* Push to the right */
 }
 
 .task-actions .btn-visit:hover {
@@ -1097,53 +1109,55 @@ body {
     .admin-dashboard {
         padding: 16px;
     }
-    
+
     .admin-grid {
         grid-template-columns: 1fr;
         gap: 16px;
         margin: 24px 0;
     }
-    
+
     .admin-card {
         padding: 20px;
     }
-    
+
     .admin-card-actions {
         flex-direction: column;
     }
-    
+
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 16px;
     }
 }
+
 @media (max-width: 600px) {
     .simple-task {
         margin-bottom: 12px;
     }
-    
+
     .task-header {
         padding: 16px;
     }
-    
+
     .task-details {
         padding: 16px;
     }
-    
+
     .task-actions {
         flex-direction: column;
         gap: 8px;
     }
-    
+
     .task-actions .btn-visit,
     .task-actions .btn-skip,
     .task-actions .btn-complete {
         width: 100%;
         padding: 12px 16px;
         font-size: 14px;
-        min-height: 44px; /* Ensure adequate touch target size */
+        min-height: 44px;
+        /* Ensure adequate touch target size */
     }
-    
+
     .task-instructions pre {
         font-size: 14px;
         padding: 14px;
@@ -1189,28 +1203,29 @@ body {
     .skipped-task {
         margin-bottom: 12px;
     }
-    
+
     .skipped-task .task-header {
         padding: 16px;
     }
-    
+
     .skipped-task .task-details {
         padding: 16px;
     }
-    
+
     .skipped-task .task-actions {
         flex-direction: column;
         gap: 8px;
     }
-    
+
     .skipped-task .task-actions .btn-visit,
     .skipped-task .task-actions .btn-unskip {
         width: 100%;
         padding: 12px 16px;
         font-size: 14px;
-        min-height: 44px; /* Ensure adequate touch target size */
+        min-height: 44px;
+        /* Ensure adequate touch target size */
     }
-    
+
     .skipped-task .task-instructions pre {
         font-size: 14px;
         padding: 14px;
@@ -1293,6 +1308,7 @@ body {
         opacity: 0;
         transform: translateY(-10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1448,16 +1464,16 @@ body {
     .platform-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .platform-checkbox {
         padding: 14px 16px;
         min-height: 48px;
     }
-    
+
     .platforms-intro {
         padding: 14px 16px;
     }
-    
+
     .save-section .btn-primary {
         width: 100%;
         padding: 16px;
@@ -1803,7 +1819,7 @@ body {
         gap: 0;
         border-bottom: none;
     }
-    
+
     .tab-button {
         border-bottom: 1px solid var(--border-color);
         border-left: 3px solid transparent;
@@ -1811,28 +1827,28 @@ body {
         text-align: left;
         bottom: 0;
     }
-    
+
     .tab-button.active {
         border-left-color: var(--accent-color);
         border-bottom-color: var(--border-color);
     }
-    
+
     .task-compact {
         flex-direction: column;
         align-items: flex-start;
     }
-    
+
     .btn-skip-compact {
         width: 100%;
         padding: 10px 16px;
         min-height: 44px;
     }
-    
+
     .task-actions {
         flex-direction: column;
         width: 100%;
     }
-    
+
     .btn-visit,
     .btn-complete,
     .btn-skip {
@@ -1840,7 +1856,7 @@ body {
         padding: 12px 16px;
         min-height: 44px;
     }
-    
+
     .task-timer {
         width: 100%;
         text-align: center;
@@ -1880,11 +1896,11 @@ body {
     #ad-header-desktop {
         display: none !important;
     }
-    
+
     #ad-header-mobile {
         display: block !important;
     }
-    
+
     .ad-slot-container {
         margin: 0.5rem 0;
     }
@@ -1894,8 +1910,67 @@ body {
     #ad-header-desktop {
         display: block !important;
     }
-    
+
     #ad-header-mobile {
         display: none !important;
     }
+}
+
+/* Floating Ad Styles */
+.floating-ad-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 350px;
+    max-width: 100%;
+    height: 200px;
+    z-index: 1000;
+    display: none;
+    /* Hidden by default, shown by JS */
+    animation: slideInUp 0.5s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.floating-ad-close {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    width: 26px;
+    height: 26px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: #333;
+    font-size: 18px;
+    line-height: 26px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 1002;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.floating-ad-close:hover {
+    color: #e74c3c;
+    transform: scale(1.1);
+}
+
+.floating-ad-content {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    border: 1px solid #ddd;
 }

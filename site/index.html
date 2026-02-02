@@ -1,17 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://clickforcharity.net/">
     <title>Click for Charity – No Money Needed</title>
-    <meta name="description" content="Do simple tasks to help change lives for the better. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="description"
+        content="Do simple tasks to help change lives for the better. No middlemen; 100% of site revenue goes to the recipients.">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:url" content="https://clickforcharity.net/">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:description"
+        content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <!-- Twitter Meta Tags -->
@@ -19,16 +22,18 @@
     <meta property="twitter:domain" content="clickforcharity.net">
     <meta property="twitter:url" content="https://clickforcharity.net/">
     <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="twitter:description"
+        content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
     <link rel="stylesheet" href="css/style.css">
 
 </head>
+
 <body>
     <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
     <div class="menu-overlay" data-menu-overlay></div>
     <div class="container">
-<!-- include start sidebar.incl -->
+        <!-- include start sidebar.incl -->
         <aside class="sidebar" id="site-navigation">
             <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
@@ -80,12 +85,17 @@
                 <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
         </aside>
-<!-- include end sidebar.incl -->
+        <!-- include end sidebar.incl -->
         <main class="main-content landing" data-menu-target>
+            <!-- include start banner-ad.incl -->
+<div id="ad-banner" style="margin:0 0 0.3em 0;"></div>
+<script src="js/banner-rotate.js"></script>
+            <!-- include end banner-ad.incl -->
             <section class="hero">
                 <div class="hero-copy">
                     <h1>No Money Needed—Just Your Clicks <span class="btc-symbol">₿</span></h1>
-                    <p>Support real people instantly. Sponsors fund the rewards; you donate your attention. 100% of value reaches the recipient.</p>
+                    <p>Support real people instantly. Sponsors fund the rewards; you donate your attention. 100% of
+                        value reaches the recipient.</p>
                     <ul>
                         <li>Powered by Bitcoin micropayments</li>
                         <li>Simple tasks, transparent payouts</li>
@@ -98,20 +108,21 @@
                 </div>
             </section>
 
-            <div id="ad-banner" style="margin:0.3em 0;"></div>
-
             <section class="highlights">
                 <article>
                     <h2>How It Works</h2>
-                    <p>Sponsors publish ads and micro-tasks. Volunteers view or complete them, transferring the sponsor’s payment straight to the recipient.</p>
+                    <p>Sponsors publish ads and micro-tasks. Volunteers view or complete them, transferring the
+                        sponsor’s payment straight to the recipient.</p>
                 </article>
                 <article>
                     <h2>Why It Matters</h2>
-                    <p>Every click supports families who can’t afford waste. We build for intermittent connections, high data costs, and legacy hardware.</p>
+                    <p>Every click supports families who can’t afford waste. We build for intermittent connections, high
+                        data costs, and legacy hardware.</p>
                 </article>
                 <article>
                     <h2>What’s Next</h2>
-                    <p>Surf ads today; surveys and offer walls are in progress. Track broader ecosystem updates at <a href="https://directsponsor.net/">DirectSponsor.net</a>.</p>
+                    <p>Surf ads today; surveys and offer walls are in progress. Track broader ecosystem updates at <a
+                            href="https://directsponsor.net/">DirectSponsor.net</a>.</p>
                 </article>
             </section>
         </main>
@@ -119,7 +130,6 @@
     <script src="js/unified-balance.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
-    <script src="js/banner-rotate.js"></script>
     <!-- include start footer.incl -->
     <footer class="footer-meta" style="text-align:center;padding:1rem 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
         <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
@@ -131,6 +141,58 @@
             </a>
         </div>
     </footer>
+
+<div id="floating-ad" class="floating-ad-container">
+    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <div class="floating-ad-content">
+        <!-- Ad Content Placeholder -->
+        <div style="text-align:center; padding: 20px;">
+            <p style="margin:0; font-weight:bold; color:#555;">Sponsored</p>
+            <div style="margin:10px auto; width:300px; height:150px; background:#eee; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc;">
+                350 x 200 Ad Space
+            </div>
+            <p style="margin:0; font-size:11px; color:#999;">Floating Ad Demo</p>
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    const STORAGE_KEY = 'clickforcharity_floating_closed_ts';
+    const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+    function initFloatingAd() {
+        const adElement = document.getElementById('floating-ad');
+        if (!adElement) return;
+
+        // Check if previously closed
+        const closedTs = localStorage.getItem(STORAGE_KEY);
+        if (closedTs) {
+            const timeSinceClose = Date.now() - parseInt(closedTs, 10);
+            if (timeSinceClose < HIDE_DURATION) {
+                // Keep hidden
+                return;
+            }
+        }
+
+        // Show ad
+        adElement.style.display = 'block';
+    }
+
+    window.closeFloatingAd = function() {
+        const adElement = document.getElementById('floating-ad');
+        if (adElement) {
+            adElement.style.display = 'none';
+            // Save timestamp
+            localStorage.setItem(STORAGE_KEY, Date.now().toString());
+        }
+    };
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFloatingAd);
+    } else {
+        initFloatingAd();
+    }
+})();
+</script>
     <!-- include end footer.incl -->
-</body>
-</html>

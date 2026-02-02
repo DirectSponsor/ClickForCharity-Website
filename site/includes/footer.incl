@@ -8,3 +8,57 @@
             </a>
         </div>
     </footer>
+
+<div id="floating-ad" class="floating-ad-container">
+    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <div class="floating-ad-content">
+        <!-- Ad Content Placeholder -->
+        <div style="text-align:center; padding: 20px;">
+            <p style="margin:0; font-weight:bold; color:#555;">Sponsored</p>
+            <div style="margin:10px auto; width:300px; height:150px; background:#eee; display:flex; align-items:center; justify-content:center; border:1px dashed #ccc;">
+                350 x 200 Ad Space
+            </div>
+            <p style="margin:0; font-size:11px; color:#999;">Floating Ad Demo</p>
+        </div>
+    </div>
+</div>
+<script>
+(function() {
+    const STORAGE_KEY = 'clickforcharity_floating_closed_ts';
+    const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+
+    function initFloatingAd() {
+        const adElement = document.getElementById('floating-ad');
+        if (!adElement) return;
+
+        // Check if previously closed
+        const closedTs = localStorage.getItem(STORAGE_KEY);
+        if (closedTs) {
+            const timeSinceClose = Date.now() - parseInt(closedTs, 10);
+            if (timeSinceClose < HIDE_DURATION) {
+                // Keep hidden
+                return;
+            }
+        }
+
+        // Show ad
+        adElement.style.display = 'block';
+    }
+
+    window.closeFloatingAd = function() {
+        const adElement = document.getElementById('floating-ad');
+        if (adElement) {
+            adElement.style.display = 'none';
+            // Save timestamp
+            localStorage.setItem(STORAGE_KEY, Date.now().toString());
+        }
+    };
+
+    // Initialize
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initFloatingAd);
+    } else {
+        initFloatingAd();
+    }
+})();
+</script>
