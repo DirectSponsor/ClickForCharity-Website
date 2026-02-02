@@ -1875,7 +1875,9 @@ body {
 }
 
 #ad-banner {
-    display: inline-block;
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
     background: white;
     padding: 2px;
     border: 1px solid #ddd;
