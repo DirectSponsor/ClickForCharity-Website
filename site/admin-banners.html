@@ -129,8 +129,8 @@
         <main>
             <!-- Desktop Ads Section -->
             <section class="ad-section">
-                <h2>Desktop Banners (728×90)</h2>
-                <p>Manage banner ads for desktop screens (>768px width).</p>
+                <h2>Standard Banners</h2>
+                <p>Manage standard header/footer banners (e.g. 728×90). These will be scaled for mobile devices.</p>
 
                 <div id="desktop-ads-list" class="ad-list">
                     <p>Loading ads...</p>
@@ -155,29 +155,7 @@ or
                 </div>
             </section>
 
-            <!-- Mobile Ads Section -->
-            <section class="ad-section">
-                <h2>Mobile Banners (320×50)</h2>
-                <p>Manage banner ads for mobile screens (≤768px width).</p>
 
-                <div id="mobile-ads-list" class="ad-list">
-                    <p>Loading ads...</p>
-                </div>
-
-                <div class="ad-form">
-                    <h3>Add New Mobile Banner</h3>
-                    <textarea id="mobile-ad-input"
-                        placeholder="Paste HTML code here, e.g.:
-<img src=&quot;banner-mobile.png&quot; width=&quot;320&quot; height=&quot;50&quot; style=&quot;max-width:100%;height:auto;&quot; alt=&quot;Ad&quot;>"></textarea>
-                    <div>
-                        <button class="btn primary" onclick="previewAd('mobile')">Preview</button>
-                        <button class="btn secondary" onclick="addAd('mobile')">Add Banner</button>
-                    </div>
-                    <div id="mobile-preview" class="preview-box empty">Preview will appear here</div>
-                    <div id="mobile-status"></div>
-                </div>
-            </section>
-            </section>
 
             <!-- Floating Ads Section -->
             <section class="ad-section">
@@ -208,7 +186,6 @@ or
         document.addEventListener('DOMContentLoaded', async () => {
             await requireAdmin();
             loadAds('desktop');
-            loadAds('mobile');
             loadAds('floating');
         });
 

@@ -12,33 +12,12 @@
     let currentAds = [];
     let currentSize = null;
 
-    // Determine if we should show desktop or mobile ads
-    function isMobile() {
-        return window.innerWidth <= DESKTOP_BREAKPOINT;
-    }
-
-    // Get the appropriate ads file based on screen size
-    function getAdsFile() {
-        return isMobile() ? MOBILE_ADS_FILE : DESKTOP_ADS_FILE;
-    }
-
-    // Get localStorage key based on current size
-    function getStorageKey() {
-        return isMobile() ? 'ad_rotation_mobile' : 'ad_rotation_desktop';
-    }
-
-    // Parse ads file content (split by --- separator)
-    function parseAds(text) {
-        return text.split('---').map(ad => ad.trim()).filter(ad => ad.length > 0);
-    }
-
     // Load ads from file
     async function loadAds() {
-        const adsFile = getAdsFile();
-        const newSize = isMobile() ? 'mobile' : 'desktop';
+        const adsFile = DESKTOP_ADS_FILE;
 
-        // Only reload if size changed
-        if (newSize === currentSize && currentAds.length > 0) {
+        // Prevent redundant loading if already loaded
+        if (currentAds.length > 0) {
             return currentAds;
         }
 
@@ -50,7 +29,6 @@
             }
             const text = await response.text();
             currentAds = parseAds(text);
-            currentSize = newSize;
             return currentAds;
         } catch (error) {
             console.error('Error loading ads:', error);
@@ -59,6 +37,14 @@
     }
 
     // Get next ad index (sequential rotation)
+    function getStorageKey() {
+        return 'ad_rotation_desktop';
+    }
+
+    function parseAds(text) {
+        return text.split('---').map(ad => ad.trim()).filter(ad => ad.length > 0);
+    }
+
     function getNextAdIndex(adsCount) {
         const storageKey = getStorageKey();
         let index = parseInt(localStorage.getItem(storageKey) || '0');
@@ -115,21 +101,8 @@
         }
     }
 
-    // Handle window resize
-    let resizeTimer;
-    function handleResize() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            const newSize = isMobile() ? 'mobile' : 'desktop';
-            if (newSize !== currentSize) {
-                displayAd();
-            }
-        }, 250);
-    }
-
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', function () {
         displayAd();
-        window.addEventListener('resize', handleResize);
     });
 })();
