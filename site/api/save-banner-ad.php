@@ -12,6 +12,7 @@ if (!$input || !isset($input['type']) || !isset($input['html'])) {
 
 $type = $input['type'];
 $html = trim($input['html']);
+$index = isset($input['index']) ? intval($input['index']) : null;
 
 // Validate type
 if (!in_array($type, ['desktop', 'mobile', 'floating'])) {
@@ -33,15 +34,36 @@ $files = [
 ];
 $file = $files[$type];
 
-// Read existing content
-$existingContent = file_exists($file) ? file_get_contents($file) : '';
-
-// Append new ad with separator
-$newContent = $existingContent;
-if (!empty($existingContent) && !preg_match('/---\s*$/', $existingContent)) {
-    $newContent .= "\n---\n";
+// Read existing ads
+$ads = [];
+if (file_exists($file)) {
+    $content = file_get_contents($file);
+    $ads = array_filter(
+        array_map('trim', explode('---', $content)),
+        function($ad) { return !empty($ad); }
+    );
+    $ads = array_values($ads); // Re-index
 }
-$newContent .= $html . "\n";
+
+if ($index !== null) {
+    // Update existing ad
+    if ($index < 0 || $index >= count($ads)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid index']);
+        exit;
+    }
+    $ads[$index] = $html;
+    $message = 'Banner ad updated successfully';
+} else {
+    // Append new ad
+    $ads[] = $html;
+    $message = 'Banner ad added successfully';
+}
+
+// Rebuild content with separators
+$newContent = implode("\n---\n", $ads);
+if (!empty($newContent)) {
+    $newContent .= "\n";
+}
 
 // Write to file
 if (file_put_contents($file, $newContent) === false) {
@@ -49,4 +71,4 @@ if (file_put_contents($file, $newContent) === false) {
     exit;
 }
 
-echo json_encode(['success' => true, 'message' => 'Banner ad added successfully']);
+echo json_encode(['success' => true, 'message' => $message]);

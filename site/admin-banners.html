@@ -202,12 +202,22 @@ or
                 }
 
                 listEl.innerHTML = data.ads.map((ad, index) => `
-                    <div class="ad-item">
+                    <div class="ad-item" id="${type}-ad-${index}">
                         <div class="ad-item-header">
                             <strong>Banner #${index + 1}</strong>
-                            <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd('${type}', ${index})">Delete</button>
+                            <div>
+                                <button class="btn" style="background:#2980b9;color:#fff;padding:0.3rem 0.8rem;margin-right:0.5rem;" onclick="editAd('${type}', ${index})">Edit</button>
+                                <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd('${type}', ${index})">Delete</button>
+                            </div>
                         </div>
-                        <div class="ad-item-code">${escapeHtml(ad)}</div>
+                        <div class="ad-item-code" id="${type}-code-${index}">${escapeHtml(ad)}</div>
+                        <div class="ad-edit-form" id="${type}-edit-${index}" style="display:none; margin-top:0.5rem;">
+                            <textarea id="${type}-input-${index}" style="width:100%; min-height:100px; font-family:monospace; margin-bottom:0.5rem;">${ad}</textarea>
+                            <div>
+                                <button class="btn primary" onclick="updateAd('${type}', ${index})">Save Changes</button>
+                                <button class="btn secondary" onclick="cancelEdit('${type}', ${index})">Cancel</button>
+                            </div>
+                        </div>
                     </div>
                 `).join('');
             } catch (error) {
@@ -230,6 +240,50 @@ or
 
             preview.className = 'preview-box';
             preview.innerHTML = html;
+        }
+
+        // Edit ad (show form)
+        function editAd(type, index) {
+            document.getElementById(`${type}-code-${index}`).style.display = 'none';
+            document.getElementById(`${type}-edit-${index}`).style.display = 'block';
+        }
+
+        // Cancel edit
+        function cancelEdit(type, index) {
+            document.getElementById(`${type}-code-${index}`).style.display = 'block';
+            document.getElementById(`${type}-edit-${index}`).style.display = 'none';
+        }
+
+        // Update existing ad
+        async function updateAd(type, index) {
+            const input = document.getElementById(`${type}-input-${index}`);
+            const status = document.getElementById(`${type}-status`);
+            const html = input.value.trim();
+
+            if (!html) {
+                showStatus(status, 'Please enter HTML code', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/save-banner-ad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type, index, html })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showStatus(status, 'Banner updated successfully!', 'success');
+                    loadAds(type);
+                } else {
+                    showStatus(status, result.error || 'Failed to update banner', 'error');
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                showStatus(status, 'Network error. Please try again.', 'error');
+            }
         }
 
         // Add new ad
