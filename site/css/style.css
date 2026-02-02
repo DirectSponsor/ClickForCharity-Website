@@ -1877,14 +1877,28 @@ body {
 #ad-banner {
     display: block;
     width: fit-content;
-    margin: 0 auto;
+    margin: 0 0 0.75rem 0;
+    /* Left-aligned with bottom spacing */
     background: white;
-    padding: 2px;
+    padding: 1px;
+    /* Thinner border to match user preference */
     border: 1px solid #ddd;
-    border-radius: 4px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    /* Matching floating ad's radius */
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+    /* Matching floating ad's shadow */
     max-width: 100%;
     box-sizing: border-box;
+    line-height: 0;
+    /* Removes the descender gap at the bottom of images */
+}
+
+#ad-banner img,
+#ad-banner iframe {
+    display: block;
+    max-width: 100%;
+    border-radius: 7px;
+    /* Slab-matching radius (-1px for the 1px padding) */
 }
 
 .content-banner {
