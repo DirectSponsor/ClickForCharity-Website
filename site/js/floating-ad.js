@@ -3,32 +3,21 @@
     const STORAGE_KEY_TIMER = 'clickforcharity_floating_closed_ts';
     const STORAGE_KEY_ROTATION = 'clickforcharity_floating_rotation_index';
     const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes
+    const ADS_FILE = 'data/ads-floating.txt';
 
-    const ads = [
-        // Ad 1: LiteBits
-        '<iframe src="https://litebits.io/banners/300x250/?ref=J61UMX3M" width="300" height="250" frameborder="0" scrolling="no" style="border: none;"></iframe>',
-        // Ad 2: SatsMan
-        '<a href="https://satsman.com?ref=andysavage" target="_blank"><img src="banners/army02.gif" alt="SatsMan" style="max-width:300px; height:auto; border:none; display:block;"></a>'
-    ];
-
-    function getNextAd() {
-        let index = parseInt(localStorage.getItem(STORAGE_KEY_ROTATION) || '0');
-        // Initial load should be 0, next should be 1
-        // But if we want it to rotate on RELOAD, we should increment first?
-        // Or store the one we displayed last time?
-        // If we store index=0, next time we read 0, display 0?
-        // Let's increment and save for NEXT time.
-        // Current display: index % length.
-        // Save: (index + 1) % length.
-
-        const currentIndex = index % ads.length;
-        const nextIndex = (currentIndex + 1) % ads.length;
-        localStorage.setItem(STORAGE_KEY_ROTATION, nextIndex.toString());
-
-        return ads[currentIndex];
+    async function loadAds() {
+        try {
+            const response = await fetch(ADS_FILE);
+            if (!response.ok) return [];
+            const text = await response.text();
+            return text.split('---').map(ad => ad.trim()).filter(ad => ad.length > 0);
+        } catch (e) {
+            console.error('Failed to load floating ads', e);
+            return [];
+        }
     }
 
-    function initFloatingAd() {
+    async function initFloatingAd() {
         const adContainer = document.getElementById('floating-ad');
         if (!adContainer) return;
 
@@ -41,20 +30,27 @@
             }
         }
 
+        const ads = await loadAds();
+        if (ads.length === 0) return;
+
+        // Rotation Logic
+        let index = parseInt(localStorage.getItem(STORAGE_KEY_ROTATION) || '0');
+        const currentIndex = index % ads.length;
+        const nextIndex = (currentIndex + 1) % ads.length;
+        localStorage.setItem(STORAGE_KEY_ROTATION, nextIndex.toString());
+
+        const adContent = ads[currentIndex];
+
         // Inject Ad Content
         const contentContainer = adContainer.querySelector('.floating-ad-content');
         if (contentContainer) {
-            contentContainer.innerHTML = getNextAd();
+            contentContainer.innerHTML = adContent;
         }
 
         // Show Ad
         adContainer.style.display = 'block';
 
         // Dynamic Padding
-        // Wait for render to ensure dimensions are accurate (images load)
-        // With iframe it is fixed size usually. With img it might take time.
-        // We can listen for image load or just use requestAnimationFrame loop?
-        // simple RAF is okay for now.
         const updatePadding = () => {
             const height = adContainer.offsetHeight;
             const footer = document.querySelector('footer');
@@ -64,7 +60,6 @@
         };
 
         requestAnimationFrame(updatePadding);
-        // Also update after a short delay for images
         setTimeout(updatePadding, 500);
         setTimeout(updatePadding, 2000);
     }
