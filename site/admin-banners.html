@@ -1,31 +1,120 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Banner Ad Management - Click for Charity</title>
     <link rel="stylesheet" href="css/style.css">
     <style>
-        .banner-admin { max-width: 900px; margin: 2rem auto; padding: 1rem; }
-        .banner-admin h1 { margin-bottom: 0.5rem; }
-        .banner-admin .nav-links { margin-bottom: 2rem; font-size: 0.9rem; }
-        .banner-admin .nav-links a { margin-right: 1rem; }
-        .ad-section { margin-bottom: 3rem; padding: 1.5rem; border: 1px solid #ddd; border-radius: 4px; }
-        .ad-section h2 { margin-top: 0; }
-        .ad-list { margin: 1rem 0; }
-        .ad-item { padding: 1rem; margin-bottom: 1rem; border: 1px solid #e0e0e0; border-radius: 4px; background: #f9f9f9; }
-        .ad-item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .ad-item-code { background: #fff; padding: 0.5rem; border: 1px solid #ddd; font-family: monospace; font-size: 0.85rem; white-space: pre-wrap; word-break: break-all; }
-        .ad-form { margin-top: 1.5rem; }
-        .ad-form textarea { width: 100%; min-height: 100px; font-family: monospace; font-size: 0.9rem; padding: 0.5rem; }
-        .ad-form .btn { margin-top: 0.5rem; margin-right: 0.5rem; }
-        .preview-box { margin-top: 1rem; padding: 1rem; border: 2px dashed #ccc; background: #fff; text-align: center; min-height: 100px; }
-        .preview-box.empty { color: #999; font-style: italic; }
-        .status-msg { margin-top: 0.5rem; padding: 0.5rem; border-radius: 4px; }
-        .status-msg.success { background: #d4edda; color: #155724; }
-        .status-msg.error { background: #f8d7da; color: #721c24; }
+        .banner-admin {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+
+        .banner-admin h1 {
+            margin-bottom: 0.5rem;
+        }
+
+        .banner-admin .nav-links {
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .banner-admin .nav-links a {
+            margin-right: 1rem;
+        }
+
+        .ad-section {
+            margin-bottom: 3rem;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .ad-section h2 {
+            margin-top: 0;
+        }
+
+        .ad-list {
+            margin: 1rem 0;
+        }
+
+        .ad-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background: #f9f9f9;
+        }
+
+        .ad-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .ad-item-code {
+            background: #fff;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .ad-form {
+            margin-top: 1.5rem;
+        }
+
+        .ad-form textarea {
+            width: 100%;
+            min-height: 100px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            padding: 0.5rem;
+        }
+
+        .ad-form .btn {
+            margin-top: 0.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .preview-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 2px dashed #ccc;
+            background: #fff;
+            text-align: center;
+            min-height: 100px;
+        }
+
+        .preview-box.empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .status-msg {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 4px;
+        }
+
+        .status-msg.success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-msg.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
     </style>
 </head>
+
 <body>
     <div class="banner-admin">
         <header>
@@ -42,7 +131,7 @@
             <section class="ad-section">
                 <h2>Desktop Banners (728×90)</h2>
                 <p>Manage banner ads for desktop screens (>768px width).</p>
-                
+
                 <div id="desktop-ads-list" class="ad-list">
                     <p>Loading ads...</p>
                 </div>
@@ -70,14 +159,15 @@ or
             <section class="ad-section">
                 <h2>Mobile Banners (320×50)</h2>
                 <p>Manage banner ads for mobile screens (≤768px width).</p>
-                
+
                 <div id="mobile-ads-list" class="ad-list">
                     <p>Loading ads...</p>
                 </div>
 
                 <div class="ad-form">
                     <h3>Add New Mobile Banner</h3>
-                    <textarea id="mobile-ad-input" placeholder="Paste HTML code here, e.g.:
+                    <textarea id="mobile-ad-input"
+                        placeholder="Paste HTML code here, e.g.:
 <img src=&quot;banner-mobile.png&quot; width=&quot;320&quot; height=&quot;50&quot; style=&quot;max-width:100%;height:auto;&quot; alt=&quot;Ad&quot;>"></textarea>
                     <div>
                         <button class="btn primary" onclick="previewAd('mobile')">Preview</button>
@@ -85,6 +175,28 @@ or
                     </div>
                     <div id="mobile-preview" class="preview-box empty">Preview will appear here</div>
                     <div id="mobile-status"></div>
+                </div>
+            </section>
+            </section>
+
+            <!-- Floating Ads Section -->
+            <section class="ad-section">
+                <h2>Floating Ads (Responsive)</h2>
+                <p>Manage floating ads (e.g. 300x250, 350x200). These are auto-sized and rotated.</p>
+
+                <div id="floating-ads-list" class="ad-list">
+                    <p>Loading ads...</p>
+                </div>
+
+                <div class="ad-form">
+                    <h3>Add New Floating Ad</h3>
+                    <textarea id="floating-ad-input" placeholder="Paste HTML code here..."></textarea>
+                    <div>
+                        <button class="btn primary" onclick="previewAd('floating')">Preview</button>
+                        <button class="btn secondary" onclick="addAd('floating')">Add Ad</button>
+                    </div>
+                    <div id="floating-preview" class="preview-box empty">Preview will appear here</div>
+                    <div id="floating-status"></div>
                 </div>
             </section>
         </main>
@@ -97,6 +209,7 @@ or
             await requireAdmin();
             loadAds('desktop');
             loadAds('mobile');
+            loadAds('floating');
         });
 
         // Load ads from server
@@ -105,7 +218,7 @@ or
             try {
                 const response = await fetch(`/api/get-banner-ads.php?type=${type}`);
                 const data = await response.json();
-                
+
                 if (!data.success || !data.ads || data.ads.length === 0) {
                     listEl.innerHTML = '<p style="color:#999;">No ads yet. Add one below.</p>';
                     return;
@@ -131,13 +244,13 @@ or
             const input = document.getElementById(`${type}-ad-input`);
             const preview = document.getElementById(`${type}-preview`);
             const html = input.value.trim();
-            
+
             if (!html) {
                 preview.className = 'preview-box empty';
                 preview.textContent = 'Preview will appear here';
                 return;
             }
-            
+
             preview.className = 'preview-box';
             preview.innerHTML = html;
         }
@@ -147,7 +260,7 @@ or
             const input = document.getElementById(`${type}-ad-input`);
             const status = document.getElementById(`${type}-status`);
             const html = input.value.trim();
-            
+
             if (!html) {
                 showStatus(status, 'Please enter HTML code', 'error');
                 return;
@@ -161,7 +274,7 @@ or
                 });
 
                 const result = await response.json();
-                
+
                 if (result.success) {
                     showStatus(status, 'Banner added successfully!', 'success');
                     input.value = '';
@@ -182,7 +295,7 @@ or
             if (!confirm(`Delete banner #${index + 1}?`)) return;
 
             const status = document.getElementById(`${type}-status`);
-            
+
             try {
                 const response = await fetch('/api/delete-banner-ad.php', {
                     method: 'POST',
@@ -191,7 +304,7 @@ or
                 });
 
                 const result = await response.json();
-                
+
                 if (result.success) {
                     showStatus(status, 'Banner deleted successfully!', 'success');
                     loadAds(type);
@@ -217,4 +330,5 @@ or
         }
     </script>
 </body>
+
 </html>

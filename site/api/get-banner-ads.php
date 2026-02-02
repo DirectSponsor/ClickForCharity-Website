@@ -6,15 +6,18 @@ header('Access-Control-Allow-Origin: *');
 $type = isset($_GET['type']) ? $_GET['type'] : 'desktop';
 
 // Validate type
-if (!in_array($type, ['desktop', 'mobile'])) {
+if (!in_array($type, ['desktop', 'mobile', 'floating'])) {
     echo json_encode(['success' => false, 'error' => 'Invalid type']);
     exit;
 }
 
 // Determine file path
-$file = $type === 'desktop' 
-    ? '../data/ads-desktop.txt' 
-    : '../data/ads-mobile.txt';
+$files = [
+    'desktop' => '../data/ads-desktop.txt',
+    'mobile' => '../data/ads-mobile.txt',
+    'floating' => '../data/ads-floating.txt'
+];
+$file = $files[$type];
 
 // Check if file exists
 if (!file_exists($file)) {
