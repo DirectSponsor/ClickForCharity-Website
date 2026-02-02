@@ -22,7 +22,7 @@
         }
 
         try {
-            const response = await fetch(adsFile);
+            const response = await fetch(`${adsFile}?t=${Date.now()}`);
             if (!response.ok) {
                 console.error('Failed to load ads:', response.status);
                 return [];

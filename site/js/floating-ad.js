@@ -7,7 +7,7 @@
 
     async function loadAds() {
         try {
-            const response = await fetch(ADS_FILE);
+            const response = await fetch(`${ADS_FILE}?t=${Date.now()}`);
             if (!response.ok) return [];
             const text = await response.text();
             return text.split('---').map(ad => ad.trim()).filter(ad => ad.length > 0);
