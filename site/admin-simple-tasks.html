@@ -138,12 +138,14 @@
         </main>
     </div>
 
+    <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
     <script>
         // Check admin privileges on page load
-        document.addEventListener('DOMContentLoaded', async () => {
-            await requireAdmin();
-        });
+        (async () => {
+            const isAdmin = await window.requireAdmin();
+            if (!isAdmin) return;
+        })();
 
         // Global variables
         let loadTasks;

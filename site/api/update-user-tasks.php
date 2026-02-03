@@ -94,7 +94,7 @@ function addTransaction($balanceData, $amount, $description) {
 }
 
 function loadTasks() {
-    $tasksFile = __DIR__ . '/../data/complex-tasks/tasks.json';
+    $tasksFile = '/var/clickforcharity-data/complex-tasks/tasks.json';
     
     if (file_exists($tasksFile)) {
         $data = json_decode(file_get_contents($tasksFile), true);
