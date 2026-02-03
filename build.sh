@@ -38,10 +38,10 @@ process_file() {
             output+="$line"$'\n'
             
             # Read and insert the include file content
-            if [[ -f "includes/$include_file" ]]; then
-                output+="$(cat "includes/$include_file")"$'\n'
+            if [[ -f "../includes/$include_file" ]]; then
+                output+="$(cat "../includes/$include_file")"$'\n'
             else
-                echo "Warning: Include file 'includes/$include_file' not found"
+                echo "Warning: Include file '../includes/$include_file' not found"
             fi
             continue
         fi
