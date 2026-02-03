@@ -68,7 +68,7 @@ process_file() {
     # Replace all #ACTIVE_*# markers with empty string first
     output="${output//#ACTIVE_HOME#/}"
     output="${output//#ACTIVE_PTC#/}"
-    output="${output//#ACTIVE_SIMPLE_TASKS#/}"
+    output="${output//#ACTIVE_TASKS#/}"
     output="${output//#ACTIVE_SKIPPED_TASKS#/}"
     output="${output//#ACTIVE_SURVEYS#/}"
     output="${output//#ACTIVE_OFFERS#/}"
@@ -83,8 +83,8 @@ process_file() {
         "ptc")
             output="${output//\<li \><a href=\"ptc.html\">/<li class=\"active\"><a href=\"ptc.html\">}"
             ;;
-        "simple-tasks")
-            output="${output//\<li \><a href=\"simple-tasks.html\">/<li class=\"active\"><a href=\"simple-tasks.html\">}"
+        "tasks")
+            output="${output//\<li \><a href=\"tasks.html\">/<li class=\"active\"><a href=\"tasks.html\">}"
             ;;
         "skipped-tasks")
             output="${output//\<li \><a href=\"skipped-tasks.html\">/<li class=\"active\"><a href=\"skipped-tasks.html\">}"

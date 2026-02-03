@@ -12,7 +12,7 @@
                 <ul>
                     <li #ACTIVE_HOME#><a href="index.html">Home</a></li>
                     <li #ACTIVE_PTC#><a href="ptc.html">Surf Ads</a></li>
-                    <li #ACTIVE_SIMPLE_TASKS#><a href="simple-tasks.html">Simple Tasks</a></li>
+                    <li #ACTIVE_TASKS#><a href="tasks.html">Tasks</a></li>
                     <li #ACTIVE_SKIPPED_TASKS#><a href="skipped-tasks.html">Skipped Tasks</a></li>
                     <li #ACTIVE_SURVEYS#><a href="surveys.html">Surveys</a></li>
                     <li #ACTIVE_OFFERS#><a href="offers.html">Offers</a></li>

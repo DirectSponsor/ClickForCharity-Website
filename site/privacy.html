@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/privacy.html">
+    <title>Privacy Policy – Click for Charity</title>
+    <meta name="description"
+        content="Our commitment to your privacy. Learn how Click for Charity handles your data with transparency and security.">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:url" content="https://clickforcharity.net/privacy.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Privacy Policy – Click for Charity">
+    <meta property="og:description"
+        content="Our commitment to your privacy. Learn how Click for Charity handles your data with transparency and security.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta property="twitter:domain" content="clickforcharity.net">
+    <meta property="twitter:url" content="https://clickforcharity.net/privacy.html">
+    <meta name="twitter:title" content="Privacy Policy – Click for Charity">
+    <meta name="twitter:description"
+        content="Our commitment to your privacy. Learn how Click for Charity handles your data with transparency and security.">
+    <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+        <!-- include start sidebar.incl -->
+        <aside class="sidebar" id="site-navigation">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </a>
+            
+            <!-- Beta Warning -->
+            <div style="background: #dc3545; color: white; padding: 8px 12px; margin: 10px 0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: bold;">
+                🚧 BETA TESTING
+            </div>
+            <nav>
+                <ul>
+                    <li ><a href="index.html">Home</a></li>
+                    <li ><a href="ptc.html">Surf Ads</a></li>
+                    <li ><a href="tasks.html">Tasks</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            
+            <!-- User Menu Area (bottom of sidebar) -->
+            <div class="user-select-container">
+                <!-- Login Button (shown when not logged in) -->
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <!-- User Menu (shown when logged in) -->
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <!-- Dropdown Menu (pops upward) -->
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <!-- Guest Mode Notice -->
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+        <!-- include end sidebar.incl -->
+        <main class="main-content" data-menu-target>
+            <header class="dashboard-header">
+                <h1>Privacy at Click for Charity: We Don't Care Who You Are (And That's the Point)</h1>
+            </header>
+
+            <section class="about-content">
+                <article>
+                    <p>Hey there, clicker for good. In a world where every app and site is slurping up your data like
+                        it's free candy, we're doing the opposite. Click for Charity is about turning your idle clicks
+                        into real-world impact—no strings, no surveillance, no BS. Let's break it down honestly.</p>
+                </article>
+
+                <article>
+                    <h2>What We Collect: Basically Nothing</h2>
+                    <p>No tracking, no leaks. We analyzed the site—it's pure static HTML with zero JavaScript, no
+                        external trackers (Google Analytics? Nope.), no cookies, no sneaky third-party requests. No
+                        forms on the main page harvesting anything. Your browser loads plain content, that's it. No data
+                        leaks because there's nothing collecting or phoning home.</p>
+                    <p>Sign up? Whatever you want. Use any email and any name—no verification, no real-identity ties,
+                        nothing sold or shared. We store the bare minimum needed for clicks to count toward charities
+                        (maybe an email for updates or a username for fun leaderboards), but we don't care who you
+                        really are.</p>
+                    <p>Data storage and security. Whatever little we hold stays basic on our end. No fancy encryption
+                        needed when there's zilch worth stealing—no payments, no profiles, no habits tracked.</p>
+                </article>
+
+                <article>
+                    <h2>The Security Circus: Why Most "Privacy" is a Facade</h2>
+                    <p>We have this page because laws and norms demand it, but let's be real: a ton of online "security"
+                        is pure theater. Companies write epic policies while hoovering your every move for ads or AI
+                        training. "End-to-end" encryption that still gets scanned? Backdoors for governments? Data
+                        brokers selling your life? One big breach and poof—your details are everywhere.</p>
+                    <p>Real privacy means fighting back actively, not trusting glossy promises. We're not claiming
+                        perfection, but at least we're not pretending while leaking like crazy.</p>
+                </article>
+
+                <article>
+                    <h2>How We Handle Ads (Now and Maybe Later)</h2>
+                    <p>Right now (and likely forever), we use A-Ads—a crypto/Bitcoin ad network that's been around since
+                        2011 and genuinely prioritizes anonymity. They don't spy, collect personal data, require KYC, or
+                        use cookies/trackers. Ads are simple banners, payments in crypto, and everything stays private
+                        for both publishers and viewers. It's low-threat by design—easy to block with uBlock Origin if
+                        you want—and aligns with not caring who you are.</p>
+                    <p>In the future, we might experiment with other Bitcoin-based ad networks for similar reasons:
+                        they're pseudonymous, no heavy profiling, and far less invasive than mainstream ones. But we'll
+                        keep A-Ads around even after our own ads launch because they get privacy right in a space full
+                        of fakes.</p>
+                </article>
+
+                <article>
+                    <h2>Take Control: Resources for Real Privacy</h2>
+                    <p>Don't just take our word—protect yourself. Here are solid, independent tools and intros to dodge
+                        the surveillance machine. No affiliates, just stuff worth knowing.</p>
+
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://presearch.com" target="_blank">Presearch</a></strong> — A
+                            decentralized, privacy-first search engine that doesn't track, profile, or sell your data.
+                            Ditch Google for good.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://haveibeenpwned.com" target="_blank">Have I Been Pwned</a></strong>
+                            — Check if your email (or passwords) popped up in data breaches. Essential for knowing when
+                            to change creds.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://episode1.donottrack-doc.com/en/" target="_blank">Do Not Track - The
+                                    Documentary</a></strong> — A great, eye-opening intro to how online tracking really
+                            works. Perfect starter for understanding the bigger picture.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://amiunique.org" target="_blank">AmIUnique.org</a></strong> — See how
+                            unique (and trackable) your browser really is via fingerprinting. great for awareness.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://ssd.eff.org" target="_blank">EFF Surveillance
+                                    Self-Defense</a></strong> — Practical guides to encryption, secure tools, and
+                            dodging spies.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://www.privacyguides.org" target="_blank">Privacy Guides</a></strong>
+                            — Unbiased picks for browsers, email, VPNs, etc. Community-driven.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://duckduckgo.com" target="_blank">DuckDuckGo</a></strong> —
+                            Privacy-respecting search with no tracking.
+                        </li>
+                        <li style="margin-bottom: 1.5rem;">
+                            <strong><a href="https://proton.me" target="_blank">Proton Suite</a></strong> — Encrypted
+                            email, VPN, and more from a privacy-first crew.
+                        </li>
+                    </ul>
+                </article>
+
+                <article>
+                    <h2>Changes and Contact</h2>
+                    <p>We'll tweak this if features change, but the core stays: minimal data, maximum anonymity, real
+                        impact. Questions? Reach out at <strong>test2@directsponsor.org</strong>. Privacy is your
+                        fight—tools like these help you win it.</p>
+                    <p><em>Last updated: February 3, 2026.</em></p>
+                </article>
+            </section>
+        </main>
+    </div>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <!-- include start footer.incl -->
+    <footer class="footer-meta" style="text-align:center;padding:1rem 0 280px 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">View site map</a>
+        </div>
+        <div style="display:inline-block;margin:0 0 0.5rem 0;">
+            <a href="https://lightning.news" target="_blank" rel="noopener">
+                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
+            </a>
+        </div>
+    </footer>
+
+<div id="floating-ad" class="floating-ad-container">
+    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <div class="floating-ad-content"></div>
+</div>
+<script src="js/floating-ad.js"></script>
+    <!-- include end footer.incl -->
