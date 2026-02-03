@@ -3,7 +3,7 @@
  * Handles tabbed interface, expandable cards, timer, and manual completion
  */
 
-(function() {
+(function () {
     'use strict';
 
     let userId = null;
@@ -18,15 +18,15 @@
             setTimeout(init, 500);
             return;
         }
-        
+
         const session = window.auth.getSession();
-        
+
         if (!session || !session.combined_user_id) {
             console.log('User not logged in - loading guest tasks');
             loadGuestTasks();
             return;
         }
-        
+
         userId = session.combined_user_id;
 
         attachEventListeners();
@@ -42,15 +42,15 @@
 
     function switchTab(tabName) {
         activeTab = tabName;
-        
+
         document.querySelectorAll('.tab-button').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.tab === tabName);
         });
-        
+
         document.querySelectorAll('.tab-content').forEach(content => {
             content.classList.toggle('active', content.id === `${tabName}-tab`);
         });
-        
+
         renderTasks();
     }
 
@@ -61,13 +61,13 @@
 
             if (data.success) {
                 allTasks = data.tasks || [];
-                
+
                 if (data.userPlatforms.length === 0) {
                     document.getElementById('no-platforms-notice').style.display = 'block';
                 } else {
                     document.getElementById('no-platforms-notice').style.display = 'none';
                 }
-                
+
                 renderTasks();
             } else {
                 console.error('Failed to load tasks:', data.error);
@@ -79,17 +79,17 @@
 
     function renderTasks() {
         const categories = ['engagements', 'follows', 'other'];
-        
+
         categories.forEach(category => {
             const tasks = allTasks.filter(t => t.category === category);
             const container = document.getElementById(`${category}-tasks`);
             const emptyState = container.nextElementSibling;
             const countElement = document.getElementById(`${category}-count`);
-            
+
             if (countElement) {
                 countElement.textContent = `(${tasks.length})`;
             }
-            
+
             if (tasks.length === 0) {
                 container.innerHTML = '';
                 if (emptyState) emptyState.style.display = 'block';
@@ -104,10 +104,10 @@
     function createTaskCard(task) {
         const isExpanded = expandedTaskId === task.id;
         const timerState = taskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
-        
+
         // Check if this task was recently completed (in this session)
         const isRecentlyCompleted = window.unifiedBalance && window.unifiedBalance.isTaskCompleted(task.id);
-        
+
         return `
             <div class="complex-task-card ${isExpanded ? 'expanded' : ''} ${isRecentlyCompleted ? 'completed' : ''}" data-task-id="${task.id}">
                 <div class="task-compact" onclick="toggleTask('${task.id}')">
@@ -151,7 +151,7 @@
         `;
     }
 
-    window.toggleTask = function(taskId) {
+    window.toggleTask = function (taskId) {
         if (expandedTaskId === taskId) {
             expandedTaskId = null;
         } else {
@@ -160,30 +160,30 @@
         renderTasks();
     };
 
-    window.visitTask = function(taskId, url, duration) {
+    window.visitTask = function (taskId, url, duration) {
         window.open(url, '_blank');
-        
+
         taskTimers[taskId] = {
             running: true,
             timeLeft: duration,
             completed: false
         };
-        
+
         renderTasks();
-        
+
         const interval = setInterval(() => {
             if (!taskTimers[taskId] || !taskTimers[taskId].running) {
                 clearInterval(interval);
                 return;
             }
-            
+
             taskTimers[taskId].timeLeft--;
-            
+
             const timerElement = document.querySelector(`#timer-${taskId} .timer-value`);
             if (timerElement) {
                 timerElement.textContent = taskTimers[taskId].timeLeft;
             }
-            
+
             if (taskTimers[taskId].timeLeft <= 0) {
                 clearInterval(interval);
                 taskTimers[taskId].running = false;
@@ -193,7 +193,7 @@
         }, 1000);
     };
 
-    window.completeTask = async function(taskId) {
+    window.completeTask = async function (taskId) {
         try {
             const completeBtn = document.getElementById(`complete-${taskId}`);
             if (completeBtn) {
@@ -218,18 +218,18 @@
             if (data.success) {
                 delete taskTimers[taskId];
                 expandedTaskId = null;
-                
+
                 // Mark task as completed in unified balance system
                 if (window.unifiedBalance) {
                     window.unifiedBalance.markTaskCompleted(taskId);
                 }
-                
+
                 showNotification(`✓ ${data.message}`, 'success');
-                
+
                 if (window.unifiedBalance) {
                     window.unifiedBalance.syncBalance();
                 }
-                
+
                 await loadTasks();
             } else {
                 showNotification(`✗ ${data.error || 'Failed to complete task'}`, 'error');
@@ -244,7 +244,7 @@
         }
     };
 
-    window.skipTask = async function(taskId) {
+    window.skipTask = async function (taskId) {
         if (!confirm('Are you sure you want to skip this task? You can unskip it later from the Skipped Tasks page.')) {
             return;
         }
@@ -267,9 +267,9 @@
             if (data.success) {
                 delete taskTimers[taskId];
                 expandedTaskId = null;
-                
+
                 showNotification('Task skipped', 'success');
-                
+
                 await loadTasks();
             } else {
                 showNotification(`✗ ${data.error || 'Failed to skip task'}`, 'error');
@@ -280,65 +280,66 @@
         }
     };
 
-function attachTaskEventListeners() {
-    // Event listeners are attached via onclick in HTML for simplicity
-    // This function is here for future enhancements
-}
-
-function showNotification(message, type = 'success') {
-    const existing = document.querySelector('.task-notification');
-    if (existing) existing.remove();
-    
-    const notification = document.createElement('div');
-    notification.className = `task-notification ${type}`;
-    notification.textContent = message;
-    
-    const content = document.getElementById('complex-tasks-content');
-    content.insertBefore(notification, content.firstChild);
-    
-    setTimeout(() => {
-        notification.remove();
-    }, 5000);
-}
-
-// Guest-specific state
-let guestTasks = [];
-let guestExpandedTaskId = null;
-let guestTaskTimers = {};
-
-async function loadGuestTasks() {
-    try {
-        const response = await fetch('/data/complex-tasks/tasks.json');
-        const tasks = await response.json();
-        
-        // Show all enabled tasks to guests
-        guestTasks = tasks.filter(task => task.enabled);
-        
-        renderGuestTasks();
-    } catch (error) {
-        console.error('Error loading guest tasks:', error);
-        document.getElementById('guest-empty-state').style.display = 'block';
+    function attachTaskEventListeners() {
+        // Event listeners are attached via onclick in HTML for simplicity
+        // This function is here for future enhancements
     }
-}
 
-function renderGuestTasks() {
-    const container = document.getElementById('guest-tasks');
-    const emptyState = document.getElementById('guest-empty-state');
-    
-    if (guestTasks.length === 0) {
-        container.innerHTML = '';
-        emptyState.style.display = 'block';
-    } else {
-        emptyState.style.display = 'none';
-        container.innerHTML = guestTasks.map(task => createGuestTaskCard(task)).join('');
+    function showNotification(message, type = 'success') {
+        const existing = document.querySelector('.task-notification');
+        if (existing) existing.remove();
+
+        const notification = document.createElement('div');
+        notification.className = `task-notification ${type}`;
+        notification.textContent = message;
+
+        const content = document.getElementById('complex-tasks-content');
+        content.insertBefore(notification, content.firstChild);
+
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
     }
-}
 
-function createGuestTaskCard(task) {
-    const isExpanded = guestExpandedTaskId === task.id;
-    const timerState = guestTaskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
-    
-    return `
+    // Guest-specific state
+    let guestTasks = [];
+    let guestExpandedTaskId = null;
+    let guestTaskTimers = {};
+
+    async function loadGuestTasks() {
+        try {
+            const response = await fetch('/api/get-complex-tasks.php?all=true');
+            const data = await response.json();
+            const tasks = data.tasks || [];
+
+            // Show all enabled tasks to guests
+            guestTasks = tasks.filter(task => task.enabled);
+
+            renderGuestTasks();
+        } catch (error) {
+            console.error('Error loading guest tasks:', error);
+            document.getElementById('guest-empty-state').style.display = 'block';
+        }
+    }
+
+    function renderGuestTasks() {
+        const container = document.getElementById('guest-tasks');
+        const emptyState = document.getElementById('guest-empty-state');
+
+        if (guestTasks.length === 0) {
+            container.innerHTML = '';
+            emptyState.style.display = 'block';
+        } else {
+            emptyState.style.display = 'none';
+            container.innerHTML = guestTasks.map(task => createGuestTaskCard(task)).join('');
+        }
+    }
+
+    function createGuestTaskCard(task) {
+        const isExpanded = guestExpandedTaskId === task.id;
+        const timerState = guestTaskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
+
+        return `
         <div class="complex-task-card ${isExpanded ? 'expanded' : ''}" data-task-id="${task.id}">
             <div class="task-compact" onclick="toggleGuestTask('${task.id}')">
                 <div class="task-compact-content">
@@ -376,53 +377,53 @@ function createGuestTaskCard(task) {
             </div>
         </div>
     `;
-}
-
-window.toggleGuestTask = function(taskId) {
-    if (guestExpandedTaskId === taskId) {
-        guestExpandedTaskId = null;
-    } else {
-        guestExpandedTaskId = taskId;
     }
-    renderGuestTasks();
-};
 
-window.visitGuestTask = function(taskId, url, duration) {
-    window.open(url, '_blank');
-    
-    guestTaskTimers[taskId] = {
-        running: true,
-        timeLeft: duration,
-        completed: false
+    window.toggleGuestTask = function (taskId) {
+        if (guestExpandedTaskId === taskId) {
+            guestExpandedTaskId = null;
+        } else {
+            guestExpandedTaskId = taskId;
+        }
+        renderGuestTasks();
     };
-    
-    renderGuestTasks();
-    
-    const interval = setInterval(() => {
-        if (!guestTaskTimers[taskId] || !guestTaskTimers[taskId].running) {
-            clearInterval(interval);
-            return;
-        }
-        
-        guestTaskTimers[taskId].timeLeft--;
-        
-        const timerElement = document.querySelector(`#guest-timer-${taskId} .timer-value`);
-        if (timerElement) {
-            timerElement.textContent = guestTaskTimers[taskId].timeLeft;
-        }
-        
-        if (guestTaskTimers[taskId].timeLeft <= 0) {
-            clearInterval(interval);
-            guestTaskTimers[taskId].running = false;
-            guestTaskTimers[taskId].completed = true;
-            renderGuestTasks();
-        }
-    }, 1000);
-};
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
-}
+    window.visitGuestTask = function (taskId, url, duration) {
+        window.open(url, '_blank');
+
+        guestTaskTimers[taskId] = {
+            running: true,
+            timeLeft: duration,
+            completed: false
+        };
+
+        renderGuestTasks();
+
+        const interval = setInterval(() => {
+            if (!guestTaskTimers[taskId] || !guestTaskTimers[taskId].running) {
+                clearInterval(interval);
+                return;
+            }
+
+            guestTaskTimers[taskId].timeLeft--;
+
+            const timerElement = document.querySelector(`#guest-timer-${taskId} .timer-value`);
+            if (timerElement) {
+                timerElement.textContent = guestTaskTimers[taskId].timeLeft;
+            }
+
+            if (guestTaskTimers[taskId].timeLeft <= 0) {
+                clearInterval(interval);
+                guestTaskTimers[taskId].running = false;
+                guestTaskTimers[taskId].completed = true;
+                renderGuestTasks();
+            }
+        }, 1000);
+    };
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 })();

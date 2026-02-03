@@ -32,7 +32,7 @@ function loadUserProfile($userId) {
 }
 
 function loadTasks() {
-    $tasksFile = __DIR__ . '/../data/complex-tasks/tasks.json';
+    $tasksFile = '/var/clickforcharity-data/complex-tasks/tasks.json';
     
     if (file_exists($tasksFile)) {
         $data = json_decode(file_get_contents($tasksFile), true);
@@ -46,22 +46,23 @@ function loadTasks() {
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $userId = $_GET['user_id'] ?? null;
+    $fetchAll = isset($_GET['all']) && $_GET['all'] === 'true';
     
-    if (!$userId) {
+    if (!$userId && !$fetchAll) {
         http_response_code(401);
         echo json_encode(['error' => 'Authentication required - user_id parameter missing']);
         exit;
     }
     
-    if (!preg_match('/^[0-9]+-[a-zA-Z0-9_-]+$/', $userId)) {
+    if ($userId && !preg_match('/^[0-9]+-[a-zA-Z0-9_-]+$/', $userId)) {
         http_response_code(400);
         echo json_encode(['error' => 'Invalid user_id format (expected: id-username)']);
         exit;
     }
     
-    $userData = loadUserProfile($userId);
+    $userData = $userId ? loadUserProfile($userId) : null;
     
-    if (!$userData) {
+    if ($userId && !$userData) {
         http_response_code(404);
         echo json_encode(['error' => 'User not found']);
         exit;
@@ -73,9 +74,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     $skippedTasks = $userData['skippedComplexTasks'] ?? [];
     
     // Filter tasks based on user's platforms and completion status
-    $availableTasks = array_filter($allTasks, function($task) use ($userPlatforms, $completedTasks, $skippedTasks) {
-        // Only show enabled tasks
-        if (!isset($task['enabled']) || !$task['enabled']) {
+    $availableTasks = array_filter($allTasks, function($task) use ($userPlatforms, $completedTasks, $skippedTasks, $fetchAll) {
+        // Only show enabled tasks for users/guests, but show all for admin (fetchAll)
+        if (!$fetchAll && (!isset($task['enabled']) || !$task['enabled'])) {
             return false;
         }
         
@@ -85,6 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             if ($expiryDate && $expiryDate < time()) {
                 return false;
             }
+        }
+        
+        // Skip platform filtering, skipping, and completion status if fetching all (admin/guest full view)
+        if ($fetchAll) {
+            return true;
         }
         
         // Platform filtering: "none" means show to everyone, otherwise check membership

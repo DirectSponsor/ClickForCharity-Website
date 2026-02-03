@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     $taskId = $input['id'];
-    $tasksFile = __DIR__ . '/../data/complex-tasks/tasks.json';
+    $tasksFile = '/var/clickforcharity-data/complex-tasks/tasks.json';
     
     // Load existing tasks
     $tasks = [];

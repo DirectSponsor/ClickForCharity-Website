@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,7 +9,8 @@
     <meta property="og:url" content="https://clickforcharity.net/admin-simple-tasks.html">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta property="og:description" content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:description"
+        content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <!-- Twitter Meta Tags -->
@@ -16,16 +18,19 @@
     <meta property="twitter:domain" content="clickforcharity.net">
     <meta property="twitter:url" content="https://clickforcharity.net/admin-simple-tasks.html">
     <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta name="twitter:description" content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta name="twitter:description"
+        content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <title>Admin – Tasks Management</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
+
 <body>
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
         <header style="margin-bottom: 30px; border-bottom: 2px solid #e0e0e0; padding-bottom: 20px;">
-            <a href="index.html" class="logo" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
+            <a href="index.html" class="logo"
+                style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
                 <span>Click for Charity</span>
             </a>
@@ -34,26 +39,30 @@
             <section class="admin-form" aria-labelledby="admin-form-heading">
                 <h1 id="admin-form-heading">Tasks Management</h1>
                 <p class="section-nav">
-                    <a href="#create-task">Create Task</a> | 
-                    <a href="#manage-tasks">Manage Tasks</a> | 
-                    <a href="admin.html">← Admin Dashboard</a> | 
+                    <a href="#create-task">Create Task</a> |
+                    <a href="#manage-tasks">Manage Tasks</a> |
+                    <a href="admin.html">← Admin Dashboard</a> |
                     <a href="simple-tasks.html" target="_blank">View Live Page</a>
                 </p>
-                
+
                 <h2 id="create-task">Create a Task</h2>
-                <p class="description">Create tasks for users to complete. Choose the category and platform, set rewards and timers.</p>
+                <p class="description">Create tasks for users to complete. Choose the category and platform, set rewards
+                    and timers.</p>
                 <form id="task-form">
                     <div class="field">
                         <label for="task-title">Title</label>
-                        <input type="text" id="task-title" name="title" maxlength="120" required placeholder="e.g. Follow DirectSponsor on X">
+                        <input type="text" id="task-title" name="title" maxlength="120" required
+                            placeholder="e.g. Follow DirectSponsor on X">
                     </div>
                     <div class="field">
                         <label for="task-short-description">Short Description</label>
-                        <input type="text" id="task-short-description" name="shortDescription" maxlength="200" required placeholder="Brief description shown in compact view">
+                        <input type="text" id="task-short-description" name="shortDescription" maxlength="200" required
+                            placeholder="Brief description shown in compact view">
                     </div>
                     <div class="field">
                         <label for="task-instructions">Instructions</label>
-                        <textarea id="task-instructions" name="instructions" maxlength="500" required placeholder="Detailed step-by-step instructions for the user">1. Click the Visit button to open the target page
+                        <textarea id="task-instructions" name="instructions" maxlength="500" required
+                            placeholder="Detailed step-by-step instructions for the user">1. Click the Visit button to open the target page
 2. Follow the specific instructions for that platform
 3. Return here and click Complete when done</textarea>
                     </div>
@@ -63,12 +72,14 @@
                     </div>
                     <div class="field">
                         <label for="task-duration">Timer (seconds)</label>
-                        <input type="number" id="task-duration" name="duration" min="5" max="59" step="5" value="20" required>
+                        <input type="number" id="task-duration" name="duration" min="5" max="59" step="5" value="20"
+                            required>
                         <small>Maximum 59 seconds to avoid browser throttling</small>
                     </div>
                     <div class="field">
                         <label for="task-reward">Reward (tokens/coins)</label>
-                        <input type="number" id="task-reward" name="reward" min="1" max="1000" step="1" value="25" required>
+                        <input type="number" id="task-reward" name="reward" min="1" max="1000" step="1" value="25"
+                            required>
                     </div>
                     <div class="field">
                         <label for="task-category">Category</label>
@@ -106,13 +117,15 @@
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn primary">Save Task</button>
-                        <button type="button" id="new-task-btn" class="btn secondary" style="display:none;">Create Another Task</button>
+                        <button type="button" id="new-task-btn" class="btn secondary" style="display:none;">Create
+                            Another Task</button>
                         <span id="form-feedback" role="status"></span>
                     </div>
                 </form>
-                
+
                 <h2 id="manage-tasks" style="margin-top: 60px;">Manage Existing Tasks</h2>
-                <p class="description">View and delete existing simple tasks. Currently using mock data - backend integration coming soon.</p>
+                <p class="description">View and delete existing simple tasks. Currently using mock data - backend
+                    integration coming soon.</p>
                 <div style="margin-bottom: 20px;">
                     <button id="reset-completed-btn" class="btn secondary">Reset Completed Tasks (for testing)</button>
                     <button id="reset-skipped-btn" class="btn secondary">Reset Skipped Tasks (for testing)</button>
@@ -131,7 +144,7 @@
         document.addEventListener('DOMContentLoaded', async () => {
             await requireAdmin();
         });
-        
+
         // Global variables
         let loadTasks;
 
@@ -164,14 +177,14 @@
                     return;
                 }
 
-                const task = { 
-                    title, 
-                    shortDescription, 
-                    instructions, 
-                    url, 
-                    reward, 
-                    duration, 
-                    category, 
+                const task = {
+                    title,
+                    shortDescription,
+                    instructions,
+                    url,
+                    reward,
+                    duration,
+                    category,
                     platform,
                     repeatable,
                     enabled,
@@ -197,12 +210,12 @@
                         submitButton.style.display = 'none';
                         newTaskBtn.style.display = 'inline-block';
                         feedbackEl.textContent = '';
-                        
+
                         // Disable all form inputs
                         Array.from(form.elements).forEach(el => {
                             if (el.type !== 'button') el.disabled = true;
                         });
-                        
+
                         loadTasks(); // Refresh task list
                     } else {
                         feedbackEl.textContent = result.error || 'Failed to save task.';
@@ -230,13 +243,14 @@
         })();
 
         // Task management
-        (function() {
+        (function () {
             const taskListEl = document.getElementById('task-management-list');
 
-            loadTasks = async function() {
+            loadTasks = async function () {
                 try {
-                    const response = await fetch('/data/complex-tasks/tasks.json');
-                    const tasks = await response.json();
+                    const response = await fetch('/api/get-complex-tasks.php?all=true');
+                    const data = await response.json();
+                    const tasks = data.tasks || [];
 
                     if (!tasks || tasks.length === 0) {
                         taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
@@ -287,7 +301,7 @@
                                     if (taskListEl.children.length === 0) {
                                         taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
                                     }
-                                    
+
                                     // Show success message
                                     const message = result.message || 'Task marked for deletion';
                                     alert(message);
@@ -311,7 +325,7 @@
         })();
 
         // Reset completed tasks
-        (function() {
+        (function () {
             const resetBtn = document.getElementById('reset-completed-btn');
             const resetSkippedBtn = document.getElementById('reset-skipped-btn');
             const feedbackEl = document.getElementById('reset-feedback');
@@ -350,4 +364,5 @@
         })();
     </script>
 </body>
+
 </html>

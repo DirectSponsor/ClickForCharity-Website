@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    $tasksFile = __DIR__ . '/../data/complex-tasks/tasks.json';
+    $tasksFile = '/var/clickforcharity-data/complex-tasks/tasks.json';
     
     // Load existing tasks
     $tasks = [];
@@ -52,6 +52,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     $newId = 'task_' . str_pad($maxId + 1, 3, '0', STR_PAD_LEFT);
+    
+    // Ensure the directory exists
+    $dataDir = dirname($tasksFile);
+    if (!is_dir($dataDir)) {
+        mkdir($dataDir, 0755, true);
+    }
     
     // Create new task
     $newTask = [
