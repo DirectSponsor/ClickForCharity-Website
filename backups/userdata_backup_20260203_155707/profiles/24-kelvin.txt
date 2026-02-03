@@ -1,0 +1,23 @@
+{
+    "user_id": "24-kelvin",
+    "username": "kelvin",
+    "profile": {
+        "display_name": "kelvin",
+        "avatar": "\ud83d\udc64",
+        "bio": "",
+        "location": "",
+        "website": ""
+    },
+    "global_roles": [],
+    "site_roles": {
+        "roflfaucet": [],
+        "clickforcharity": []
+    },
+    "last_updated": "2026-01-06T04:43:46+00:00",
+    "display_name": "kelvin",
+    "avatar": "\ud83d\udc64",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "last_profile_update": 1768107244
+}

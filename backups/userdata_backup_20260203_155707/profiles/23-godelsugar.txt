@@ -1,0 +1,25 @@
+{
+    "user_id": "23-godelsugar",
+    "level": 1,
+    "username": "godelsugar",
+    "display_name": "",
+    "avatar": "\ud83d\udc64",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1767447236,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_ads_viewed": 0,
+        "total_surveys_completed": 0,
+        "total_earned": 0
+    },
+    "roles": [
+        "member"
+    ],
+    "last_profile_update": 1768145414
+}

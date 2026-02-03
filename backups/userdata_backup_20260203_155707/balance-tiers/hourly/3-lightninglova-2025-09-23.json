@@ -1,0 +1,14 @@
+{
+    "date": "2025-09-23",
+    "hours": [
+        {
+            "hour": 0,
+            "transaction_count": 6,
+            "total_wagered": 4,
+            "total_won": 14,
+            "games_played": 4,
+            "faucet_claims": 0,
+            "ending_balance": 585
+        }
+    ]
+}

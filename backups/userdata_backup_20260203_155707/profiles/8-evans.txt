@@ -1,0 +1,26 @@
+{
+    "user_id": "8-evans",
+    "level": 1,
+    "username": "evans",
+    "display_name": "",
+    "avatar": "\ud83d\udc64",
+    "email": "badilisha.rusinga@gmail.com",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1759240806,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "roles": [
+        "member",
+        "recipient"
+    ],
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1763667163
+}

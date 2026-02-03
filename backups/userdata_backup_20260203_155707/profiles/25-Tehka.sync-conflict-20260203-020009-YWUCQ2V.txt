@@ -1,0 +1,35 @@
+{
+    "user_id": "25-Tehka",
+    "level": 1,
+    "username": "Tehka",
+    "display_name": "",
+    "avatar": "\ud83d\udc64",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1769733845,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_ads_viewed": 0,
+        "total_surveys_completed": 0,
+        "total_earned": 0
+    },
+    "roles": [
+        "member"
+    ],
+    "last_profile_update": 1770083990,
+    "completedComplexTasks": [],
+    "skippedComplexTasks": [],
+    "taskStats": {
+        "totalCompleted": 2,
+        "byCategory": {
+            "follows": 0,
+            "engagements": 0,
+            "other": 2
+        }
+    }
+}

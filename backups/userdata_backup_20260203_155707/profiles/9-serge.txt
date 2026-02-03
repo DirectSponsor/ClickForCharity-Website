@@ -1,0 +1,22 @@
+{
+    "user_id": "9-serge",
+    "level": 1,
+    "username": "serge",
+    "display_name": "Serge",
+    "avatar": "uploaded:9-serge.jpg",
+    "email": "",
+    "bio": "I am myself!",
+    "location": "Ireland",
+    "website": "https:\/\/serazi.net\/",
+    "joined_date": 1759519952,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1759520287
+}

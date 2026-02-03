@@ -1,0 +1,15 @@
+{
+    "balance": 18,
+    "last_updated": 1761405432,
+    "recent_transactions": [],
+    "monthly_totals": {
+        "2025-10": {
+            "total_bets": 12,
+            "total_wins": 5,
+            "total_wagered": 12,
+            "total_won": 10,
+            "faucet_claims": 1,
+            "games_played": 12
+        }
+    }
+}

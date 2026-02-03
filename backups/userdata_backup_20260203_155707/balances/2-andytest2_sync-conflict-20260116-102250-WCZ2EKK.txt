@@ -1,0 +1,5 @@
+{
+    "balance": 0,
+    "last_updated": 1770134198,
+    "recent_transactions": []
+}

@@ -1,0 +1,109 @@
+[
+    {
+        "id": "msg_1768755297_696d1061c67bf",
+        "type": "mention",
+        "from": "andytest2",
+        "message": "mentioned you in chat: @lightninglova hi",
+        "timestamp": 1768755297,
+        "read": false,
+        "metadata": {
+            "message": "@lightninglova hi",
+            "timestamp": 1768755297
+        }
+    },
+    {
+        "id": "msg_1758577732_68d1c44447c97",
+        "type": "mention",
+        "from": "andytest1",
+        "message": "mentioned you in chat: @lightninglova anzar is now a citizen! but will leave intefrating him with the unified balance syste...",
+        "timestamp": 1758577732,
+        "read": true,
+        "metadata": {
+            "message": "@lightninglova anzar is now a citizen! but will leave intefrating him with the unified balance system till tomorrow.",
+            "timestamp": 1758577732
+        }
+    },
+    {
+        "id": "msg_1758575707_68d1bc5b76f35",
+        "type": "mention",
+        "from": "andytest1",
+        "message": "mentioned you in chat: @lightninglova that ws a hugh masekela song -",
+        "timestamp": 1758575707,
+        "read": true,
+        "metadata": {
+            "message": "@lightninglova that ws a hugh masekela song -",
+            "timestamp": 1758575707
+        }
+    },
+    {
+        "id": "msg_1758575278_68d1baae5834a",
+        "type": "tip",
+        "from": "andytest1",
+        "message": "You received 500 coins from andytest1! \ud83d\udcb0",
+        "timestamp": 1758575278,
+        "read": true,
+        "metadata": {
+            "amount": 500
+        }
+    },
+    {
+        "id": "msg_1758575252_68d1ba941599d",
+        "type": "mention",
+        "from": "andytest1",
+        "message": "mentioned you in chat: @lightninglova cool I am racing against time to get giphy image posting so Anzar can post a rain gif...",
+        "timestamp": 1758575252,
+        "read": true,
+        "metadata": {
+            "message": "@lightninglova cool I am racing against time to get giphy image posting so Anzar can post a rain gif whien it rains",
+            "timestamp": 1758575252
+        }
+    },
+    {
+        "id": "msg_1758574338_68d1b702cf675",
+        "type": "mention",
+        "from": "andytest1",
+        "message": "mentioned you in chat: @lightninglova yes it was a bit of a mess earlier, but much better now",
+        "timestamp": 1758574338,
+        "read": true,
+        "metadata": {
+            "message": "@lightninglova yes it was a bit of a mess earlier, but much better now",
+            "timestamp": 1758574338
+        }
+    },
+    {
+        "id": "msg_1758573664_68d1b460e9677",
+        "type": "mention",
+        "from": "andytest1",
+        "message": "mentioned you in chat: @lightninglova click his name ans say sometihng",
+        "timestamp": 1758573664,
+        "read": true,
+        "metadata": {
+            "message": "@lightninglova click his name ans say sometihng",
+            "timestamp": 1758573664
+        }
+    },
+    {
+        "id": "msg_1758565148_68d1931c5ef87",
+        "type": "mention",
+        "from": "ROFLBot",
+        "message": "mentioned you in chat: Hey @lightninglova! Welcome to ROFLFaucet!  Ready to claim some free crypto, try your luck at our ga...",
+        "timestamp": 1758565148,
+        "read": true,
+        "metadata": {
+            "message": "Hey @lightninglova! Welcome to ROFLFaucet!  Ready to claim some free crypto, try your luck at our games, or maybe even win some coins in a rain event?  Check out the chat commands (\/balance, \/tip, \/rain, \/online) for more info.  Have fun and gamble responsibly!",
+            "timestamp": 1758565148
+        }
+    },
+    {
+        "id": "msg_1758564458_68d1906a9acce",
+        "type": "mention",
+        "from": "roflbot",
+        "message": "mentioned you in chat: @lightninglova hi!",
+        "timestamp": 1758564458,
+        "read": true,
+        "metadata": {
+            "message": "@lightninglova hi!",
+            "timestamp": 1758564458
+        }
+    }
+]

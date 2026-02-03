@@ -1,0 +1,57 @@
+{
+    "user_id": "2-andytest2",
+    "level": 10,
+    "username": "andytest2",
+    "email": "test2@directsponsor.org",
+    "joined_date": 1758048307,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1770134206,
+    "bio": "",
+    "location": "",
+    "website": "",
+    "roles": [
+        "admin",
+        "member"
+    ],
+    "memberPlatforms": [
+        "x",
+        "facebook",
+        "youtube",
+        "instagram",
+        "tiktok",
+        "reddit",
+        "linkedin",
+        "odysee",
+        "publish0x",
+        "minds"
+    ],
+    "rewardedPlatforms": [
+        "odysee",
+        "publish0x",
+        "minds"
+    ],
+    "display_name": "",
+    "avatar": "",
+    "completedComplexTasks": [
+        "task_001",
+        "task_004",
+        "task_005"
+    ],
+    "skippedComplexTasks": [],
+    "taskStats": {
+        "totalCompleted": 2,
+        "byCategory": {
+            "follows": 0,
+            "engagements": 2,
+            "other": 0
+        }
+    }
+}

@@ -1,0 +1,14 @@
+[
+    {
+        "id": "msg_1766442327_6949c557ceb5e",
+        "type": "mention",
+        "from": "andytest2",
+        "message": "mentioned you in chat: hey @Anzar I have not forgotten you! Keep up the good work",
+        "timestamp": 1766442327,
+        "read": false,
+        "metadata": {
+            "message": "hey @Anzar I have not forgotten you! Keep up the good work",
+            "timestamp": 1766442327
+        }
+    }
+]

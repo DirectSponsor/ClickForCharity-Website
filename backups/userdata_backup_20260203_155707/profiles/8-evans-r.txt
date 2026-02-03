@@ -1,0 +1,28 @@
+{
+    "user_id": "8-evans-r",
+    "level": 1,
+    "username": "evans-r",
+    "display_name": "Evans",
+    "avatar": "uploaded:8-evans.jpg",
+    "email": "badilisha.rusinga@gmail.com",
+    "bio": "Permaculutre And Reforestation In Kenya.",
+    "location": "Kenya",
+    "website": "https:\/\/badilisha.org\/",
+    "joined_date": 1759240806,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "roles": [
+        "member",
+        "recipient"
+    ],
+    "fundraiser_permissions": [],
+    "public_profile": false,
+    "last_profile_update": 1764870312
+}

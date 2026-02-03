@@ -1,0 +1,27 @@
+{
+    "user_id": "1-andytest1",
+    "level": 1,
+    "username": "andytest1",
+    "display_name": "",
+    "avatar": "\ud83d\udc64",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1763664684,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "roles": [
+        "member"
+    ],
+    "fundraiser_permissions": [],
+    "public_profile": false,
+    "last_profile_update": 1763667184
+}

@@ -1,0 +1,20 @@
+{
+    "user_id": "4-roflbot",
+    "level": 1,
+    "username": "roflbot",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1758564445,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1758564445
+}

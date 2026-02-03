@@ -1,0 +1,14 @@
+{
+    "balance": 0,
+    "last_updated": 1759519952,
+    "transactions": [
+        {
+            "timestamp": 1759519952,
+            "type": "system",
+            "old_balance": 0,
+            "new_balance": 0,
+            "change": 0,
+            "description": "system: Account created - use faucet to earn coins"
+        }
+    ]
+}

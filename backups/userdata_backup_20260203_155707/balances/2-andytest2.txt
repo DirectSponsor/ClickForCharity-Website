@@ -1,0 +1,24 @@
+{
+    "balance": 13565,
+    "last_updated": 1770134206,
+    "recent_transactions": [
+        {
+            "amount": 50,
+            "description": "Platform membership reward: Publish0x, Minds",
+            "timestamp": 1770123495,
+            "date": "2026-02-03 12:58:15"
+        },
+        {
+            "amount": 30,
+            "description": "Completed task: Like our charity video",
+            "timestamp": 1770130872,
+            "date": "2026-02-03 15:01:12"
+        },
+        {
+            "amount": 25,
+            "description": "Completed task: Like our latest post",
+            "timestamp": 1770131343,
+            "date": "2026-02-03 15:09:03"
+        }
+    ]
+}

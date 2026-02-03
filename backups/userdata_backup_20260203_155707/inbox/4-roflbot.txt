@@ -1,0 +1,94 @@
+[
+    {
+        "id": "msg_1758576391_68d1bf0712cde",
+        "type": "mention",
+        "from": "lightninglova",
+        "message": "mentioned you in chat: @roflbot can you keep it cool?",
+        "timestamp": 1758576391,
+        "read": false,
+        "metadata": {
+            "message": "@roflbot can you keep it cool?",
+            "timestamp": 1758576391
+        }
+    },
+    {
+        "id": "msg_1758573851_68d1b51b4b95a",
+        "type": "mention",
+        "from": "lightninglova",
+        "message": "mentioned you in chat: @roflbot thansk",
+        "timestamp": 1758573851,
+        "read": false,
+        "metadata": {
+            "message": "@roflbot thansk",
+            "timestamp": 1758573851
+        }
+    },
+    {
+        "id": "msg_1758573778_68d1b4d24e545",
+        "type": "mention",
+        "from": "lightninglova",
+        "message": "mentioned you in chat: @roflbot everything in games.. and most especially the fact that I can get free coins on the faucet",
+        "timestamp": 1758573778,
+        "read": false,
+        "metadata": {
+            "message": "@roflbot everything in games.. and most especially the fact that I can get free coins on the faucet",
+            "timestamp": 1758573778
+        }
+    },
+    {
+        "id": "msg_1758573703_68d1b487f0192",
+        "type": "mention",
+        "from": "lightninglova",
+        "message": "mentioned you in chat: @roflbot this is cool",
+        "timestamp": 1758573703,
+        "read": false,
+        "metadata": {
+            "message": "@roflbot this is cool",
+            "timestamp": 1758573703
+        }
+    },
+    {
+        "id": "msg_1758572474_68d1afba4ec96",
+        "type": "tip",
+        "from": "andytest1",
+        "message": "You received 10 coins from andytest1! \ud83d\udcb0",
+        "timestamp": 1758572474,
+        "read": false,
+        "metadata": {
+            "amount": 10
+        }
+    },
+    {
+        "id": "msg_1758570801_68d1a9316d6b1",
+        "type": "tip",
+        "from": "andytest1",
+        "message": "You received 10 coins from andytest1! \ud83d\udcb0",
+        "timestamp": 1758570801,
+        "read": false,
+        "metadata": {
+            "amount": 10
+        }
+    },
+    {
+        "id": "msg_1758570528_68d1a820b68bb",
+        "type": "tip",
+        "from": "andytest1",
+        "message": "You received 10 coins from andytest1! \ud83d\udcb0",
+        "timestamp": 1758570528,
+        "read": false,
+        "metadata": {
+            "amount": 10
+        }
+    },
+    {
+        "id": "msg_1758569224_68d1a3089f88c",
+        "type": "tip",
+        "from": "andytest1",
+        "message": "You received 10 coins from andytest1! \ud83d\udcb0",
+        "timestamp": 1758569224,
+        "read": false,
+        "metadata": {
+            "amount": 10
+        }
+    }
+]

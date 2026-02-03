@@ -1,0 +1,32 @@
+{
+    "date": "2025-09-21",
+    "hours": {
+        "23": {
+            "hour": 23,
+            "transaction_count": 90,
+            "total_wagered": 610,
+            "total_won": 610,
+            "games_played": 61,
+            "faucet_claims": 0,
+            "ending_balance": 3000
+        },
+        "22": {
+            "hour": 22,
+            "transaction_count": 27,
+            "total_wagered": 200,
+            "total_won": 210,
+            "games_played": 20,
+            "faucet_claims": 0,
+            "ending_balance": 3000
+        },
+        "21": {
+            "hour": 21,
+            "transaction_count": 18,
+            "total_wagered": 110,
+            "total_won": 160,
+            "games_played": 11,
+            "faucet_claims": 0,
+            "ending_balance": 3000
+        }
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "user_id": "25-Tehka",
+    "username": "Tehka",
+    "profile": {
+        "display_name": "Tehka",
+        "avatar": "\ud83d\udc64",
+        "bio": "",
+        "location": "",
+        "website": ""
+    },
+    "global_roles": [],
+    "site_roles": {
+        "roflfaucet": [],
+        "clickforcharity": []
+    },
+    "last_updated": "2026-01-30T00:44:00+00:00"
+}

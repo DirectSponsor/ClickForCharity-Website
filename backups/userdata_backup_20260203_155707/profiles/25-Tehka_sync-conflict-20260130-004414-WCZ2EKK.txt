@@ -1,0 +1,9 @@
+{
+    "user_id": "25-Tehka_sync-conflict-20260130-004414-WCZ2EKK",
+    "display_name": "Tehka",
+    "avatar": "\ud83d\udc64",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "last_profile_update": 1770134211
+}

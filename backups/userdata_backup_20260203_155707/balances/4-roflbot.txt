@@ -1,0 +1,46 @@
+{
+    "balance": 40,
+    "last_updated": 1758572474,
+    "transactions": [
+        {
+            "timestamp": 1758564445,
+            "type": "system",
+            "old_balance": 0,
+            "new_balance": 0,
+            "change": 0,
+            "description": "system: Account created - use faucet to earn coins"
+        },
+        {
+            "timestamp": 1758569224,
+            "type": "credit",
+            "old_balance": 0,
+            "new_balance": 10,
+            "change": 10,
+            "description": "Tip received from andytest1"
+        },
+        {
+            "timestamp": 1758570528,
+            "type": "credit",
+            "old_balance": 10,
+            "new_balance": 20,
+            "change": 10,
+            "description": "Tip received from andytest1"
+        },
+        {
+            "timestamp": 1758570801,
+            "type": "credit",
+            "old_balance": 20,
+            "new_balance": 30,
+            "change": 10,
+            "description": "Tip received from andytest1"
+        },
+        {
+            "timestamp": 1758572474,
+            "type": "credit",
+            "old_balance": 30,
+            "new_balance": 40,
+            "change": 10,
+            "description": "Tip received from andytest1"
+        }
+    ]
+}

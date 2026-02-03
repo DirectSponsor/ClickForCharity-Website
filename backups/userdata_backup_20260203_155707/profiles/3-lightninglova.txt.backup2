@@ -1,0 +1,31 @@
+{
+    "user_id": "3-lightninglova",
+    "level": 1,
+    "username": "lightninglova",
+    "email": "centralbanlib@gmail.com",
+    "bio": "Bitcoin education advocate in Ghana. Running community workshops to promote Bitcoin and Lightning Network adoption across West Africa.",
+    "location": "Accra, Ghana",
+    "website": "",
+    "joined_date": 1758181536,
+    "roles": ["member", "recipient", "fundraiser"],
+    "projects": [
+        {
+            "project_id": "001",
+            "title": "Bitcoin Education Workshops in Ghana",
+            "status": "active",
+            "target_amount": 50000,
+            "current_amount": 0,
+            "created_date": "2025-01-14"
+        }
+    ],
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1758181536
+}

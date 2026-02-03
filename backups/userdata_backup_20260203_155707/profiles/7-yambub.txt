@@ -1,0 +1,20 @@
+{
+    "user_id": "7-yambub",
+    "level": 1,
+    "username": "yambub",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1759093205,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1759093205
+}

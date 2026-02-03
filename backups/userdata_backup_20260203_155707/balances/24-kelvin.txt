@@ -1,0 +1,7 @@
+{
+    "user_id": "24-kelvin",
+    "balance": 144,
+    "last_updated": 1770053683,
+    "last_source": "ptc_task_complete",
+    "last_server": "clickforcharity"
+}

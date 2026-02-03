@@ -1,0 +1,22 @@
+{
+    "user_id": "5-anzar",
+    "level": 1,
+    "username": "anzar",
+    "display_name": "",
+    "avatar": "\ud83d\udc64",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1758577299,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1763667150
+}

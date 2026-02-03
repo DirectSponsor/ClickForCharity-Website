@@ -1,0 +1,26 @@
+{
+    "balance": 0,
+    "last_updated": 1759093211,
+    "recent_transactions": [],
+    "monthly_totals": {
+        "2025-09": {
+            "total_bets": 1,
+            "total_wins": 0,
+            "total_wagered": 1,
+            "total_won": 0,
+            "faucet_claims": 0,
+            "games_played": 1
+        }
+    },
+    "last_rollup": 0,
+    "transactions": [
+        {
+            "timestamp": 1759093205,
+            "type": "system",
+            "old_balance": 0,
+            "new_balance": 0,
+            "change": 0,
+            "description": "system: Account created - use faucet to earn coins"
+        }
+    ]
+}

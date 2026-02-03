@@ -1,0 +1,5 @@
+{
+    "user_id": "1-andytest1",
+    "balance": 14582,
+    "last_updated": 1764278255
+}

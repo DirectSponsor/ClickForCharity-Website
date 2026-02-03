@@ -1,0 +1,20 @@
+{
+    "user_id": "16-superhands101",
+    "level": 1,
+    "username": "superhands101",
+    "email": "",
+    "bio": "",
+    "location": "",
+    "website": "",
+    "joined_date": 1761404959,
+    "settings": {
+        "notifications": true,
+        "theme": "default"
+    },
+    "stats": {
+        "total_claims": 0,
+        "total_games_played": 0,
+        "total_won": 0
+    },
+    "last_profile_update": 1761404959
+}

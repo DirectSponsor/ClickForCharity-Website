@@ -1,0 +1,11 @@
+{
+    "balance": 98583,
+    "last_updated": 1770134215,
+    "recent_transactions": [
+        {
+            "amount": 20000,
+            "timestamp": 1768748283,
+            "type": "admin_grant"
+        }
+    ]
+}
