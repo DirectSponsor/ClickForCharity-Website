@@ -130,7 +130,6 @@
                             ${isRecentlyCompleted ? '<span class="completed-badge">✓ Completed</span>' : ''}
                         </div>
                     </div>
-                    <button class="btn-skip-compact" onclick="event.stopPropagation(); skipTask('${task.id}')" ${isRecentlyCompleted ? 'disabled' : ''}>Skip</button>
                 </div>
                 
                 <div class="task-expanded" style="display: ${isExpanded ? 'block' : 'none'}">
