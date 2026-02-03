@@ -1538,13 +1538,13 @@ body {
     margin: 0;
 }
 
-.complex-task-list {
+.task-list {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.complex-task-card {
+.task-card {
     background-color: var(--task-bg);
     border: 1px solid var(--border-color);
     border-radius: 6px;
@@ -1552,23 +1552,23 @@ body {
     transition: all 0.2s ease;
 }
 
-.complex-task-card.expanded {
+.task-card.expanded {
     border-color: var(--accent-color);
     box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
 }
 
-.complex-task-card.completed {
+.task-card.completed {
     background-color: var(--task-done-bg);
     opacity: 0.7;
     border-color: #ddd;
 }
 
-.complex-task-card.completed .task-title {
+.task-card.completed .task-title {
     color: #666;
     text-decoration: line-through;
 }
 
-.complex-task-card.completed .task-short-desc {
+.task-card.completed .task-short-desc {
     color: #999;
 }
 
