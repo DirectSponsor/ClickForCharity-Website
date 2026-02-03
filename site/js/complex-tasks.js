@@ -81,7 +81,17 @@
         const categories = ['engagements', 'follows', 'other'];
 
         categories.forEach(category => {
-            const tasks = allTasks.filter(t => t.category === category);
+            let tasks = allTasks.filter(t => t.category === category);
+
+            // Sort tasks: completed ones go to the bottom
+            tasks.sort((a, b) => {
+                const aCompleted = window.unifiedBalance && window.unifiedBalance.isTaskCompleted(a.id);
+                const bCompleted = window.unifiedBalance && window.unifiedBalance.isTaskCompleted(b.id);
+
+                if (aCompleted === bCompleted) return 0;
+                return aCompleted ? 1 : -1;
+            });
+
             const container = document.getElementById(`${category}-tasks`);
             const emptyState = container.nextElementSibling;
             const countElement = document.getElementById(`${category}-count`);
@@ -226,6 +236,13 @@
 
                 showNotification(`✓ ${data.message}`, 'success');
 
+                // Move task to bottom immediately for feedback
+                const taskCard = document.querySelector(`.complex-task-card[data-task-id="${taskId}"]`);
+                if (taskCard) {
+                    taskCard.classList.add('completed');
+                    moveTaskToBottom(taskCard);
+                }
+
                 if (window.unifiedBalance) {
                     window.unifiedBalance.syncBalance();
                 }
@@ -299,6 +316,15 @@
         setTimeout(() => {
             notification.remove();
         }, 5000);
+    }
+
+    function moveTaskToBottom(taskCard) {
+        if (!taskCard) return;
+        const container = taskCard.parentElement;
+        if (!container) return;
+
+        // Smooth transition: we could do more here, but simple append works
+        container.appendChild(taskCard);
     }
 
     // Guest-specific state

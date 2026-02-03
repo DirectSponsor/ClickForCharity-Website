@@ -104,9 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         }
         
         // If non-repeatable, must not be completed
-        if (!$task['repeatable'] && in_array($task['id'], $completedTasks)) {
-            return false;
-        }
+        // [MODIFIED] We now show completed tasks at the bottom of the list instead of hiding them
+        // if (!$task['repeatable'] && in_array($task['id'], $completedTasks)) {
+        //     return false;
+        // }
         
         return true;
     });
