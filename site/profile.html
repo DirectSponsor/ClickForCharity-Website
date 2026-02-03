@@ -32,52 +32,55 @@
     <div class="container">
         <!-- include start sidebar.incl -->
         <aside class="sidebar" id="site-navigation">
-            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+            <a href="index.html" class="logo"
+                style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
                 <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
                 <span>Click for Charity</span>
             </a>
-            
+
             <!-- Beta Warning -->
-            <div style="background: #dc3545; color: white; padding: 8px 12px; margin: 10px 0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: bold;">
+            <div
+                style="background: #dc3545; color: white; padding: 8px 12px; margin: 10px 0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: bold;">
                 🚧 BETA TESTING
             </div>
             <nav>
                 <ul>
-                    <li ><a href="index.html">Home</a></li>
-                    <li ><a href="ptc.html">Surf Ads</a></li>
-                    <li ><a href="tasks.html">Tasks</a></li>
-                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
-                    <li ><a href="surveys.html">Surveys</a></li>
-                    <li ><a href="offers.html">Offers</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="ptc.html">Surf Ads</a></li>
+                    <li><a href="tasks.html">Tasks</a></li>
+                    <li><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li><a href="surveys.html">Surveys</a></li>
+                    <li><a href="offers.html">Offers</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
                 </ul>
             </nav>
-            
+
             <!-- User Menu Area (bottom of sidebar) -->
             <div class="user-select-container">
                 <!-- Login Button (shown when not logged in) -->
                 <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
                     🔐 Login
                 </button>
-                
+
                 <!-- User Menu (shown when logged in) -->
                 <div id="user-menu" class="user-menu" style="display: none;">
                     <div class="user-menu-header" onclick="toggleUserDropdown()">
                         <span class="user-avatar">👤</span>
                         <div class="user-info">
                             <span id="username-display" class="username">User</span>
-                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                            <span class="user-balance"><span class="balance">0</span> <span
+                                    class="currency">tokens</span></span>
                         </div>
                         <span class="dropdown-arrow">▲</span>
                     </div>
-                    
+
                     <!-- Dropdown Menu (pops upward) -->
                     <div id="user-dropdown" class="user-dropdown" style="display: none;">
                         <a href="profile.html" class="dropdown-item">👤 Profile</a>
                         <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
                     </div>
                 </div>
-                
+
                 <!-- Guest Mode Notice -->
                 <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
             </div>
@@ -85,8 +88,8 @@
         <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
             <!-- include start banner-ad.incl -->
-<div id="ad-banner"></div>
-<script src="js/banner-rotate.js"></script>
+            <div id="ad-banner"></div>
+            <script src="js/banner-rotate.js"></script>
             <!-- include end banner-ad.incl -->
             <header class="dashboard-header">
                 <h1>Profile</h1>
@@ -114,6 +117,7 @@
 
                     <div class="meanwhile">
                         <h3>Current Status:</h3>
+                        <p>Logged in as: <strong id="full-username-display">Loading...</strong></p>
                         <p>Your account is active and earning tokens! The full profile page will launch soon with
                             advanced features and settings.</p>
                     </div>
@@ -131,22 +135,23 @@
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
     <!-- include start footer.incl -->
-    <footer class="footer-meta" style="text-align:center;padding:1rem 0 280px 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+    <footer class="footer-meta"
+        style="text-align:center;padding:1rem 0 280px 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
         <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
             <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">View site map</a>
         </div>
         <div style="display:inline-block;margin:0 0 0.5rem 0;">
             <a href="https://lightning.news" target="_blank" rel="noopener">
-                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
+                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news"
+                    style="max-width:100%;height:auto;vertical-align:middle;">
             </a>
         </div>
     </footer>
 
-<div id="floating-ad" class="floating-ad-container">
-    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
-    <div class="floating-ad-content"></div>
-</div>
-<script src="js/floating-ad.js"></script>
+    <div id="floating-ad" class="floating-ad-container">
+        <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+        <div class="floating-ad-content"></div>
+    </div>
+    <script src="js/floating-ad.js"></script>
     <!-- include end footer.incl -->
 </body>
-
