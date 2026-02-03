@@ -94,7 +94,7 @@ function addTransaction($balanceData, $amount, $description) {
 }
 
 function loadTasks() {
-    $tasksFile = '/var/clickforcharity-data/complex-tasks/tasks.json';
+    $tasksFile = '/var/clickforcharity-data/tasks/tasks.json';
     
     if (file_exists($tasksFile)) {
         $data = json_decode(file_get_contents($tasksFile), true);
@@ -156,11 +156,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Initialize arrays if they don't exist
-    if (!isset($userData['completedComplexTasks'])) {
-        $userData['completedComplexTasks'] = [];
+    if (!isset($userData['completedTasks'])) {
+        $userData['completedTasks'] = [];
     }
-    if (!isset($userData['skippedComplexTasks'])) {
-        $userData['skippedComplexTasks'] = [];
+    if (!isset($userData['skippedTasks'])) {
+        $userData['skippedTasks'] = [];
     }
     
     // Initialize stats tracking
@@ -192,8 +192,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $reward = $task['reward'];
         
         // Add to completed tasks
-        if (!in_array($taskId, $userData['completedComplexTasks'])) {
-            $userData['completedComplexTasks'][] = $taskId;
+        if (!in_array($taskId, $userData['completedTasks'])) {
+            $userData['completedTasks'][] = $taskId;
             
             // Update stats
             $userData['taskStats']['totalCompleted']++;
@@ -212,8 +212,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
     } elseif ($action === 'skip') {
         // Add to skipped tasks
-        if (!in_array($taskId, $userData['skippedComplexTasks'])) {
-            $userData['skippedComplexTasks'][] = $taskId;
+        if (!in_array($taskId, $userData['skippedTasks'])) {
+            $userData['skippedTasks'][] = $taskId;
         }
     }
     

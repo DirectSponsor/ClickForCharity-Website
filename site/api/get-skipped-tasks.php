@@ -32,7 +32,7 @@ function loadUserProfile($userId) {
 }
 
 function loadTasks() {
-    $tasksFile = __DIR__ . '/../data/complex-tasks/tasks.json';
+    $tasksFile = '/var/clickforcharity-data/tasks/tasks.json';
     
     if (file_exists($tasksFile)) {
         $data = json_decode(file_get_contents($tasksFile), true);
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     }
     
     $allTasks = loadTasks();
-    $skippedTaskIds = $userData['skippedComplexTasks'] ?? [];
+    $skippedTaskIds = $userData['skippedTasks'] ?? [];
     
     // Filter to only show skipped tasks
     $skippedTasks = array_filter($allTasks, function($task) use ($skippedTaskIds) {
@@ -90,3 +90,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode(['error' => 'Invalid request method - Use GET']);
 }
 ?>
+

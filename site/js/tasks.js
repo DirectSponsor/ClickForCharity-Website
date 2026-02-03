@@ -1,5 +1,5 @@
 /**
- * Complex Tasks - Social Media Tasks System
+ * Tasks - Social Media Tasks System
  * Handles tabbed interface, expandable cards, timer, and manual completion
  */
 
@@ -56,16 +56,18 @@
 
     async function loadTasks() {
         try {
-            const response = await fetch(`api/get-complex-tasks.php?user_id=${encodeURIComponent(userId)}`);
+            const response = await fetch(`api/get-tasks.php?user_id=${encodeURIComponent(userId)}`);
             const data = await response.json();
 
             if (data.success) {
                 allTasks = data.tasks || [];
 
                 if (data.userPlatforms.length === 0) {
-                    document.getElementById('no-platforms-notice').style.display = 'block';
+                    const notice = document.getElementById('no-platforms-notice');
+                    if (notice) notice.style.display = 'block';
                 } else {
-                    document.getElementById('no-platforms-notice').style.display = 'none';
+                    const notice = document.getElementById('no-platforms-notice');
+                    if (notice) notice.style.display = 'none';
                 }
 
                 renderTasks();
@@ -93,6 +95,8 @@
             });
 
             const container = document.getElementById(`${category}-tasks`);
+            if (!container) return;
+
             const emptyState = container.nextElementSibling;
             const countElement = document.getElementById(`${category}-count`);
 
@@ -102,9 +106,9 @@
 
             if (tasks.length === 0) {
                 container.innerHTML = '';
-                if (emptyState) emptyState.style.display = 'block';
+                if (emptyState && emptyState.classList.contains('empty-state')) emptyState.style.display = 'block';
             } else {
-                if (emptyState) emptyState.style.display = 'none';
+                if (emptyState && emptyState.classList.contains('empty-state')) emptyState.style.display = 'none';
                 container.innerHTML = tasks.map(task => createTaskCard(task)).join('');
                 attachTaskEventListeners();
             }
@@ -119,7 +123,7 @@
         const isRecentlyCompleted = window.unifiedBalance && window.unifiedBalance.isTaskCompleted(task.id);
 
         return `
-            <div class="complex-task-card ${isExpanded ? 'expanded' : ''} ${isRecentlyCompleted ? 'completed' : ''}" data-task-id="${task.id}">
+            <div class="task-card ${isExpanded ? 'expanded' : ''} ${isRecentlyCompleted ? 'completed' : ''}" data-task-id="${task.id}">
                 <div class="task-compact" onclick="toggleTask('${task.id}')">
                     <div class="task-compact-content">
                         <div class="task-title">${task.title}</div>
@@ -236,7 +240,7 @@
                 showNotification(`✓ ${data.message}`, 'success');
 
                 // Move task to bottom immediately for feedback
-                const taskCard = document.querySelector(`.complex-task-card[data-task-id="${taskId}"]`);
+                const taskCard = document.querySelector(`.task-card[data-task-id="${taskId}"]`);
                 if (taskCard) {
                     taskCard.classList.add('completed');
                     moveTaskToBottom(taskCard);
@@ -298,7 +302,6 @@
 
     function attachTaskEventListeners() {
         // Event listeners are attached via onclick in HTML for simplicity
-        // This function is here for future enhancements
     }
 
     function showNotification(message, type = 'success') {
@@ -309,8 +312,12 @@
         notification.className = `task-notification ${type}`;
         notification.textContent = message;
 
-        const content = document.getElementById('complex-tasks-content');
-        content.insertBefore(notification, content.firstChild);
+        const content = document.getElementById('tasks-content');
+        if (content) {
+            content.insertBefore(notification, content.firstChild);
+        } else {
+            document.body.appendChild(notification);
+        }
 
         setTimeout(() => {
             notification.remove();
@@ -321,8 +328,6 @@
         if (!taskCard) return;
         const container = taskCard.parentElement;
         if (!container) return;
-
-        // Smooth transition: we could do more here, but simple append works
         container.appendChild(taskCard);
     }
 
@@ -333,7 +338,7 @@
 
     async function loadGuestTasks() {
         try {
-            const response = await fetch('/api/get-complex-tasks.php?all=true');
+            const response = await fetch('/api/get-tasks.php?all=true');
             const data = await response.json();
             const tasks = data.tasks || [];
 
@@ -343,19 +348,22 @@
             renderGuestTasks();
         } catch (error) {
             console.error('Error loading guest tasks:', error);
-            document.getElementById('guest-empty-state').style.display = 'block';
+            const emptyState = document.getElementById('guest-empty-state');
+            if (emptyState) emptyState.style.display = 'block';
         }
     }
 
     function renderGuestTasks() {
         const container = document.getElementById('guest-tasks');
+        if (!container) return;
+
         const emptyState = document.getElementById('guest-empty-state');
 
         if (guestTasks.length === 0) {
             container.innerHTML = '';
-            emptyState.style.display = 'block';
+            if (emptyState) emptyState.style.display = 'block';
         } else {
-            emptyState.style.display = 'none';
+            if (emptyState) emptyState.style.display = 'none';
             container.innerHTML = guestTasks.map(task => createGuestTaskCard(task)).join('');
         }
     }
@@ -365,7 +373,7 @@
         const timerState = guestTaskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
 
         return `
-        <div class="complex-task-card ${isExpanded ? 'expanded' : ''}" data-task-id="${task.id}">
+        <div class="task-card ${isExpanded ? 'expanded' : ''}" data-task-id="${task.id}">
             <div class="task-compact" onclick="toggleGuestTask('${task.id}')">
                 <div class="task-compact-content">
                     <div class="task-title">${task.title}</div>

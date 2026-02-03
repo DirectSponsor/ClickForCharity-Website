@@ -75,13 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     // Initialize array if it doesn't exist
-    if (!isset($userData['skippedComplexTasks'])) {
-        $userData['skippedComplexTasks'] = [];
+    if (!isset($userData['skippedTasks'])) {
+        $userData['skippedTasks'] = [];
     }
     
     // Remove task from skipped list
-    $userData['skippedComplexTasks'] = array_values(
-        array_filter($userData['skippedComplexTasks'], function($id) use ($taskId) {
+    $userData['skippedTasks'] = array_values(
+        array_filter($userData['skippedTasks'], function($id) use ($taskId) {
             return $id !== $taskId;
         })
     );
