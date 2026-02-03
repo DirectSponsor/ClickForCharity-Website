@@ -56,7 +56,7 @@
 
     async function loadTasks() {
         try {
-            const response = await fetch(`api/get-tasks.php?user_id=${encodeURIComponent(userId)}`);
+            const response = await fetch(`api/get-tasks.php?user_id=${encodeURIComponent(userId)}&t=${Date.now()}`);
             const data = await response.json();
 
             if (data.success) {
@@ -338,7 +338,7 @@
 
     async function loadGuestTasks() {
         try {
-            const response = await fetch('/api/get-tasks.php?all=true');
+            const response = await fetch(`/api/get-tasks.php?all=true&t=${Date.now()}`);
             const data = await response.json();
             const tasks = data.tasks || [];
 

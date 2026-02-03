@@ -3,7 +3,7 @@
  * Works with complex tasks API and server-side storage
  */
 
-(function() {
+(function () {
     'use strict';
 
     let userId = null;
@@ -17,14 +17,14 @@
             setTimeout(init, 500);
             return;
         }
-        
+
         const session = window.auth.getSession();
-        
+
         if (!session || !session.combined_user_id) {
             console.log('User not logged in');
             return;
         }
-        
+
         userId = session.combined_user_id;
         loadSkippedTasks();
     }
@@ -32,7 +32,7 @@
     async function loadSkippedTasks() {
         try {
             // Load all tasks
-            const tasksResponse = await fetch(`api/get-skipped-tasks.php?user_id=${encodeURIComponent(userId)}`);
+            const tasksResponse = await fetch(`api/get-skipped-tasks.php?user_id=${encodeURIComponent(userId)}&t=${Date.now()}`);
             const data = await tasksResponse.json();
 
             if (data.success) {
@@ -51,7 +51,7 @@
 
     function renderSkippedTasks() {
         const container = document.getElementById('skipped-task-list');
-        
+
         if (!container) return;
 
         if (allTasks.length === 0) {
@@ -64,7 +64,7 @@
 
     function createSkippedTaskCard(task) {
         const isExpanded = expandedTasks.has(task.id);
-        
+
         return `
             <div class="task-item skipped-task" data-task-id="${task.id}">
                 <div class="task-content" onclick="toggleSkippedTask('${task.id}')">
@@ -89,12 +89,12 @@
         `;
     }
 
-    window.toggleSkippedTask = function(taskId) {
+    window.toggleSkippedTask = function (taskId) {
         const taskItem = document.querySelector(`[data-task-id="${taskId}"]`);
         if (!taskItem) return;
 
         const taskDetails = taskItem.querySelector('.task-details');
-        
+
         if (expandedTasks.has(taskId)) {
             expandedTasks.delete(taskId);
             taskDetails.style.display = 'none';
@@ -106,7 +106,7 @@
         }
     };
 
-    window.unskipTask = async function(taskId) {
+    window.unskipTask = async function (taskId) {
         try {
             const response = await fetch('api/unskip-task.php', {
                 method: 'POST',
@@ -127,14 +127,14 @@
                     taskItem.style.opacity = '0.5';
                     setTimeout(() => {
                         taskItem.remove();
-                        
+
                         const container = document.getElementById('skipped-task-list');
                         if (container && container.querySelectorAll('.task-item').length === 0) {
                             showEmptyState('No skipped tasks. You haven\'t skipped any tasks yet!');
                         }
                     }, 300);
                 }
-                
+
                 showNotification('✓ Task restored!', 'success');
             } else {
                 showNotification(`✗ ${data.error || 'Failed to restore task'}`, 'error');
@@ -155,15 +155,15 @@
     function showNotification(message, type) {
         const existing = document.querySelector('.task-notification');
         if (existing) existing.remove();
-        
+
         const notification = document.createElement('div');
         notification.className = `task-notification ${type}`;
         notification.textContent = message;
-        
+
         const container = document.querySelector('.task-list-container');
         if (container) {
             container.insertBefore(notification, container.firstChild);
-            
+
             setTimeout(() => {
                 notification.remove();
             }, 5000);
