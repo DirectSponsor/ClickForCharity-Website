@@ -121,6 +121,36 @@ create_local_backup() {
     cd "$LOCAL_PATH"
 }
 
+# Safety check: preview deletions before they happen
+preview_deletions() {
+    log "Checking for files that would be DELETED on server..."
+    
+    local deletions
+    deletions=$(rsync -avzn --delete --itemize-changes \
+        --exclude='.git/' \
+        --exclude='node_modules/' \
+        --exclude='*.tmp' \
+        --exclude='*.log' \
+        --exclude='deploy.sh' \
+        --exclude='.DS_Store' \
+        --exclude='Thumbs.db' \
+        --exclude='site/' \
+        "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/" 2>/dev/null | grep '^\*deleting' || true)
+    
+    if [[ -n "$deletions" ]]; then
+        warning "⚠️  The following files will be DELETED from the server:"
+        echo "$deletions" | sed 's/^\*deleting   /  - /'
+        echo ""
+        read -rp "Continue with these deletions? (y/N): " -n 1
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            error "Deployment cancelled to prevent deletions."
+        fi
+    else
+        success "No files will be deleted."
+    fi
+}
+
 # Deploy files to remote server
 deploy_files() {
     log "Deploying files to $REMOTE_HOST:$REMOTE_PATH..."
@@ -172,6 +202,7 @@ main() {
     auto_commit_changes
     pre_deploy_checks
     create_local_backup
+    preview_deletions
     deploy_files
     fix_permissions
     
