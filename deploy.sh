@@ -135,6 +135,7 @@ preview_deletions() {
         --exclude='.DS_Store' \
         --exclude='Thumbs.db' \
         --exclude='site/' \
+        --exclude='data/analytics/' \
         "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/" 2>/dev/null | grep '^\*deleting' || true)
     
     if [[ -n "$deletions" ]]; then
@@ -164,6 +165,7 @@ deploy_files() {
         --exclude='.DS_Store' \
         --exclude='Thumbs.db' \
         --exclude='site/' \
+        --exclude='data/analytics/' \
         --progress \
         "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/"
     
