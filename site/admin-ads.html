@@ -179,82 +179,80 @@
         })();
 
         // Task management
-        (function() {
-            const taskListEl = document.getElementById('task-management-list');
+        const taskListEl = document.getElementById('task-management-list');
 
-            async function loadTasks() {
-                try {
-                    const response = await fetch('/api/get-ads.php');
-                    const tasks = await response.json();
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/get-ads.php');
+                const tasks = await response.json();
 
-                    if (!tasks || tasks.length === 0) {
-                        taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
-                        return;
-                    }
-
-                    taskListEl.innerHTML = tasks.map(task => `
-                        <div class="admin-task-item" data-task-id="${task.id}">
-                            <div class="admin-task-info">
-                                <h3>${task.title}</h3>
-                                <p class="admin-task-meta">
-                                    <strong>ID:</strong> ${task.id} | 
-                                    <strong>Timer:</strong> ${task.duration}s | 
-                                    <strong>Reward:</strong> ${task.reward} | 
-                                    <strong>Duration:</strong> ${task.campaignDuration === 0 ? 'Indefinite' : task.campaignDuration + ' days'}
-                                </p>
-                                <p class="admin-task-instructions">${task.instructions}</p>
-                                <p class="admin-task-url"><a href="${task.url}" target="_blank" rel="noopener">${task.url}</a></p>
-                            </div>
-                            <div class="admin-task-actions">
-                                <button class="btn-delete-admin" data-task-id="${task.id}">Delete</button>
-                            </div>
-                        </div>
-                    `).join('');
-
-                    // Add delete handlers
-                    taskListEl.querySelectorAll('.btn-delete-admin').forEach(btn => {
-                        btn.addEventListener('click', async () => {
-                            const taskId = parseInt(btn.dataset.taskId, 10);
-                            const taskItem = btn.closest('.admin-task-item');
-                            const taskTitle = taskItem.querySelector('h3').textContent;
-
-                            if (!confirm(`Delete "${taskTitle}"?`)) return;
-
-                            try {
-                                const response = await fetch('/api/delete-ad.php', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ id: taskId })
-                                });
-
-                                const result = await response.json();
-                                if (response.ok && result.success) {
-                                    taskItem.remove();
-                                    if (taskListEl.children.length === 0) {
-                                        taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
-                                    }
-                                    
-                                    // Show success message
-                                    const message = result.message || 'Ad marked for deletion';
-                                    alert(message);
-                                } else {
-                                    alert(result.error || 'Failed to delete task');
-                                }
-                            } catch (error) {
-                                console.error('Delete error:', error);
-                                alert('Network error. Please try again.');
-                            }
-                        });
-                    });
-                } catch (error) {
-                    console.error('Failed to load tasks:', error);
-                    taskListEl.innerHTML = '<p class="error-state">Error loading tasks. Please refresh the page.</p>';
+                if (!tasks || tasks.length === 0) {
+                    taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
+                    return;
                 }
-            }
 
-            // Load tasks on page load
-            loadTasks();
-        })();
+                taskListEl.innerHTML = tasks.map(task => `
+                    <div class="admin-task-item" data-task-id="${task.id}">
+                        <div class="admin-task-info">
+                            <h3>${task.title}</h3>
+                            <p class="admin-task-meta">
+                                <strong>ID:</strong> ${task.id} | 
+                                <strong>Timer:</strong> ${task.duration}s | 
+                                <strong>Reward:</strong> ${task.reward} | 
+                                <strong>Duration:</strong> ${task.campaignDuration === 0 ? 'Indefinite' : task.campaignDuration + ' days'}
+                            </p>
+                            <p class="admin-task-instructions">${task.instructions}</p>
+                            <p class="admin-task-url"><a href="${task.url}" target="_blank" rel="noopener">${task.url}</a></p>
+                        </div>
+                        <div class="admin-task-actions">
+                            <button class="btn-delete-admin" data-task-id="${task.id}">Delete</button>
+                        </div>
+                    </div>
+                `).join('');
+
+                // Add delete handlers
+                taskListEl.querySelectorAll('.btn-delete-admin').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const taskId = parseInt(btn.dataset.taskId, 10);
+                        const taskItem = btn.closest('.admin-task-item');
+                        const taskTitle = taskItem.querySelector('h3').textContent;
+
+                        if (!confirm(`Delete "${taskTitle}"?`)) return;
+
+                        try {
+                            const response = await fetch('/api/delete-ad.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id: taskId })
+                            });
+
+                            const result = await response.json();
+                            if (response.ok && result.success) {
+                                taskItem.remove();
+                                if (taskListEl.children.length === 0) {
+                                    taskListEl.innerHTML = '<p class="empty-state">No tasks found. Create one above!</p>';
+                                }
+                                
+                                // Show success message
+                                const message = result.message || 'Ad marked for deletion';
+                                alert(message);
+                            } else {
+                                alert(result.error || 'Failed to delete task');
+                            }
+                        } catch (error) {
+                            console.error('Delete error:', error);
+                            alert('Network error. Please try again.');
+                        }
+                    });
+                });
+            } catch (error) {
+                console.error('Failed to load tasks:', error);
+                taskListEl.innerHTML = '<p class="error-state">Error loading tasks. Please refresh the page.</p>';
+            }
+        }
+
+        // Load tasks on page load
+        loadTasks();
 
         // Reset completed tasks
         (function() {
