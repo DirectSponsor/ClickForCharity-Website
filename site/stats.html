@@ -508,9 +508,31 @@
 
     function fetchReport(dateStr) {
         return fetch(DATA_PATH + '/report-' + dateStr + '.json')
-            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (r) {
+                if (r.ok) return r.json();
+                /* Today's report not generated yet — try yesterday */
+                if (dateStr === today()) {
+                    var prev = shiftDateStr(dateStr, -1);
+                    return fetch(DATA_PATH + '/report-' + prev + '.json')
+                        .then(function (r2) { return r2.ok ? r2.json() : null; })
+                        .then(function (data) {
+                            if (data) cache[prev] = data;
+                            return null;
+                        });
+                }
+                return null;
+            })
             .then(function (data) { if (data) cache[dateStr] = data; })
             .catch(function () {});
+    }
+
+    function shiftDateStr(dateStr, dir) {
+        var dt = new Date(dateStr + 'T00:00:00');
+        dt.setDate(dt.getDate() + dir);
+        var y = dt.getFullYear();
+        var m = String(dt.getMonth() + 1).padStart(2, '0');
+        var day = String(dt.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
     }
 
     function render(dates) {
@@ -591,7 +613,11 @@
 
     /* ── Date helpers ── */
     function today() {
-        return new Date().toISOString().slice(0, 10);
+        var d = new Date();
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
     }
 
     function periodStart(d) {
@@ -601,7 +627,7 @@
         } else if (period === 'month') {
             dt.setDate(1);
         }
-        return dt.toISOString().slice(0, 10);
+        return localDateStr(dt);
     }
 
     function periodEnd(d) {
@@ -612,7 +638,7 @@
             dt.setMonth(dt.getMonth() + 1);
             dt.setDate(0);
         }
-        return dt.toISOString().slice(0, 10);
+        return localDateStr(dt);
     }
 
     function shiftDate(d, dir) {
@@ -620,7 +646,14 @@
         if (period === 'day')   dt.setDate(dt.getDate() + dir);
         if (period === 'week')  dt.setDate(dt.getDate() + dir * 7);
         if (period === 'month') dt.setMonth(dt.getMonth() + dir);
-        return dt.toISOString().slice(0, 10);
+        return localDateStr(dt);
+    }
+
+    function localDateStr(dt) {
+        var y = dt.getFullYear();
+        var m = String(dt.getMonth() + 1).padStart(2, '0');
+        var day = String(dt.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
     }
 
     function datesInRange(start, end) {
@@ -628,7 +661,7 @@
         var cur   = new Date(start + 'T00:00:00');
         var last  = new Date(end   + 'T00:00:00');
         while (cur <= last) {
-            dates.push(cur.toISOString().slice(0, 10));
+            dates.push(localDateStr(cur));
             cur.setDate(cur.getDate() + 1);
         }
         return dates;
