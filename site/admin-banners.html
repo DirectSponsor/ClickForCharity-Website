@@ -127,54 +127,71 @@
         </header>
 
         <main>
-            <!-- Desktop Ads Section -->
+            <!-- Current Ads -->
             <section class="ad-section">
-                <h2>Standard Banners</h2>
-                <p>Manage standard header/footer banners (e.g. 728×90). These will be scaled for mobile devices.</p>
-
-                <div id="desktop-ads-list" class="ad-list">
+                <h2>Active Banner Ads</h2>
+                <p>Each advertiser occupies 1–10 slots per position. Slots determine share of impressions (10 slots = 100%).</p>
+                <p><strong>Pricing:</strong> $5/slot/month &nbsp;|&nbsp; 10 slots = $50/month = exclusive position &nbsp;|&nbsp; Target: 50,000 pageviews/month at $1.00 CPM</p>
+                <div id="all-ads-list" class="ad-list">
                     <p>Loading ads...</p>
                 </div>
-
-                <div class="ad-form">
-                    <h3>Add New Desktop Banner</h3>
-                    <textarea id="desktop-ad-input" placeholder="Paste HTML code here, e.g.:
-<img src=&quot;banner.png&quot; width=&quot;728&quot; height=&quot;90&quot; style=&quot;max-width:100%;height:auto;&quot; alt=&quot;Ad&quot;>
-
-or
-
-<a href=&quot;https://example.com&quot; target=&quot;_blank&quot;>
-  <img src=&quot;banner.png&quot; width=&quot;728&quot; height=&quot;90&quot;>
-</a>"></textarea>
-                    <div>
-                        <button class="btn primary" onclick="previewAd('desktop')">Preview</button>
-                        <button class="btn secondary" onclick="addAd('desktop')">Add Banner</button>
-                    </div>
-                    <div id="desktop-preview" class="preview-box empty">Preview will appear here</div>
-                    <div id="desktop-status"></div>
-                </div>
+                <div id="list-status"></div>
             </section>
 
-
-
-            <!-- Floating Ads Section -->
+            <!-- Add New Ad -->
             <section class="ad-section">
-                <h2>Floating Ads (Responsive)</h2>
-                <p>Manage floating ads (e.g. 300x250, 350x200). These are auto-sized and rotated.</p>
-
-                <div id="floating-ads-list" class="ad-list">
-                    <p>Loading ads...</p>
-                </div>
-
+                <h2>Add New Banner Ad</h2>
                 <div class="ad-form">
-                    <h3>Add New Floating Ad</h3>
-                    <textarea id="floating-ad-input" placeholder="Paste HTML code here..."></textarea>
-                    <div>
-                        <button class="btn primary" onclick="previewAd('floating')">Preview</button>
-                        <button class="btn secondary" onclick="addAd('floating')">Add Ad</button>
+                    <div class="field">
+                        <label for="new-advertiser">Advertiser name</label>
+                        <input type="text" id="new-advertiser" placeholder="e.g. Acme Corp">
                     </div>
-                    <div id="floating-preview" class="preview-box empty">Preview will appear here</div>
-                    <div id="floating-status"></div>
+                    <div class="field">
+                        <label for="new-position">Position</label>
+                        <select id="new-position">
+                            <option value="desktop">Top banner (728×90 desktop / responsive)</option>
+                            <option value="floating">Floating bottom-right (with × close)</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="new-slots">Slots (1–10) — share of impressions</label>
+                        <select id="new-slots">
+                            <option value="1">1 slot — 10% impressions — $5/month</option>
+                            <option value="2">2 slots — 20% impressions — $10/month</option>
+                            <option value="3">3 slots — 30% impressions — $15/month</option>
+                            <option value="4">4 slots — 40% impressions — $20/month</option>
+                            <option value="5">5 slots — 50% impressions — $25/month</option>
+                            <option value="6">6 slots — 60% impressions — $30/month</option>
+                            <option value="7">7 slots — 70% impressions — $35/month</option>
+                            <option value="8">8 slots — 80% impressions — $40/month</option>
+                            <option value="9">9 slots — 90% impressions — $45/month</option>
+                            <option value="10">10 slots — 100% exclusive — $50/month</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="new-days">Duration (0 = indefinite)</label>
+                        <select id="new-days">
+                            <option value="0">Indefinite</option>
+                            <option value="7">7 days</option>
+                            <option value="14">14 days</option>
+                            <option value="30">30 days</option>
+                            <option value="60">60 days</option>
+                            <option value="90">90 days</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="new-html">Banner HTML</label>
+                        <textarea id="new-html" placeholder="Paste HTML code here, e.g.:
+&lt;a href=&quot;https://example.com&quot; target=&quot;_blank&quot;&gt;
+  &lt;img src=&quot;https://example.com/banner.png&quot; width=&quot;728&quot; height=&quot;90&quot; alt=&quot;Ad&quot;&gt;
+&lt;/a&gt;"></textarea>
+                    </div>
+                    <div>
+                        <button class="btn primary" onclick="previewNewAd()">Preview</button>
+                        <button class="btn secondary" onclick="addAd()">Add Banner</button>
+                    </div>
+                    <div id="new-preview" class="preview-box empty">Preview will appear here</div>
+                    <div id="new-status"></div>
                 </div>
             </section>
         </main>
@@ -182,165 +199,125 @@ or
 
     <script src="js/auth.js"></script>
     <script>
-        // Check admin privileges
         document.addEventListener('DOMContentLoaded', async () => {
             await requireAdmin();
-            loadAds('desktop');
-            loadAds('floating');
+            loadAllAds();
         });
 
-        // Load ads from server
-        async function loadAds(type) {
-            const listEl = document.getElementById(`${type}-ads-list`);
+        async function loadAllAds() {
+            const listEl = document.getElementById('all-ads-list');
             try {
-                const response = await fetch(`/api/get-banner-ads.php?type=${type}`);
-                const data = await response.json();
+                const [dRes, fRes] = await Promise.all([
+                    fetch('/api/get-banner-ads.php?type=desktop'),
+                    fetch('/api/get-banner-ads.php?type=floating')
+                ]);
+                const dData = await dRes.json();
+                const fData = await fRes.json();
 
-                if (!data.success || !data.ads || data.ads.length === 0) {
+                const allMeta = [
+                    ...(dData.meta || []),
+                    ...(fData.meta || [])
+                ];
+
+                if (allMeta.length === 0) {
                     listEl.innerHTML = '<p style="color:#999;">No ads yet. Add one below.</p>';
                     return;
                 }
 
-                listEl.innerHTML = data.ads.map((ad, index) => `
-                    <div class="ad-item" id="${type}-ad-${index}">
+                const posLabel = { desktop: 'Top banner', floating: 'Floating bottom-right' };
+
+                listEl.innerHTML = allMeta.map(ad => {
+                    const created = ad.createdAt ? new Date(ad.createdAt * 1000).toLocaleDateString() : '—';
+                    const expires = ad.expiresAt ? new Date(ad.expiresAt * 1000).toLocaleDateString() : 'Indefinite';
+                    const cost = (ad.slots * 5).toFixed(0);
+                    return `
+                    <div class="ad-item" id="ad-${ad.id}">
                         <div class="ad-item-header">
-                            <strong>Banner #${index + 1}</strong>
-                            <div>
-                                <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd('${type}', ${index})">Delete</button>
-                            </div>
+                            <strong>${escapeHtml(ad.advertiser || '(no name)')}</strong>
+                            <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd(${ad.id})">Delete</button>
                         </div>
-                        <div class="ad-item-code" id="${type}-code-${index}">${escapeHtml(ad)}</div>
-                    </div>
-                `).join('');
-            } catch (error) {
-                console.error('Load error:', error);
+                        <p style="margin:0.3rem 0;font-size:0.9rem;">
+                            <strong>Position:</strong> ${posLabel[ad.position] || ad.position} &nbsp;|&nbsp;
+                            <strong>Slots:</strong> ${ad.slots}/10 (${ad.slots * 10}% of impressions) &nbsp;|&nbsp;
+                            <strong>Rate:</strong> $${cost}/month &nbsp;|&nbsp;
+                            <strong>Added:</strong> ${created} &nbsp;|&nbsp;
+                            <strong>Expires:</strong> ${expires}
+                        </p>
+                    </div>`;
+                }).join('');
+            } catch (err) {
+                console.error('Load error:', err);
                 listEl.innerHTML = '<p style="color:#c0392b;">Error loading ads. Please refresh.</p>';
             }
         }
 
-        // Preview ad
-        function previewAd(type) {
-            const input = document.getElementById(`${type}-ad-input`);
-            const preview = document.getElementById(`${type}-preview`);
-            const html = input.value.trim();
-
+        function previewNewAd() {
+            const html = document.getElementById('new-html').value.trim();
+            const preview = document.getElementById('new-preview');
             if (!html) {
                 preview.className = 'preview-box empty';
                 preview.textContent = 'Preview will appear here';
                 return;
             }
-
             preview.className = 'preview-box';
             preview.innerHTML = html;
         }
 
-        // Edit ad (show form)
-        function editAd(type, index) {
-            document.getElementById(`${type}-code-${index}`).style.display = 'none';
-            document.getElementById(`${type}-edit-${index}`).style.display = 'block';
-        }
+        async function addAd() {
+            const advertiser = document.getElementById('new-advertiser').value.trim();
+            const position   = document.getElementById('new-position').value;
+            const slots      = parseInt(document.getElementById('new-slots').value, 10);
+            const days       = parseInt(document.getElementById('new-days').value, 10);
+            const html       = document.getElementById('new-html').value.trim();
+            const status     = document.getElementById('new-status');
 
-        // Cancel edit
-        function cancelEdit(type, index) {
-            document.getElementById(`${type}-code-${index}`).style.display = 'block';
-            document.getElementById(`${type}-edit-${index}`).style.display = 'none';
-        }
-
-        // Update existing ad
-        async function updateAd(type, index) {
-            const input = document.getElementById(`${type}-input-${index}`);
-            const status = document.getElementById(`${type}-status`);
-            const html = input.value.trim();
-
-            if (!html) {
-                showStatus(status, 'Please enter HTML code', 'error');
-                return;
-            }
+            if (!html) { showStatus(status, 'Please enter banner HTML', 'error'); return; }
 
             try {
                 const response = await fetch('/api/save-banner-ad.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, index, html })
+                    body: JSON.stringify({ advertiser, position, slots, days, html })
                 });
-
                 const result = await response.json();
-
-                if (result.success) {
-                    showStatus(status, 'Banner updated successfully!', 'success');
-                    loadAds(type);
-                } else {
-                    showStatus(status, result.error || 'Failed to update banner', 'error');
-                }
-            } catch (error) {
-                console.error('Update error:', error);
-                showStatus(status, 'Network error. Please try again.', 'error');
-            }
-        }
-
-        // Add new ad
-        async function addAd(type) {
-            const input = document.getElementById(`${type}-ad-input`);
-            const status = document.getElementById(`${type}-status`);
-            const html = input.value.trim();
-
-            if (!html) {
-                showStatus(status, 'Please enter HTML code', 'error');
-                return;
-            }
-
-            try {
-                const response = await fetch('/api/save-banner-ad.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, html })
-                });
-
-                const result = await response.json();
-
                 if (result.success) {
                     showStatus(status, 'Banner added successfully!', 'success');
-                    input.value = '';
-                    document.getElementById(`${type}-preview`).className = 'preview-box empty';
-                    document.getElementById(`${type}-preview`).textContent = 'Preview will appear here';
-                    loadAds(type);
+                    document.getElementById('new-advertiser').value = '';
+                    document.getElementById('new-html').value = '';
+                    document.getElementById('new-preview').className = 'preview-box empty';
+                    document.getElementById('new-preview').textContent = 'Preview will appear here';
+                    loadAllAds();
                 } else {
                     showStatus(status, result.error || 'Failed to add banner', 'error');
                 }
-            } catch (error) {
-                console.error('Add error:', error);
+            } catch (err) {
+                console.error('Add error:', err);
                 showStatus(status, 'Network error. Please try again.', 'error');
             }
         }
 
-        // Delete ad
-        async function deleteAd(type, index) {
-            if (!confirm(`Delete banner #${index + 1}?`)) return;
-
-            const status = document.getElementById(`${type}-status`);
-
+        async function deleteAd(id) {
+            if (!confirm('Delete this banner ad?')) return;
+            const status = document.getElementById('list-status');
             try {
                 const response = await fetch('/api/delete-banner-ad.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type, index })
+                    body: JSON.stringify({ id })
                 });
-
                 const result = await response.json();
-
                 if (result.success) {
-                    showStatus(status, 'Banner deleted successfully!', 'success');
-                    loadAds(type);
+                    showStatus(status, 'Banner deleted.', 'success');
+                    loadAllAds();
                 } else {
-                    showStatus(status, result.error || 'Failed to delete banner', 'error');
+                    showStatus(status, result.error || 'Failed to delete', 'error');
                 }
-            } catch (error) {
-                console.error('Delete error:', error);
+            } catch (err) {
+                console.error('Delete error:', err);
                 showStatus(status, 'Network error. Please try again.', 'error');
             }
         }
 
-        // Helper functions
         function showStatus(el, message, type) {
             el.innerHTML = `<div class="status-msg ${type}">${message}</div>`;
             setTimeout(() => el.innerHTML = '', 5000);

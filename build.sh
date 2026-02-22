@@ -74,6 +74,7 @@ process_file() {
     output="${output//#ACTIVE_OFFERS#/}"
     output="${output//#ACTIVE_PROFILE#/}"
     output="${output//#ACTIVE_BALANCE_SYNC_HELP#/}"
+    output="${output//#ACTIVE_ADVERTISE#/}"
     
     # Set the appropriate active class based on filename
     case "$basename" in
@@ -100,6 +101,9 @@ process_file() {
             ;;
         "balance-sync-help")
             # No active nav item for help page
+            ;;
+        "advertise")
+            output="${output//\<li #ACTIVE_ADVERTISE#\><a href=\"advertise.html\">/<li class=\"active\"><a href=\"advertise.html\">}"
             ;;
     esac
     

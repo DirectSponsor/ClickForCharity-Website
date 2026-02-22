@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="canonical" href="https://clickforcharity.net/advertise.html">
+    <title>Advertise – Click for Charity</title>
+    <meta name="description" content="Buy banner ad slots on Click for Charity. 100% of ad revenue funds real people's projects. $5/slot/month, pay in Bitcoin via Lightning.">
+    <meta property="og:url" content="https://clickforcharity.net/advertise.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Advertise on Click for Charity">
+    <meta property="og:description" content="Your ad spend funds real people's projects. $5/slot/month. Pay in Bitcoin via Lightning Network.">
+    <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .advertise-content {
+            max-width: 720px;
+        }
+        .pricing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+        .pricing-table th,
+        .pricing-table td {
+            padding: 0.6rem 0.8rem;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        .pricing-table th {
+            background: #f4f4f4;
+            font-weight: bold;
+        }
+        .pricing-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+        .highlight-row td {
+            background: #fff8e1 !important;
+            font-weight: bold;
+        }
+        .ad-positions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        @media (max-width: 600px) {
+            .ad-positions { grid-template-columns: 1fr; }
+        }
+        .position-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 1rem;
+        }
+        .position-card h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1rem;
+        }
+        .position-card p {
+            margin: 0.3rem 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        .contact-box {
+            background: #f0f7ff;
+            border: 1px solid #b3d4f5;
+            border-radius: 4px;
+            padding: 1.2rem 1.5rem;
+            margin: 2rem 0;
+        }
+        .contact-box h2 {
+            margin-top: 0;
+        }
+        .faq dt {
+            font-weight: bold;
+            margin-top: 1.2rem;
+        }
+        .faq dd {
+            margin: 0.3rem 0 0 0;
+            color: #444;
+        }
+    </style>
+</head>
+
+<body>
+    <button class="menu-toggle" aria-controls="site-navigation" aria-expanded="false">☰ Menu</button>
+    <div class="menu-overlay" data-menu-overlay></div>
+    <div class="container">
+        <!-- include start sidebar.incl -->
+        <aside class="sidebar" id="site-navigation">
+            <a href="index.html" class="logo" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 10px;">
+                <img src="images/logo.svg" alt="Click for Charity" width="40" height="40">
+                <span>Click for Charity</span>
+            </a>
+            
+            <!-- Beta Warning -->
+            <div style="background: #dc3545; color: white; padding: 8px 12px; margin: 10px 0; border-radius: 6px; text-align: center; font-size: 12px; font-weight: bold;">
+                🚧 BETA TESTING
+            </div>
+            <nav>
+                <ul>
+                    <li ><a href="index.html">Home</a></li>
+                    <li ><a href="ptc.html">Surf Ads</a></li>
+                    <li ><a href="tasks.html">Tasks</a></li>
+                    <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="offers.html">Offers</a></li>
+                    <li class="admin-only"><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+            
+            <!-- User Menu Area (bottom of sidebar) -->
+            <div class="user-select-container">
+                <!-- Login Button (shown when not logged in) -->
+                <button id="login-button" class="btn-login" onclick="window.auth.login()" style="display: block;">
+                    🔐 Login
+                </button>
+                
+                <!-- User Menu (shown when logged in) -->
+                <div id="user-menu" class="user-menu" style="display: none;">
+                    <div class="user-menu-header" onclick="toggleUserDropdown()">
+                        <span class="user-avatar">👤</span>
+                        <div class="user-info">
+                            <span id="username-display" class="username">User</span>
+                            <span class="user-balance"><span class="balance">0</span> <span class="currency">tokens</span></span>
+                        </div>
+                        <span class="dropdown-arrow">▲</span>
+                    </div>
+                    
+                    <!-- Dropdown Menu (pops upward) -->
+                    <div id="user-dropdown" class="user-dropdown" style="display: none;">
+                        <a href="profile.html" class="dropdown-item">👤 Profile</a>
+                        <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
+                    </div>
+                </div>
+                
+                <!-- Guest Mode Notice -->
+                <p class="guest-only user-mode-hint" style="margin-top: 10px;">Sign up to save your earnings!</p>
+            </div>
+        </aside>
+        <!-- include end sidebar.incl -->
+
+        <main class="main-content advertise-content" data-menu-target>
+            <div id="ad-banner" style="margin:0 0 0.3em 0;"></div>
+            <script src="js/banner-rotate.js"></script>
+
+            <h1>Advertise on Click for Charity</h1>
+            <p>Your ad spend doesn't go to shareholders — it funds real people's projects. Every dollar we earn from advertising is allocated to a specific recipient project: buying equipment, covering costs, or reaching a funding target.</p>
+            <p>We have two ad positions, each with <strong>10 slots</strong>. Each slot represents 10% of impressions on that position. You choose how many slots you want — that's your share of the audience.</p>
+
+            <h2>Ad Positions</h2>
+            <div class="ad-positions">
+                <div class="position-card">
+                    <h3>Top Banner</h3>
+                    <p><strong>Size:</strong> 728×90 (desktop), scales for mobile</p>
+                    <p><strong>Location:</strong> Top of every page, above content</p>
+                    <p><strong>Format:</strong> Image, linked image, or ad network script</p>
+                </div>
+                <div class="position-card">
+                    <h3>Floating Bottom-Right</h3>
+                    <p><strong>Size:</strong> Flexible (300×250 recommended)</p>
+                    <p><strong>Location:</strong> Fixed bottom-right corner, dismissible</p>
+                    <p><strong>Format:</strong> Image, linked image, or ad network script</p>
+                </div>
+            </div>
+
+            <h2>Pricing</h2>
+            <p>Based on a target of <strong>50,000 pageviews/month</strong> at a $1.00 CPM — competitive with most ad networks, with zero middleman cut.</p>
+
+            <table class="pricing-table">
+                <thead>
+                    <tr>
+                        <th>Slots</th>
+                        <th>Share of impressions</th>
+                        <th>Est. monthly impressions</th>
+                        <th>Price/month</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>1</td><td>10%</td><td>~5,000</td><td>$5</td></tr>
+                    <tr><td>2</td><td>20%</td><td>~10,000</td><td>$10</td></tr>
+                    <tr><td>3</td><td>30%</td><td>~15,000</td><td>$15</td></tr>
+                    <tr><td>4</td><td>40%</td><td>~20,000</td><td>$20</td></tr>
+                    <tr class="highlight-row"><td>5</td><td>50%</td><td>~25,000</td><td>$25</td></tr>
+                    <tr><td>6</td><td>60%</td><td>~30,000</td><td>$30</td></tr>
+                    <tr><td>7</td><td>70%</td><td>~35,000</td><td>$35</td></tr>
+                    <tr><td>8</td><td>80%</td><td>~40,000</td><td>$40</td></tr>
+                    <tr><td>9</td><td>90%</td><td>~45,000</td><td>$45</td></tr>
+                    <tr class="highlight-row"><td>10</td><td>100% — exclusive</td><td>~50,000</td><td>$50</td></tr>
+                </tbody>
+            </table>
+
+            <p style="font-size:0.9rem;color:#666;">Impressions are estimates based on traffic targets. Unused slots show our own house ads. Payment is via Bitcoin Lightning Network.</p>
+
+            <h2>Where the money goes</h2>
+            <p>Ad revenue is allocated to specific recipient projects — things like tools, materials, or equipment that people need to improve their situation. The project and its target are visible on the site. When a target is reached, the project is marked complete and a new one begins.</p>
+            <p>There is no time pressure on our end. If traffic is lower than target, the project just takes longer to fund. You pay for the slots you get, not a guaranteed impression count.</p>
+
+            <div class="contact-box">
+                <h2>Ready to advertise?</h2>
+                <p>Fill in the form below and we'll get back to you. You'll need to provide your banner HTML, preferred position, number of slots, and duration. Payment is in Bitcoin via Lightning Network.</p>
+                <p>Or email us directly: <a href="mailto:ads@clickforcharity.net">ads@clickforcharity.net</a></p>
+
+                <form id="advertise-form" style="margin-top:1rem;">
+                    <div class="field">
+                        <label for="cf-name">Your name</label>
+                        <input type="text" id="cf-name" name="name" required autocomplete="name">
+                    </div>
+                    <div class="field">
+                        <label for="cf-email">Email address</label>
+                        <input type="email" id="cf-email" name="email" required autocomplete="email">
+                    </div>
+                    <div class="field">
+                        <label for="cf-message">Message — tell us your position, slots, duration, and any questions</label>
+                        <textarea id="cf-message" name="message" rows="5" required></textarea>
+                    </div>
+
+                    <!-- Honeypot: hidden from real users, bots fill it in -->
+                    <div style="display:none;" aria-hidden="true">
+                        <label for="cf-website">Website (leave blank)</label>
+                        <input type="text" id="cf-website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <!-- Bot check: visible, must answer "no" -->
+                    <div class="field">
+                        <label for="cf-bot">Are you a bot? (answer: no)</label>
+                        <input type="text" id="cf-bot" name="bot_check" required autocomplete="off" placeholder="Type your answer here">
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn primary" id="cf-submit">Send enquiry</button>
+                        <span id="cf-feedback" role="status" style="margin-left:0.8rem;font-size:0.9rem;"></span>
+                    </div>
+                </form>
+            </div>
+
+            <h2>FAQ</h2>
+            <dl class="faq">
+                <dt>What if someone else already has slots on my chosen position?</dt>
+                <dd>You share the rotation. If they have 3 slots and you buy 4, you get 40% of impressions and they get 30%. Up to 10 slots total per position.</dd>
+
+                <dt>What happens to unused slots?</dt>
+                <dd>We fill them with our own house ads — reflinks and promotions for the network. The first advertiser on a position automatically gets all unused slots until others buy in.</dd>
+
+                <dt>Can I get a discount?</dt>
+                <dd>Early advertisers can negotiate a reduced rate. We'd rather have a real ad running at a lower price than an empty slot. Get in touch.</dd>
+
+                <dt>What ad formats are accepted?</dt>
+                <dd>Any valid HTML — a plain image, a linked image, or a third-party ad network script tag. We review all ads before activation.</dd>
+
+                <dt>How is payment handled?</dt>
+                <dd>We generate a Lightning invoice for the agreed amount in sats, calculated at the current BTC/USD rate. You pay once and the ad runs for the agreed period.</dd>
+
+                <dt>Can I renew?</dt>
+                <dd>Yes. We'll contact you before your ad expires. Early adopters who renew keep their original slot rate.</dd>
+            </dl>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('advertise-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn      = document.getElementById('cf-submit');
+            const feedback = document.getElementById('cf-feedback');
+            btn.disabled   = true;
+            feedback.textContent = 'Sending…';
+            feedback.style.color = '#555';
+
+            const body = new FormData(this);
+
+            try {
+                const res    = await fetch('/api/contact-advertise.php', { method: 'POST', body });
+                const result = await res.json();
+                if (result.success) {
+                    this.style.display  = 'none';
+                    feedback.textContent = 'Message sent — we\'ll be in touch soon.';
+                    feedback.style.color = '#27ae60';
+                } else {
+                    feedback.textContent = result.error || 'Something went wrong. Please try again.';
+                    feedback.style.color = '#c0392b';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                feedback.textContent = 'Network error. Please email ads@clickforcharity.net directly.';
+                feedback.style.color = '#c0392b';
+                btn.disabled = false;
+            }
+        });
+    </script>
+    <script src="js/unified-balance.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/nav.js"></script>
+    <!-- include start footer.incl -->
+    <footer class="footer-meta" style="text-align:center;padding:1rem 0 280px 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="about.html" style="color:#0d172a;text-decoration:underline;">About</a>
+        </div>
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="privacy.html" style="color:#0d172a;text-decoration:underline;">Privacy</a>
+        </div>
+        <div style="display:inline-block;margin:0 1rem 0.5rem 0;">
+            <a href="sitemap.html" style="color:#0d172a;text-decoration:underline;">Sitemap</a>
+        </div>
+        <div style="display:inline-block;margin:0 0 0.5rem 0;">
+            <a href="https://lightning.news" target="_blank" rel="noopener">
+                <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
+            </a>
+        </div>
+    </footer>
+
+<div id="floating-ad" class="floating-ad-container">
+    <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <div class="floating-ad-content"></div>
+</div>
+<script src="js/floating-ad.js"></script>
+    <!-- include end footer.incl -->
+</body>
+
+</html>

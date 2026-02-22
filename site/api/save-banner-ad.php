@@ -1,60 +1,70 @@
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-// Get JSON input
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(['success' => false, 'error' => 'Method not allowed']); exit; }
+
 $input = json_decode(file_get_contents('php://input'), true);
 
-if (!$input || !isset($input['type']) || !isset($input['html'])) {
-    echo json_encode(['success' => false, 'error' => 'Missing required fields']);
+if (!$input || !isset($input['position'], $input['html'], $input['slots'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Missing required fields: position, html, slots']);
     exit;
 }
 
-$type = $input['type'];
-$html = trim($input['html']);
-$index = isset($input['index']) ? intval($input['index']) : null;
+$position = $input['position'];
+$html     = trim($input['html']);
+$slots    = max(1, min(10, (int)$input['slots']));
+$advertiser = isset($input['advertiser']) ? trim($input['advertiser']) : '';
+$days     = isset($input['days']) ? (int)$input['days'] : 0;
 
-// Validate type
-if (!in_array($type, ['desktop', 'mobile', 'floating'])) {
-    echo json_encode(['success' => false, 'error' => 'Invalid type']);
+if (!in_array($position, ['desktop', 'floating'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Invalid position. Use desktop or floating']);
     exit;
 }
 
-// Validate HTML is not empty
 if (empty($html)) {
+    http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'HTML cannot be empty']);
     exit;
 }
 
-// Determine file path
-$files = [
-    'desktop' => '../../data/ads-desktop.txt',
-    'mobile' => '../../data/ads-mobile.txt',
-    'floating' => '../../data/ads-floating.txt'
+$adsDir = '/var/clickforcharity-data/banner-ads';
+if (!is_dir($adsDir)) {
+    mkdir($adsDir, 0755, true);
+}
+
+// Find next available ID
+$existing = glob($adsDir . '/*.json');
+$ids = [];
+foreach ($existing as $f) {
+    $base = basename($f, '.json');
+    if (is_numeric($base)) $ids[] = (int)$base;
+}
+$nextId = empty($ids) ? 1 : max($ids) + 1;
+
+$expiresAt = $days > 0 ? time() + ($days * 86400) : null;
+
+$ad = [
+    'id'         => $nextId,
+    'advertiser' => $advertiser,
+    'position'   => $position,
+    'slots'      => $slots,
+    'html'       => $html,
+    'createdAt'  => time(),
+    'expiresAt'  => $expiresAt,
 ];
-$file = $files[$type];
 
-// Read existing content
-$content = "";
-if (file_exists($file)) {
-    $content = file_get_contents($file);
-}
-
-// Prepare new entry
-$entry = $html;
-if (!empty($content) && substr(trim($content), -3) !== '---') {
-    $newContent = trim($content) . "\n---\n" . $entry . "\n";
-} else {
-    $newContent = trim($content) . ($content ? "\n---\n" : "") . $entry . "\n";
-}
-$message = 'Banner ad added successfully';
-
-
-
-// Write to file
-if (file_put_contents($file, $newContent) === false) {
+$filePath = $adsDir . '/' . $nextId . '.json';
+if (file_put_contents($filePath, json_encode($ad, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) === false) {
+    http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Failed to write file']);
     exit;
 }
 
-echo json_encode(['success' => true, 'message' => $message]);
+http_response_code(201);
+echo json_encode(['success' => true, 'id' => $nextId]);

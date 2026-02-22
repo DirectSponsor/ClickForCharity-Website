@@ -1,355 +1,151 @@
-# Banner Ad System - Clean Documentation
-
-## Terminology & Definitions
-
-**Ad Position** - Fixed location on a page where ads are displayed (e.g., Header Position, Sidebar Position). Each position can contain multiple rotating ads.
-
-**Rotation Pool** - Collection of ads configured for a specific position. All ads in the pool rotate through display when users visit the page.
-
-**Ad Slot** - Individual advertisement within a rotation pool. Each slot contains one banner ad (image, link, or script) that participates in the rotation cycle.
-
-**Rotation Cycle** - Complete loop through all ad slots in a position's rotation pool. Uses localStorage to track which ad was shown last and displays the next one.
-
-**File Structure:**
-```
-data/
-├── position-1/           # Header position
-│   ├── slot-1.txt        # Individual ad banner
-│   ├── slot-2.txt        # Individual ad banner
-│   └── slot-3.txt        # Individual ad banner
-└── position-2/           # Sidebar position
-    ├── slot-1.txt        # Individual ad banner
-    ├── slot-2.txt        # Individual ad banner
-    └── slot-3.txt        # Individual ad banner
-```
-
----
+# Banner Ad System - Documentation
 
 ## Overview
 
-Network-wide banner advertising system with unified booking platform on ClickForCharity.net and display across all sites.
+Two ad positions on every page, each with 10 slots. Slots determine share of impressions. Unused slots show house ads (reflinks, "advertise here"). Revenue funds specific recipient projects.
 
-**Current Status:** Planning phase - requires migration of payment systems before implementation.
-
----
-
-## Phase 1: Migration Prerequisites
-
-### Required Migration from RoflFaucet.com → ClickForCharity.net
-
-**Core Systems to Migrate:**
-1. **Payment Processing**
-   - Lightning invoice generation via Coinos.io API
-   - Payment status monitoring
-   - Transaction history
-   - User balance tracking
-
-2. **Projects & Recipients**
-   - Recipient profiles and projects
-   - Project funding targets and progress
-   - Random donation system
-   - Project archiving when targets met
-
-3. **User Authentication**
-   - Shared login system across all sites
-   - User profiles and preferences
-   - Session management
-
-**Migration Priority:** High - Ad system depends on these being operational on ClickForCharity.net
+**Current Status:** Implemented and live. Manual booking via contact form; payment via Lightning invoice.
 
 ---
 
-## Phase 2: Network-Wide Ad System
+## Pricing Model
 
-### Architecture
+- **Target:** 50,000 pageviews/month at $1.00 CPM
+- **10 slots per position** — each slot = 10% of impressions
+- **$5/slot/month** (1 slot = ~5,000 impressions)
+- **$50/month = 10 slots = exclusive position**
+- Early advertisers can negotiate discounts
+- Payment in Bitcoin via Lightning Network
 
-**Master Platform:** ClickForCharity.net
-- Ad booking interface
-- Payment processing
-- Ad file management
-- User authentication hub
+---
 
-**Display Sites:** All other sites (DirectSponsor.net, etc.)
-- Pull ads from master via API
-- Display ads in rotation
-- Redirect to master for booking
+## Ad Positions
 
-### Core Concept
+| Position | ID | Size | Location |
+|---|---|---|---|
+| Top banner | `desktop` | 728×90 (scales for mobile) | Top of every page |
+| Floating | `floating` | Flexible (300×250 recommended) | Fixed bottom-right, dismissible |
 
-"Buy once, appear everywhere" - Single purchase displays ads across entire network of sites.
+---
 
-### How It Works
+## File Structure
 
-1. **Discovery:** User sees "Advertise Here" on any site
-2. **Redirect:** Clicks → redirected to ClickForCharity.net/advertise
-3. **Authentication:** Logs in (shared across all sites)
-4. **Browse Projects:** Views recipients/projects while planning ad purchase
-5. **Select Ad Options:**
-   - Position (header, sidebar, etc.)
-   - Number of slots
-   - Duration (days)
-6. **Payment:** USD-based pricing → Lightning invoice
-7. **Activation:** Ad files created on master, synced to all sites
-8. **Display:** Ad appears across network until expiry
-
-### Pricing Model
-
-**USD-Based with Lightning Payment:**
-- Price per day per slot in USD (e.g., $0.50/day/slot)
-- At checkout: Convert USD → sats using current BTC/USD rate
-- Generate Lightning invoice for sats amount
-- User pays in Bitcoin, thinks in USD
-
-**User-Specific Pricing (Locked Rates):**
-- Early adopters get locked USD rate (e.g., $0.50/day/slot)
-- New users pay current market rate (e.g., $1.00/day/slot)
-- USD rate locked forever as long as they keep ads active
-
-### File Structure
-
-**Master Site (ClickForCharity.net):**
 ```
-site/data/position1/
-├── slot-1.txt          # Ad HTML content
-├── slot-2.txt
-├── slot-3.txt
-├── slot-4.txt
-├── slot-5.txt
-└── metadata.json       # Expiry, user, pricing info
+site/
+├── top/                          # Top banner images
+│   ├── advertise-on-clickforcharity.gif
+│   ├── advertise-728x90.gif
+│   └── 728x90-red.png etc.       # Placeholder test images
+├── float/                        # Floating ad images
+│   ├── advertise-468x60.gif
+│   ├── satsman1.gif
+│   └── litebits.png
+├── api/
+│   ├── get-banner-ads.php        # Serves rotation array to JS
+│   ├── save-banner-ad.php        # Admin: add paid ad (JSON)
+│   ├── delete-banner-ad.php      # Admin: delete paid ad by ID
+│   └── contact-advertise.php    # Advertise page contact form
+├── js/
+│   ├── banner-rotate.js          # Top banner rotation
+│   └── floating-ad.js            # Floating ad rotation
+├── admin-banners.html            # Admin interface
+└── advertise.html                # Public advertise page
+
+data/
+├── fallback-desktop/             # House ads for top banner (one .html file per ad)
+│   ├── advertise.html            → top/advertise-on-clickforcharity.gif
+│   └── red-test.html             → top/728x90-red.png (test, delete when done)
+└── fallback-floating/            # House ads for floating position
+    ├── advertise.html            → float/advertise-468x60.gif
+    ├── satsman.html              → float/satsman1.gif → satsman.com/?ref=andysavage
+    └── litebits.html             → float/litebits.png → litebits.io/ref/J61UMX3M
+
+/var/clickforcharity-data/
+└── banner-ads/                   # Paid advertiser JSON files (one per advertiser)
+    └── {id}.json
 ```
 
-**Slave Sites (All other sites):**
-```
-site/data/position1/
-├── slot-1.txt          # Synced copy from master
-├── slot-2.txt          # Synced copy from master
-├── slot-3.txt          # Synced copy from master
-├── slot-4.txt          # Synced copy from master
-├── slot-5.txt          # Synced copy from master
-└── metadata.json       # Synced copy from master
-```
+---
 
-### Ad Metadata Structure
+## How the Rotation Works
+
+`get-banner-ads.php?type=desktop` (or `?type=floating`):
+
+1. Reads all JSON files from `/var/clickforcharity-data/banner-ads/`
+2. Filters to the requested position
+3. Skips expired ads
+4. Repeats each ad's HTML by its slot count (e.g. 3 slots → appears 3× in array)
+5. Counts total paid slots used (max 10)
+6. Pads remaining slots by randomly picking from `data/fallback-{position}/` `.html` files
+7. Returns the full array to JS
+
+JS rotators (`banner-rotate.js`, `floating-ad.js`) use localStorage to track position and display sequentially.
+
+---
+
+## Paid Ad JSON Format
+
+Stored in `/var/clickforcharity-data/banner-ads/{id}.json`:
 
 ```json
 {
-  "slot-1": {
-    "expiry": "2026-03-15",
-    "invoice_id": "abc123",
-    "activated": "2026-02-10 14:30:00",
-    "user_id": "user_123",
-    "days": 30,
-    "usd_cost": 15.00,
-    "usd_per_day_per_slot": 0.50,
-    "btc_usd_rate": 50000,
-    "sats_paid": 30000,
-    "tier": "Early Adopter",
-    "recipient_id": "project_456"
-  }
+  "id": 1,
+  "advertiser": "Acme Corp",
+  "position": "desktop",
+  "slots": 3,
+  "html": "<a href=\"https://example.com\"><img src=\"...\"></a>",
+  "createdAt": 1740000000,
+  "expiresAt": 1742678400
 }
 ```
 
-### Technical Implementation
-
-**Ad Booking Flow (Master Site):**
-```php
-// api/generate-ad-invoice.php
-$user_id = $_SESSION['user_id'];
-$slots = $_POST['slots'];
-$days = $_POST['days'];
-$position = $_POST['position'];
-$recipient_id = $_POST['recipient_id']; // Selected project
-
-// Get user's pricing tier
-$user_pricing = getUserPricing($user_id);
-
-// Calculate USD cost
-$num_slots = count($slots);
-$usd_cost = $num_slots * $days * $user_pricing['usd_per_day_per_slot'];
-
-// Get current BTC/USD rate and convert
-$btc_usd_rate = getBtcUsdRate();
-$sats_amount = round(($usd_cost / $btc_usd_rate) * 100000000);
-
-// Generate Lightning invoice
-$invoice = generateCoinosInvoice($sats_amount);
-
-// Store pending purchase
-$pending = [
-    'invoice_id' => $invoice['id'],
-    'user_id' => $user_id,
-    'slots' => $slots,
-    'position' => $position,
-    'recipient_id' => $recipient_id,
-    'days' => $days,
-    'usd_cost' => $usd_cost,
-    'sats_amount' => $sats_amount,
-    'created' => time()
-];
-file_put_contents("data/pending/$invoice[id].json", json_encode($pending));
-```
-
-**Ad Activation (After Payment):**
-```php
-// api/activate-ad.php
-if ($status === 'paid') {
-    $pending = json_decode(file_get_contents("data/pending/$invoice_id.json"), true);
-    
-    // Calculate expiry
-    $expiry = date('Y-m-d', strtotime("+$pending[days] days"));
-    
-    // Write ad files to master
-    foreach ($pending['slots'] as $slot) {
-        file_put_contents("data/$pending[position]/slot-$slot.txt", $pending['banner_html']);
-    }
-    
-    // Update metadata
-    $metadata = json_decode(file_get_contents("data/$pending[position]/metadata.json"), true);
-    foreach ($pending['slots'] as $slot) {
-        $metadata["slot-$slot"] = [
-            'expiry' => $expiry,
-            'invoice_id' => $invoice_id,
-            'activated' => date('Y-m-d H:i:s'),
-            'user_id' => $pending['user_id'],
-            'days' => $pending['days'],
-            'usd_cost' => $pending['usd_cost'],
-            'usd_per_day_per_slot' => $user_pricing['usd_per_day_per_slot'],
-            'btc_usd_rate' => $btc_usd_rate,
-            'sats_paid' => $pending['sats_amount'],
-            'tier' => $user_pricing['tier_name'],
-            'recipient_id' => $pending['recipient_id']
-        ];
-    }
-    file_put_contents("data/$pending[position]/metadata.json", json_encode($metadata));
-    
-    // Sync to all slave sites
-    syncToSlaveSites($pending['position']);
-}
-```
-
-**Slave Site Display:**
-```javascript
-// banner-rotate.js on slave sites
-function getAd(slot) {
-  // Try to get fresh ad from master
-  fetch('https://clickforcharity.net/api/get-ad.php?position=position1&slot=' + slot)
-    .then(response => response.json())
-    .then(ad => {
-      if (ad && ad.expiry > Date.now()) {
-        displayAd(ad);
-      } else {
-        displayPlaceholder();
-      }
-    })
-    .catch(() => {
-      // Fallback to local cached ad
-      displayLocalAd(slot);
-    });
-}
-```
-
-### Expiry Management
-
-**Lazy Expiry (Check on View):**
-- No cron jobs needed
-- When ad is about to display, check if expired
-- If expired, show placeholder and rotate to next ad
-- Acceptable to be hours late due to browser caching
-
-```javascript
-function displayAd(ad) {
-  // Lazy expiry check
-  if (new Date() > new Date(ad.expiry)) {
-    showPlaceholder();
-    return;
-  }
-  
-  // Display ad
-  document.getElementById('ad-banner').innerHTML = ad.html;
-}
-```
-
-### User Experience
-
-**Ad Booking Interface:**
-```
-1. Browse Projects (while planning ad purchase)
-2. Select Ad Position
-3. Choose Slots (1-5 available)
-4. Set Duration (days)
-5. Select Recipient (who receives payment)
-6. Review Cost (USD with sats conversion shown)
-7. Pay Lightning Invoice
-8. Ad goes live across network
-```
-
-**Benefits for Advertisers:**
-- See exactly who you're sponsoring
-- Network-wide reach from single purchase
-- Stable USD pricing with Bitcoin payment
-- Locked rates for early adopters
+- `position`: `desktop` or `floating`
+- `slots`: 1–10
+- `expiresAt`: Unix timestamp, or `null` for indefinite
 
 ---
 
-## Phase 3: Future Enhancements
+## Adding a Paid Advertiser (Admin)
 
-### Streaming Money Model (Experimental)
+1. Go to `admin-banners.html`
+2. Fill in advertiser name, position, slot count, duration, banner HTML
+3. Click **Add Banner** — saves JSON to `/var/clickforcharity-data/banner-ads/`
 
-**Concept:** Pay-as-you-go with micro-deductions from balance account
-- Deposit sats → ad runs until balance depleted
-- 1 sat deducted every ~68 minutes (at $0.50/day rate)
-- When balance hits 0, ad pauses (can reactivate)
-
-**Implementation Plan:**
-- Introduce on one site as experimental feature
-- Remove that site from network temporarily
-- Test streaming model with Bitcoin enthusiasts
-- If successful, consider network-wide rollout
-
-**Marketing Angle:** "First banner ad platform with streaming Lightning payments"
-
-### Other Enhancements
-
-- **Advertiser Dashboard** - View active ads, performance stats
-- **Auto-Renewal** - Automatic renewal before expiry
-- **Click/Impression Tracking** - ROI metrics
-- **Recipient Selection** - Choose which project receives payment
-- **Grace Period** - 3-7 days before losing locked rate
-- **Renewal Reminders** - Email notifications before expiry
+The rotation updates immediately on next page load.
 
 ---
 
-## Implementation Dependencies
+## Adding House/Fallback Ads
 
-**Must Complete Before Ad System:**
+1. Drop the image into `site/top/` or `site/float/`
+2. Create a `.html` file in `data/fallback-desktop/` or `data/fallback-floating/`:
 
-1. **Payment System Migration**
-   - Move Lightning payment processing from roflfaucet.com
-   - Test on ClickForCharity.net domain
-   - Ensure Coinos.io API works with new domain
+```html
+<a href="https://destination-url.com" target="_blank" rel="noopener"><img src="top/your-image.png" style="max-width:100%;height:auto;" alt="Description"></a>
+```
 
-2. **Projects/Recipients Migration**
-   - Move all project data
-   - Ensure project display works on ClickForCharity
-   - Test donation flow
-
-3. **User Authentication Migration**
-   - Implement shared login across sites
-   - Test session management
-   - Ensure user data portability
-
-**After Migration Complete:**
-1. Build ad booking interface on ClickForCharity
-2. Implement network sync to other sites
-3. Test ad rotation across network
-4. Launch with traditional model only
-5. Consider streaming model as future experiment
+No code changes needed. The file is picked up automatically.
 
 ---
 
-## Current Status
+## Advertise Page & Contact Form
 
-**Phase:** Planning and Migration Preparation
-**Next Step:** Migrate payment and project systems from roflfaucet.com to clickforcharity.net
-**Timeline:** Dependent on migration complexity
-**Priority:** High - Ad system cannot proceed without core systems in place
+`advertise.html` — public-facing page with:
+- Pricing table (slots, impressions, monthly cost)
+- Position descriptions
+- Contact form → `api/contact-advertise.php` → emails `ads@clickforcharity.net`
+- FAQ
+
+**Bot protection on contact form:**
+- Honeypot field (`website`, hidden) — if filled, silently discards
+- Visible "are you a bot?" field — must answer "no", otherwise silently discards
+
+---
+
+## Future Enhancements
+
+- **Self-service booking** — advertiser pays Lightning invoice, ad activates automatically
+- **Impression counting** — log to daily flat file for reporting; use to tune fallback slot weights
+- **Expiry notifications** — email advertiser before ad expires
+- **Streaming payments** — pay-per-impression via Lightning balance (experimental)
+- **Advertiser dashboard** — view active ads, impressions, expiry

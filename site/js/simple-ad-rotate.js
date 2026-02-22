@@ -2,9 +2,9 @@
 (function() {
     // List of banner images to rotate through
     const banners = [
-        'banners/728x90-red.png',
-        'banners/728x90-green.png',
-        'banners/728x90-blue.png'
+        'top/728x90-red.png',
+        'top/728x90-green.png',
+        'top/728x90-blue.png'
     ];
     
     // Get current position from localStorage, default to 0

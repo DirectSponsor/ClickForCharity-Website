@@ -1,65 +1,34 @@
 <?php
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
 
-// Get JSON input
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); echo json_encode(['success' => false, 'error' => 'Method not allowed']); exit; }
+
 $input = json_decode(file_get_contents('php://input'), true);
 
-if (!$input || !isset($input['type']) || !isset($input['index'])) {
-    echo json_encode(['success' => false, 'error' => 'Missing required fields']);
+if (!$input || !isset($input['id'])) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Missing required field: id']);
     exit;
 }
 
-$type = $input['type'];
-$index = intval($input['index']);
+$id = (int)$input['id'];
+$adsDir = '/var/clickforcharity-data/banner-ads';
+$filePath = $adsDir . '/' . $id . '.json';
 
-// Validate type
-if (!in_array($type, ['desktop', 'mobile', 'floating'])) {
-    echo json_encode(['success' => false, 'error' => 'Invalid type']);
+if (!file_exists($filePath)) {
+    http_response_code(404);
+    echo json_encode(['success' => false, 'error' => 'Ad not found']);
     exit;
 }
 
-// Determine file path
-$files = [
-    'desktop' => '../../data/ads-desktop.txt',
-    'mobile' => '../../data/ads-mobile.txt',
-    'floating' => '../../data/ads-floating.txt'
-];
-$file = $files[$type];
-
-// Check if file exists
-if (!file_exists($file)) {
-    echo json_encode(['success' => false, 'error' => 'File not found']);
+if (!unlink($filePath)) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'error' => 'Failed to delete ad']);
     exit;
 }
 
-// Read and parse ads
-$content = file_get_contents($file);
-$ads = array_filter(
-    array_map('trim', explode('---', $content)),
-    function($ad) { return !empty($ad); }
-);
-$ads = array_values($ads); // Re-index
-
-// Validate index
-if ($index < 0 || $index >= count($ads)) {
-    echo json_encode(['success' => false, 'error' => 'Invalid index']);
-    exit;
-}
-
-// Remove the ad at the specified index
-array_splice($ads, $index, 1);
-
-// Rebuild content with separators
-$newContent = implode("\n---\n", $ads);
-if (!empty($newContent)) {
-    $newContent .= "\n";
-}
-
-// Write to file
-if (file_put_contents($file, $newContent) === false) {
-    echo json_encode(['success' => false, 'error' => 'Failed to write file']);
-    exit;
-}
-
-echo json_encode(['success' => true, 'message' => 'Banner ad deleted successfully']);
+echo json_encode(['success' => true, 'message' => 'Banner ad deleted']);

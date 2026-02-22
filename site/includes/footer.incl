@@ -7,6 +7,11 @@
                 <img src="images/Lightning-News-Horizontal-Light-Backround-257x35.png" alt="Supported by Lightning.news" style="max-width:100%;height:auto;vertical-align:middle;">
             </a>
         </div>
+        <div style="display:block;margin:0.8rem auto 0 auto;text-align:center;">
+            <a href="advertise.html">
+                <img src="banners/advertise-on-clickforcharity.gif" alt="Advertise on Click for Charity" style="max-width:100%;width:728px;height:auto;">
+            </a>
+        </div>
     </footer>
 
 <div id="floating-ad" class="floating-ad-container">

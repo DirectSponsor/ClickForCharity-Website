@@ -16,6 +16,7 @@
                     <li #ACTIVE_SKIPPED_TASKS#><a href="skipped-tasks.html">Skipped Tasks</a></li>
                     <li #ACTIVE_SURVEYS#><a href="surveys.html">Surveys</a></li>
                     <li #ACTIVE_OFFERS#><a href="offers.html">Offers</a></li>
+                    <li #ACTIVE_ADVERTISE#><a href="advertise.html">Advertise</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
                 </ul>
             </nav>
