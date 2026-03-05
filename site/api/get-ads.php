@@ -35,6 +35,10 @@ foreach ($files as $file) {
                 unlink($file);
                 continue;
             }
+
+            // Skip paused ads (unless admin view requested)
+            if (!empty($ad['paused']) && empty($_GET['admin'])) continue;
+
             $ads[] = $ad;
         }
     }
@@ -42,7 +46,7 @@ foreach ($files as $file) {
 
 // Sort by ID
 usort($ads, function($a, $b) {
-    return $a['id'] - $b['id'];
+    return $b['id'] - $a['id'];
 });
 
 echo json_encode($ads);

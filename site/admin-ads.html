@@ -20,6 +20,10 @@
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
     <title>Admin – Surf Ads Management</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        .admin-task-item.paused { opacity: 0.6; border-left: 3px solid #aaa; }
+        .paused-badge { display: inline-block; background: #888; color: #fff; font-size: 0.75rem; padding: 0.1rem 0.5rem; border-radius: 3px; margin-left: 0.5rem; vertical-align: middle; }
+    </style>
 </head>
 <body>
     <div class="container" style="max-width: 1200px; margin: 0 auto; padding: 20px;">
@@ -183,7 +187,7 @@
 
         async function loadTasks() {
             try {
-                const response = await fetch('/api/get-ads.php');
+                const response = await fetch('/api/get-ads.php?admin=1');
                 const tasks = await response.json();
 
                 if (!tasks || tasks.length === 0) {
@@ -192,9 +196,9 @@
                 }
 
                 taskListEl.innerHTML = tasks.map(task => `
-                    <div class="admin-task-item" data-task-id="${task.id}">
+                    <div class="admin-task-item${task.paused ? ' paused' : ''}" data-task-id="${task.id}">
                         <div class="admin-task-info">
-                            <h3>${task.title}</h3>
+                            <h3>${task.title}${task.paused ? '<span class="paused-badge">PAUSED</span>' : ''}</h3>
                             <p class="admin-task-meta">
                                 <strong>ID:</strong> ${task.id} | 
                                 <strong>Timer:</strong> ${task.duration}s | 
@@ -205,10 +209,33 @@
                             <p class="admin-task-url"><a href="${task.url}" target="_blank" rel="noopener">${task.url}</a></p>
                         </div>
                         <div class="admin-task-actions">
+                            <button class="btn-pause-admin" data-task-id="${task.id}" style="margin-bottom:0.4rem;background:${task.paused ? '#27ae60' : '#e67e22'};color:#fff;border:none;padding:0.3rem 0.8rem;cursor:pointer;border-radius:3px;display:block;width:100%;">${task.paused ? 'Resume' : 'Pause'}</button>
                             <button class="btn-delete-admin" data-task-id="${task.id}">Delete</button>
                         </div>
                     </div>
                 `).join('');
+
+                // Add pause/resume handlers
+                taskListEl.querySelectorAll('.btn-pause-admin').forEach(btn => {
+                    btn.addEventListener('click', async () => {
+                        const taskId = parseInt(btn.dataset.taskId, 10);
+                        try {
+                            const response = await fetch('/api/toggle-ad.php', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ id: taskId })
+                            });
+                            const result = await response.json();
+                            if (result.success) {
+                                loadTasks();
+                            } else {
+                                alert(result.error || 'Failed to update task');
+                            }
+                        } catch (error) {
+                            alert('Network error. Please try again.');
+                        }
+                    });
+                });
 
                 // Add delete handlers
                 taskListEl.querySelectorAll('.btn-delete-admin').forEach(btn => {
