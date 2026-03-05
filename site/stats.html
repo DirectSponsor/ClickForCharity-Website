@@ -305,9 +305,9 @@
     <div class="controls">
         <button class="btn" id="prevBtn">&#8592; Prev</button>
         <div class="period-group">
-            <button class="btn active" data-period="day">Day</button>
+            <button class="btn" data-period="day">Day</button>
             <button class="btn" data-period="week">Week</button>
-            <button class="btn" data-period="month">Month</button>
+            <button class="btn active" data-period="month">Month</button>
         </div>
         <button class="btn" id="nextBtn">Next &#8594;</button>
         <span class="date-label" id="dateLabel"></span>
@@ -366,7 +366,7 @@
     var DATA_PATH = 'data/analytics';     /* relative to this HTML file */
 
     /* ── State ── */
-    var period  = 'day';
+    var period  = 'month';
     var refDate = today();
     var cache   = {};
     var allDates = [];   /* populated from index.json */

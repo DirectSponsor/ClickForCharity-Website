@@ -1,0 +1,1 @@
+/home/andy/work/projects/clickforcharity.net/Payment-System-for-Ads-and-Donations.md

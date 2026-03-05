@@ -168,6 +168,12 @@ deploy_files() {
         --exclude='data/analytics/' \
         --progress \
         "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/"
+
+    log "Syncing fallback ad folders..."
+    rsync -avz --delete \
+        "$LOCAL_PATH/data/fallback-desktop/" "$REMOTE_HOST:/var/www/clickforcharity.net/data/fallback-desktop/"
+    rsync -avz --delete \
+        "$LOCAL_PATH/data/fallback-floating/" "$REMOTE_HOST:/var/www/clickforcharity.net/data/fallback-floating/"
     
     success "Files deployed successfully"
 }

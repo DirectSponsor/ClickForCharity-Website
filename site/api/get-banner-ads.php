@@ -17,7 +17,7 @@ if (!is_dir($adsDir)) {
     exit;
 }
 
-$files = glob($adsDir . '/*.json');
+$files = array_reverse(glob($adsDir . '/*.json'));
 $rotation = [];
 $meta = [];
 $now = time();
@@ -35,10 +35,14 @@ foreach ($files as $file) {
     // Skip expired ads
     if (isset($ad['expiresAt']) && $ad['expiresAt'] !== null && $ad['expiresAt'] < $now) continue;
 
-    // Repeat HTML by slot count to weight the rotation
     $slots = max(1, min(10, (int)$ad['slots']));
-    for ($i = 0; $i < $slots; $i++) {
-        $rotation[] = $ad['html'];
+    $paused = !empty($ad['paused']);
+
+    // Only add to rotation if not paused
+    if (!$paused) {
+        for ($i = 0; $i < $slots; $i++) {
+            $rotation[] = $ad['html'];
+        }
     }
 
     $meta[] = [
@@ -48,6 +52,7 @@ foreach ($files as $file) {
         'position'     => $ad['position'],
         'createdAt'    => $ad['createdAt'] ?? null,
         'expiresAt'    => $ad['expiresAt'] ?? null,
+        'paused'       => $paused,
     ];
 }
 

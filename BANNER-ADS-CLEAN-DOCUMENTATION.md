@@ -53,8 +53,7 @@ site/
 
 data/
 ├── fallback-desktop/             # House ads for top banner (one .html file per ad)
-│   ├── advertise.html            → top/advertise-on-clickforcharity.gif
-│   └── red-test.html             → top/728x90-red.png (test, delete when done)
+│   └── advertise.html            → top/advertise-on-clickforcharity.gif
 └── fallback-floating/            # House ads for floating position
     ├── advertise.html            → float/advertise-468x60.gif
     ├── satsman.html              → float/satsman1.gif → satsman.com/?ref=andysavage
@@ -131,14 +130,54 @@ No code changes needed. The file is picked up automatically.
 ## Advertise Page & Contact Form
 
 `advertise.html` — public-facing page with:
-- Pricing table (slots, impressions, monthly cost)
+- Early adopter offer callout (yellow box, leads the pricing section)
+- Pricing table (slots, impressions, monthly cost) framed as standard rates
 - Position descriptions
+- "Where the money goes" section — explains payment goes direct to recipient in Bitcoin, not to us; offers help for anyone unfamiliar with Bitcoin
+- Low-friction contact form — just name, email, and a free-text message; no need to have details worked out
 - Contact form → `api/contact-advertise.php` → emails `ads@clickforcharity.net`
 - FAQ
 
 **Bot protection on contact form:**
 - Honeypot field (`website`, hidden) — if filled, silently discards
 - Visible "are you a bot?" field — must answer "no", otherwise silently discards
+
+---
+
+## Site Integration
+
+**Sidebar nav** (`site/includes/sidebar.incl`) — "Advertise" link added to nav on all pages.
+
+**Footer** (`site/includes/footer.incl`) — `advertise-on-clickforcharity.gif` added as a centered block below the existing footer links on all pages, linking to `advertise.html`. Scales down on small screens via `max-width:100%`.
+
+Both are managed via includes and applied to all non-admin pages by running `build.sh`.
+
+---
+
+## Server Setup
+
+Required on first deploy (one-time):
+
+```bash
+sudo mkdir -p /var/clickforcharity-data/banner-ads
+sudo chown -R www-data:www-data /var/clickforcharity-data/banner-ads
+```
+
+The `data/fallback-desktop/` and `data/fallback-floating/` directories live at `/var/www/clickforcharity.net/data/` on the server and are synced by `deploy.sh`.
+
+Server snapshot taken before this overhaul: `/root/snapshots/clickforcharity-pre-ad-overhaul-20260222-185454.tar.gz`
+
+---
+
+## Deployment
+
+Run `bash deploy.sh` from the project root. The script:
+1. Commits and pushes any pending git changes
+2. rsyncs `site/` to `/var/www/clickforcharity.net/public_html/`
+3. rsyncs `data/fallback-desktop/` and `data/fallback-floating/` to the server
+4. Fixes file permissions (`www-data`)
+
+**Note:** `/var/clickforcharity-data/banner-ads/` (paid ad JSON files) is on the server only — it is not in the repo and is not touched by the deploy script.
 
 ---
 

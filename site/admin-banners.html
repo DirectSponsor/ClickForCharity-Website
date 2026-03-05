@@ -112,6 +112,23 @@
             background: #f8d7da;
             color: #721c24;
         }
+
+        .ad-item.paused {
+            opacity: 0.6;
+            border-color: #aaa;
+            background: #f0f0f0;
+        }
+
+        .paused-badge {
+            display: inline-block;
+            background: #888;
+            color: #fff;
+            font-size: 0.75rem;
+            padding: 0.1rem 0.5rem;
+            border-radius: 3px;
+            margin-left: 0.5rem;
+            vertical-align: middle;
+        }
     </style>
 </head>
 
@@ -230,11 +247,18 @@
                     const created = ad.createdAt ? new Date(ad.createdAt * 1000).toLocaleDateString() : '—';
                     const expires = ad.expiresAt ? new Date(ad.expiresAt * 1000).toLocaleDateString() : 'Indefinite';
                     const cost = (ad.slots * 5).toFixed(0);
+                    const pausedClass = ad.paused ? ' paused' : '';
+                    const pausedBadge = ad.paused ? '<span class="paused-badge">PAUSED</span>' : '';
+                    const pauseLabel = ad.paused ? 'Resume' : 'Pause';
+                    const pauseStyle = ad.paused ? 'background:#27ae60;color:#fff' : 'background:#e67e22;color:#fff';
                     return `
-                    <div class="ad-item" id="ad-${ad.id}">
+                    <div class="ad-item${pausedClass}" id="ad-${ad.id}">
                         <div class="ad-item-header">
-                            <strong>${escapeHtml(ad.advertiser || '(no name)')}</strong>
-                            <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd(${ad.id})">Delete</button>
+                            <strong>${escapeHtml(ad.advertiser || '(no name)')}${pausedBadge}</strong>
+                            <span>
+                                <button class="btn" style="${pauseStyle};padding:0.3rem 0.8rem;margin-right:0.4rem;" onclick="togglePauseAd(${ad.id})">${pauseLabel}</button>
+                                <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd(${ad.id})">Delete</button>
+                            </span>
                         </div>
                         <p style="margin:0.3rem 0;font-size:0.9rem;">
                             <strong>Position:</strong> ${posLabel[ad.position] || ad.position} &nbsp;|&nbsp;
@@ -292,6 +316,27 @@
                 }
             } catch (err) {
                 console.error('Add error:', err);
+                showStatus(status, 'Network error. Please try again.', 'error');
+            }
+        }
+
+        async function togglePauseAd(id) {
+            const status = document.getElementById('list-status');
+            try {
+                const response = await fetch('/api/toggle-banner-ad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showStatus(status, result.paused ? 'Banner paused.' : 'Banner resumed.', 'success');
+                    loadAllAds();
+                } else {
+                    showStatus(status, result.error || 'Failed to update banner', 'error');
+                }
+            } catch (err) {
+                console.error('Toggle error:', err);
                 showStatus(status, 'Network error. Please try again.', 'error');
             }
         }
