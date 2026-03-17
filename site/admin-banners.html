@@ -454,6 +454,8 @@
         function closeEditModal() {
             editModal.style.display = 'none';
             editForm.reset();
+            const submitButton = editForm.querySelector('button[type="submit"]');
+            submitButton.disabled = false;
         }
 
         cancelEditBtn.addEventListener('click', closeEditModal);
@@ -463,7 +465,13 @@
             if (e.target === editModal) closeEditModal();
         });
 
-        editForm.addEventListener('submit', async (e) => {
+        // Only attach once to prevent duplicate handlers
+        if (!editForm.hasAttribute('data-listener-attached')) {
+            editForm.addEventListener('submit', handleEditFormSubmit);
+            editForm.setAttribute('data-listener-attached', 'true');
+        }
+
+        async function handleEditFormSubmit(e) {
             e.preventDefault();
 
             const bannerId = parseInt(document.getElementById('edit-banner-id').value, 10);
@@ -507,7 +515,7 @@
                 editFeedback.style.color = '#c0392b';
                 submitButton.disabled = false;
             }
-        });
+        }
     </script>
 </body>
 
