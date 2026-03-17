@@ -214,8 +214,59 @@
         </main>
     </div>
 
+    <!-- Edit Banner Modal -->
+    <div id="edit-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;">
+        <div style="position:relative;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:30px;border-radius:8px;max-width:700px;width:90%;max-height:90vh;overflow-y:auto;">
+            <h2 style="margin-top:0;">Edit Banner Ad</h2>
+            <form id="edit-banner-form">
+                <input type="hidden" id="edit-banner-id">
+                <div class="field">
+                    <label for="edit-advertiser">Advertiser name</label>
+                    <input type="text" id="edit-advertiser" required>
+                </div>
+                <div class="field">
+                    <label for="edit-slots">Slots (1–10)</label>
+                    <select id="edit-slots" required>
+                        <option value="1">1 slot — 10% — $5/month</option>
+                        <option value="2">2 slots — 20% — $10/month</option>
+                        <option value="3">3 slots — 30% — $15/month</option>
+                        <option value="4">4 slots — 40% — $20/month</option>
+                        <option value="5">5 slots — 50% — $25/month</option>
+                        <option value="6">6 slots — 60% — $30/month</option>
+                        <option value="7">7 slots — 70% — $35/month</option>
+                        <option value="8">8 slots — 80% — $40/month</option>
+                        <option value="9">9 slots — 90% — $45/month</option>
+                        <option value="10">10 slots — 100% — $50/month</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="edit-days">Duration</label>
+                    <select id="edit-days" required>
+                        <option value="0">Indefinite</option>
+                        <option value="7">7 days</option>
+                        <option value="14">14 days</option>
+                        <option value="30">30 days</option>
+                        <option value="60">60 days</option>
+                        <option value="90">90 days</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="edit-html">Banner HTML</label>
+                    <textarea id="edit-html" style="min-height:150px;" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Save Changes</button>
+                    <button type="button" id="cancel-edit-btn" class="btn secondary">Cancel</button>
+                    <span id="edit-form-feedback" role="status" style="margin-left:0.8rem;font-size:0.9rem;"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script>
+        let allAdsData = []; // Store full ad data for editing
+
         document.addEventListener('DOMContentLoaded', async () => {
             await requireAdmin();
             loadAllAds();
@@ -235,6 +286,9 @@
                     ...(dData.meta || []),
                     ...(fData.meta || [])
                 ];
+
+                // Store for editing
+                allAdsData = allMeta;
 
                 if (allMeta.length === 0) {
                     listEl.innerHTML = '<p style="color:#999;">No ads yet. Add one below.</p>';
@@ -256,6 +310,7 @@
                         <div class="ad-item-header">
                             <strong>${escapeHtml(ad.advertiser || '(no name)')}${pausedBadge}</strong>
                             <span>
+                                <button class="btn" style="background:#3498db;color:#fff;padding:0.3rem 0.8rem;margin-right:0.4rem;" onclick="editAd(${ad.id})">Edit</button>
                                 <button class="btn" style="${pauseStyle};padding:0.3rem 0.8rem;margin-right:0.4rem;" onclick="togglePauseAd(${ad.id})">${pauseLabel}</button>
                                 <button class="btn" style="background:#c0392b;color:#fff;padding:0.3rem 0.8rem;" onclick="deleteAd(${ad.id})">Delete</button>
                             </span>
@@ -373,6 +428,86 @@
             div.textContent = text;
             return div.innerHTML;
         }
+
+        // Edit banner functionality
+        const editModal = document.getElementById('edit-modal');
+        const editForm = document.getElementById('edit-banner-form');
+        const editFeedback = document.getElementById('edit-form-feedback');
+        const cancelEditBtn = document.getElementById('cancel-edit-btn');
+
+        function editAd(id) {
+            const ad = allAdsData.find(a => a.id === id);
+            if (!ad) {
+                alert('Ad not found');
+                return;
+            }
+
+            document.getElementById('edit-banner-id').value = ad.id;
+            document.getElementById('edit-advertiser').value = ad.advertiser || '';
+            document.getElementById('edit-slots').value = ad.slots;
+            document.getElementById('edit-days').value = ad.days || 0;
+            document.getElementById('edit-html').value = ad.html || '';
+            editModal.style.display = 'block';
+            editFeedback.textContent = '';
+        }
+
+        function closeEditModal() {
+            editModal.style.display = 'none';
+            editForm.reset();
+        }
+
+        cancelEditBtn.addEventListener('click', closeEditModal);
+
+        // Close modal when clicking outside
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) closeEditModal();
+        });
+
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const bannerId = parseInt(document.getElementById('edit-banner-id').value, 10);
+            const updatedBanner = {
+                id: bannerId,
+                advertiser: document.getElementById('edit-advertiser').value.trim(),
+                slots: parseInt(document.getElementById('edit-slots').value, 10),
+                days: parseInt(document.getElementById('edit-days').value, 10),
+                html: document.getElementById('edit-html').value.trim()
+            };
+
+            const submitButton = editForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            editFeedback.textContent = 'Saving...';
+            editFeedback.style.color = '#777';
+
+            try {
+                const response = await fetch('/api/update-banner-ad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedBanner)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    editFeedback.textContent = '✓ Saved!';
+                    editFeedback.style.color = '#27ae60';
+                    setTimeout(() => {
+                        closeEditModal();
+                        loadAllAds();
+                    }, 1000);
+                } else {
+                    editFeedback.textContent = result.error || 'Failed to update banner.';
+                    editFeedback.style.color = '#c0392b';
+                    submitButton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                editFeedback.textContent = 'Network error. Please try again.';
+                editFeedback.style.color = '#c0392b';
+                submitButton.disabled = false;
+            }
+        });
     </script>
 </body>
 

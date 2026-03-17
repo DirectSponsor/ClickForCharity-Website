@@ -64,14 +64,84 @@
             color: #555;
         }
         .contact-box {
-            background: #f0f7ff;
-            border: 1px solid #b3d4f5;
-            border-radius: 4px;
-            padding: 1.2rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            padding: 2rem 2.5rem;
             margin: 2rem 0;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
         }
         .contact-box h2 {
             margin-top: 0;
+            color: #fff;
+            font-size: 1.8rem;
+        }
+        .contact-box > p {
+            color: #fff;
+            opacity: 0.95;
+        }
+        .contact-box a {
+            color: #fff;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+        .contact-box .field {
+            margin-bottom: 1.3rem;
+        }
+        .contact-box label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .contact-box input,
+        .contact-box textarea {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.95);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+        .contact-box input:focus,
+        .contact-box textarea:focus {
+            outline: none;
+            border-color: #fff;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2);
+        }
+        .contact-box textarea {
+            resize: vertical;
+            min-height: 120px;
+            font-family: inherit;
+        }
+        .contact-box .btn.primary {
+            background: #fff;
+            color: #667eea;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .contact-box .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        .contact-box .btn.primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .contact-box #cf-feedback {
+            color: #fff;
+            font-weight: 600;
         }
         .faq dt {
             font-weight: bold;

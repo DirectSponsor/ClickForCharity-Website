@@ -50,6 +50,8 @@ foreach ($files as $file) {
         'advertiser'   => $ad['advertiser'] ?? '',
         'slots'        => $slots,
         'position'     => $ad['position'],
+        'html'         => $ad['html'] ?? '',
+        'days'         => $ad['days'] ?? 0,
         'createdAt'    => $ad['createdAt'] ?? null,
         'expiresAt'    => $ad['expiresAt'] ?? null,
         'paused'       => $paused,
