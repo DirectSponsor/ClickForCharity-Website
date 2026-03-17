@@ -96,6 +96,51 @@
         </main>
     </div>
 
+    <!-- Edit Task Modal -->
+    <div id="edit-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:9999;">
+        <div style="position:relative;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:30px;border-radius:8px;max-width:600px;width:90%;max-height:90vh;overflow-y:auto;">
+            <h2 style="margin-top:0;">Edit Surf Ad Task</h2>
+            <form id="edit-task-form">
+                <input type="hidden" id="edit-task-id">
+                <div class="field">
+                    <label for="edit-task-title">Title</label>
+                    <input type="text" id="edit-task-title" name="title" maxlength="120" required>
+                </div>
+                <div class="field">
+                    <label for="edit-task-duration">Timer (seconds)</label>
+                    <input type="number" id="edit-task-duration" name="duration" min="5" max="600" step="5" required>
+                </div>
+                <div class="field">
+                    <label for="edit-campaign-duration">Campaign Duration</label>
+                    <select id="edit-campaign-duration" name="campaignDuration" required>
+                        <option value="1">1 day</option>
+                        <option value="2">2 days</option>
+                        <option value="7">1 week</option>
+                        <option value="30">1 month</option>
+                        <option value="0">Indefinite</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="edit-task-reward">Reward (tokens/coins)</label>
+                    <input type="number" id="edit-task-reward" name="reward" min="1" max="1000" step="1" required>
+                </div>
+                <div class="field">
+                    <label for="edit-task-url">Destination URL</label>
+                    <input type="url" id="edit-task-url" name="url" required>
+                </div>
+                <div class="field">
+                    <label for="edit-task-instructions">Instructions</label>
+                    <textarea id="edit-task-instructions" name="instructions" maxlength="500" required></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn primary">Save Changes</button>
+                    <button type="button" id="cancel-edit-btn" class="btn secondary">Cancel</button>
+                    <span id="edit-form-feedback" role="status"></span>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
     <script>
@@ -209,6 +254,7 @@
                             <p class="admin-task-url"><a href="${task.url}" target="_blank" rel="noopener">${task.url}</a></p>
                         </div>
                         <div class="admin-task-actions">
+                            <button class="btn-edit-admin" data-task-id="${task.id}" style="margin-bottom:0.4rem;background:#3498db;color:#fff;border:none;padding:0.3rem 0.8rem;cursor:pointer;border-radius:3px;display:block;width:100%;">Edit</button>
                             <button class="btn-pause-admin" data-task-id="${task.id}" style="margin-bottom:0.4rem;background:${task.paused ? '#27ae60' : '#e67e22'};color:#fff;border:none;padding:0.3rem 0.8rem;cursor:pointer;border-radius:3px;display:block;width:100%;">${task.paused ? 'Resume' : 'Pause'}</button>
                             <button class="btn-delete-admin" data-task-id="${task.id}">Delete</button>
                         </div>
@@ -234,6 +280,15 @@
                         } catch (error) {
                             alert('Network error. Please try again.');
                         }
+                    });
+                });
+
+                // Add edit handlers
+                taskListEl.querySelectorAll('.btn-edit-admin').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const taskId = parseInt(btn.dataset.taskId, 10);
+                        const task = tasks.find(t => t.id === taskId);
+                        if (task) openEditModal(task);
                     });
                 });
 
@@ -303,6 +358,85 @@
                 }
             });
         })();
+
+        // Edit modal functionality
+        const editModal = document.getElementById('edit-modal');
+        const editForm = document.getElementById('edit-task-form');
+        const editFeedback = document.getElementById('edit-form-feedback');
+        const cancelBtn = document.getElementById('cancel-edit-btn');
+
+        function openEditModal(task) {
+            document.getElementById('edit-task-id').value = task.id;
+            document.getElementById('edit-task-title').value = task.title;
+            document.getElementById('edit-task-duration').value = task.duration;
+            document.getElementById('edit-campaign-duration').value = task.campaignDuration;
+            document.getElementById('edit-task-reward').value = task.reward;
+            document.getElementById('edit-task-url').value = task.url;
+            document.getElementById('edit-task-instructions').value = task.instructions;
+            editModal.style.display = 'block';
+            editFeedback.textContent = '';
+        }
+
+        function closeEditModal() {
+            editModal.style.display = 'none';
+            editForm.reset();
+        }
+
+        cancelBtn.addEventListener('click', closeEditModal);
+
+        // Close modal when clicking outside
+        editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) closeEditModal();
+        });
+
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const taskId = parseInt(document.getElementById('edit-task-id').value, 10);
+            const formData = new FormData(editForm);
+            const updatedTask = {
+                id: taskId,
+                title: formData.get('title').trim(),
+                duration: Number(formData.get('duration')),
+                reward: Number(formData.get('reward')),
+                url: formData.get('url').trim(),
+                instructions: formData.get('instructions').trim(),
+                campaignDuration: Number(formData.get('campaignDuration'))
+            };
+
+            const submitButton = editForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true;
+            editFeedback.textContent = 'Saving...';
+            editFeedback.style.color = '#777';
+
+            try {
+                const response = await fetch('/api/update-ad.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatedTask)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    editFeedback.textContent = '✓ Saved!';
+                    editFeedback.style.color = '#27ae60';
+                    setTimeout(() => {
+                        closeEditModal();
+                        loadTasks(); // Refresh the task list
+                    }, 1000);
+                } else {
+                    editFeedback.textContent = result.error || 'Failed to update task.';
+                    editFeedback.style.color = '#c0392b';
+                    submitButton.disabled = false;
+                }
+            } catch (error) {
+                console.error('Update error:', error);
+                editFeedback.textContent = 'Network error. Please try again.';
+                editFeedback.style.color = '#c0392b';
+                submitButton.disabled = false;
+            }
+        });
     </script>
 </body>
 </html>

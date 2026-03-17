@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 startTimerInterval();
 
                 // Force new tab opening for automation compatibility
-                window.open(ad.url, '_blank', 'noopener,noreferrer');
+                window.open(ad.url, '_blank', 'noopener');
 
                 if (!completionAudioPrimed) {
                     completionAudio.muted = true;

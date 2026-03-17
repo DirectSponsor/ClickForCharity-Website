@@ -1,6 +1,12 @@
 <?php
 header('Content-Type: application/json');
 
+// Enable error logging
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', '/var/log/apache2/clickforcharity_contact_errors.log');
+
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo json_encode(['success' => false, 'error' => 'Method not allowed']);
@@ -52,9 +58,17 @@ $headers = "From: noreply@clickforcharity.net\r\n"
          . "Reply-To: $email\r\n"
          . "X-Mailer: PHP/" . phpversion();
 
-if (mail($to, $subject, $body, $headers)) {
+// Log the attempt
+error_log("[" . date('Y-m-d H:i:s') . "] Attempting to send email to: $to, from: $email");
+
+$mailResult = mail($to, $subject, $body, $headers);
+
+if ($mailResult) {
+    error_log("[" . date('Y-m-d H:i:s') . "] Email sent successfully to: $to");
     echo json_encode(['success' => true]);
 } else {
+    $lastError = error_get_last();
+    error_log("[" . date('Y-m-d H:i:s') . "] Email failed to send. Error: " . json_encode($lastError));
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Failed to send message. Please email us directly at ads@clickforcharity.net']);
 }
