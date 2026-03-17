@@ -83,15 +83,71 @@ fetch('/api/get-config.php')
   });
 ```
 
+## SMTP Email Configuration
+
+### Secure Setup (Implemented)
+
+The contact form uses SMTP to send emails. Credentials are stored securely outside the web root.
+
+**Server Configuration:**
+```bash
+# Config file location (outside web root)
+/var/www/clickforcharity.net/config/smtp-config.php
+
+# Permissions (only www-data can read)
+chmod 600 smtp-config.php
+chown www-data:www-data smtp-config.php
+```
+
+**Config File Structure:**
+```php
+<?php
+return [
+    'host' => 'mail.clickforcharity.net',
+    'username' => 'andy@clickforcharity.net',
+    'password' => 'YOUR_PASSWORD_HERE',
+    'port' => 465,
+    'encryption' => 'ssl'
+];
+```
+
+**Usage in Code:**
+```php
+// Load secure config from outside web root
+$smtpConfig = require '/var/www/clickforcharity.net/config/smtp-config.php';
+
+$mail->Host = $smtpConfig['host'];
+$mail->Username = $smtpConfig['username'];
+$mail->Password = $smtpConfig['password'];
+```
+
+**Files:**
+- ✅ `config.example-smtp.php` - Example file in git (no real password)
+- ❌ `smtp-config.php` - Never committed (in .gitignore)
+- ✅ Server file: `/var/www/clickforcharity.net/config/smtp-config.php`
+
+**Protected Components:**
+- Contact form: `site/api/contact-advertise.php`
+- PHPMailer library: `site/lib/PHPMailer/`
+- SMTP credentials: Stored outside public_html
+
+**Error Logs:**
+```bash
+# Check email sending attempts
+ssh es1 "tail -f /var/log/apache2/clickforcharity_ssl_error.log | grep SMTP"
+```
+
 ## Best Practices
 
-1. **Never hardcode API keys** in source files
+1. **Never hardcode API keys or passwords** in source files
 2. **Use config.php** for all secrets
 3. **Keep config.example.php** updated with structure (but no real values)
-4. **Restrict API keys** in Google Cloud Console to specific domains/IPs
-5. **Rotate keys regularly** (every 6-12 months)
-6. **Use different keys** for development vs production
-7. **Check .gitignore** before committing
+4. **Store SMTP credentials** outside the web root
+5. **Restrict API keys** in Google Cloud Console to specific domains/IPs
+6. **Rotate keys regularly** (every 6-12 months)
+7. **Use different keys** for development vs production
+8. **Check .gitignore** before committing
+9. **Set proper file permissions** (600 for config files)
 
 ## Deployment
 

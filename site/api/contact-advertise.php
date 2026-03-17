@@ -51,24 +51,49 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 $name    = preg_replace('/[\r\n]/', '', $name);
 $email   = preg_replace('/[\r\n]/', '', $email);
 
-$to      = 'ads@clickforcharity.net';
-$subject = 'Advertising enquiry from ' . $name;
-$body    = "Name: $name\nEmail: $email\n\nMessage:\n$message";
-$headers = "From: noreply@clickforcharity.net\r\n"
-         . "Reply-To: $email\r\n"
-         . "X-Mailer: PHP/" . phpversion();
+// Use PHPMailer for SMTP
+require_once __DIR__ . '/../lib/PHPMailer/PHPMailer.php';
+require_once __DIR__ . '/../lib/PHPMailer/SMTP.php';
+require_once __DIR__ . '/../lib/PHPMailer/Exception.php';
 
-// Log the attempt
-error_log("[" . date('Y-m-d H:i:s') . "] Attempting to send email to: $to, from: $email");
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
 
-$mailResult = mail($to, $subject, $body, $headers);
+$mail = new PHPMailer(true);
 
-if ($mailResult) {
-    error_log("[" . date('Y-m-d H:i:s') . "] Email sent successfully to: $to");
+try {
+    // Load SMTP config from secure file outside web root
+    $smtpConfig = require '/var/www/clickforcharity.net/config/smtp-config.php';
+    
+    // Server settings
+    $mail->isSMTP();
+    $mail->Host       = $smtpConfig['host'];
+    $mail->SMTPAuth   = true;
+    $mail->Username   = $smtpConfig['username'];
+    $mail->Password   = $smtpConfig['password'];
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $mail->Port       = $smtpConfig['port'];
+    
+    // Recipients
+    $mail->setFrom('andy@clickforcharity.net', 'ClickForCharity Contact Form');
+    $mail->addAddress('ads@clickforcharity.net');
+    $mail->addReplyTo($email, $name);
+    
+    // Content
+    $mail->isHTML(false);
+    $mail->Subject = 'Advertising enquiry from ' . $name;
+    $mail->Body    = "Name: $name\nEmail: $email\n\nMessage:\n$message";
+    
+    // Log the attempt
+    error_log("[" . date('Y-m-d H:i:s') . "] Attempting to send email via SMTP to: ads@clickforcharity.net, from: $email");
+    
+    $mail->send();
+    
+    error_log("[" . date('Y-m-d H:i:s') . "] Email sent successfully via SMTP to: ads@clickforcharity.net");
     echo json_encode(['success' => true]);
-} else {
-    $lastError = error_get_last();
-    error_log("[" . date('Y-m-d H:i:s') . "] Email failed to send. Error: " . json_encode($lastError));
+    
+} catch (Exception $e) {
+    error_log("[" . date('Y-m-d H:i:s') . "] Email failed to send via SMTP. Error: {$mail->ErrorInfo}");
     http_response_code(500);
     echo json_encode(['success' => false, 'error' => 'Failed to send message. Please email us directly at ads@clickforcharity.net']);
 }

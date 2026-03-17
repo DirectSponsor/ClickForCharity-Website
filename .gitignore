@@ -36,3 +36,6 @@ node_modules/
 
 # Deploy script (keep local only)
 deploy.sh
+
+# SMTP credentials - never commit
+smtp-config.php
