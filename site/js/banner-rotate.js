@@ -6,7 +6,7 @@
     window.BannerRotateInitialized = true;
 
     const DESKTOP_BREAKPOINT = 768;
-    const ADS_API = '/api/get-banner-ads.php?type=desktop';
+    const ADS_API = '/api/sponsor-list.php?type=desktop';
 
     let currentAds = [];
     let currentSize = null;

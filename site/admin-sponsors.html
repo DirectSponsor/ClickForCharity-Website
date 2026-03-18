@@ -130,6 +130,11 @@
             vertical-align: middle;
         }
     </style>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
+    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
+    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="/favicons/site.webmanifest">
 </head>
 
 <body>
@@ -276,8 +281,8 @@
             const listEl = document.getElementById('all-ads-list');
             try {
                 const [dRes, fRes] = await Promise.all([
-                    fetch('/api/get-banner-ads.php?type=desktop'),
-                    fetch('/api/get-banner-ads.php?type=floating')
+                    fetch('/api/sponsor-list.php?type=desktop'),
+                    fetch('/api/sponsor-list.php?type=floating')
                 ]);
                 const dData = await dRes.json();
                 const fData = await fRes.json();
@@ -353,7 +358,7 @@
             if (!html) { showStatus(status, 'Please enter banner HTML', 'error'); return; }
 
             try {
-                const response = await fetch('/api/save-banner-ad.php', {
+                const response = await fetch('/api/sponsor-create.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ advertiser, position, slots, days, html })
@@ -378,7 +383,7 @@
         async function togglePauseAd(id) {
             const status = document.getElementById('list-status');
             try {
-                const response = await fetch('/api/toggle-banner-ad.php', {
+                const response = await fetch('/api/sponsor-toggle.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id })
@@ -400,7 +405,7 @@
             if (!confirm('Delete this banner ad?')) return;
             const status = document.getElementById('list-status');
             try {
-                const response = await fetch('/api/delete-banner-ad.php', {
+                const response = await fetch('/api/sponsor-delete.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ id })
@@ -489,7 +494,7 @@
             editFeedback.style.color = '#777';
 
             try {
-                const response = await fetch('/api/update-banner-ad.php', {
+                const response = await fetch('/api/sponsor-update.php', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatedBanner)
