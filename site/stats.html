@@ -100,6 +100,21 @@
         }
         .theme-toggle:hover { border-color: var(--accent); color: var(--text); }
 
+        /* ── Refresh button ── */
+        .refresh-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            padding: 0.35rem 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-family: inherit;
+            transition: border-color 0.15s;
+        }
+        .refresh-btn:hover { border-color: var(--accent); color: var(--text); }
+        .refresh-btn[hidden] { display: none; }
+
         /* ── Month picker row ── */
         .history-row {
             display: flex;
@@ -293,11 +308,6 @@
             font-size: 0.8rem;
         }
     </style>
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
-    <link rel="icon" type="image/svg+xml" href="/favicons/favicon.svg">
-    <link rel="apple-touch-icon" href="/favicons/apple-touch-icon.png">
-    <link rel="manifest" href="/favicons/site.webmanifest">
 </head>
 <body>
 <div class="wrap">
@@ -317,6 +327,8 @@
         <button class="btn" id="nextBtn">Next &#8594;</button>
         <span class="date-label" id="dateLabel"></span>
         <span class="loading" id="loading" hidden>Loading&#8230;</span>
+        <button class="refresh-btn" id="refreshBtn" hidden title="Re-parse the access log and update reports">&#8635; Refresh</button>
+        <span class="loading" id="refreshing" hidden>Refreshing&#8230;</span>
         <button class="theme-toggle" id="themeToggle" title="Toggle light/dark mode">&#9788; Light</button>
     </div>
 
@@ -366,9 +378,15 @@
 (function () {
     'use strict';
 
-    /* ── Config: edit these two lines per deployment ── */
-    var SITE_NAME = 'clickforcharity.net';          /* e.g. 'faucetlist.org'      */
-    var DATA_PATH = 'data/analytics';     /* relative to this HTML file */
+    /* ══════════════════════════════════════════════════════════════════════════
+       CONFIGURATION — Edit these values for each deployment
+       ══════════════════════════════════════════════════════════════════════════ */
+    var CONFIG = {
+        SITE_NAME: 'clickforcharity.net',  /* Display name in header */
+        DATA_PATH: 'data/analytics',       /* Path to JSON reports relative to this file */
+        ENABLE_REFRESH: false              /* Show refresh button (requires refresh.php) */
+    };
+    /* ══════════════════════════════════════════════════════════════════════════ */
 
     /* ── State ── */
     var period  = 'month';
@@ -377,8 +395,13 @@
     var allDates = [];   /* populated from index.json */
 
     /* ── Boot ── */
-    document.getElementById('siteTitle').textContent = SITE_NAME + ' — Analytics';
-    document.title = SITE_NAME + ' Analytics';
+    document.getElementById('siteTitle').textContent = CONFIG.SITE_NAME + ' — Analytics';
+    document.title = CONFIG.SITE_NAME + ' Analytics';
+
+    /* Show refresh button if enabled */
+    if (CONFIG.ENABLE_REFRESH) {
+        document.getElementById('refreshBtn').hidden = false;
+    }
 
     /* ── Theme ── */
     var root = document.documentElement;
@@ -396,6 +419,31 @@
 
     loadIndex().then(function () {
         load();
+    });
+
+    /* ── Refresh button ── */
+    document.getElementById('refreshBtn').addEventListener('click', function () {
+        var btn  = this;
+        var spin = document.getElementById('refreshing');
+        btn.disabled = true;
+        spin.hidden  = false;
+
+        fetch('refresh.php')
+            .then(function (r) { return r.json(); })
+            .then(function () {
+                cache = {};          /* clear cached reports so fresh ones load */
+                return loadIndex();  /* rebuild month picker from new index.json */
+            })
+            .then(function () {
+                load();             /* reload current view */
+            })
+            .catch(function (e) {
+                alert('Refresh failed: ' + e.message);
+            })
+            .finally(function () {
+                btn.disabled = false;
+                spin.hidden  = true;
+            });
     });
 
     /* ── Event listeners ── */
@@ -440,7 +488,7 @@
 
     /* ── Load index.json ── */
     function loadIndex() {
-        return fetch(DATA_PATH + '/index.json')
+        return fetch(CONFIG.DATA_PATH + '/index.json')
             .then(function (r) { return r.ok ? r.json() : []; })
             .then(function (dates) {
                 allDates = Array.isArray(dates) ? dates : [];
@@ -512,32 +560,10 @@
     }
 
     function fetchReport(dateStr) {
-        return fetch(DATA_PATH + '/report-' + dateStr + '.json')
-            .then(function (r) {
-                if (r.ok) return r.json();
-                /* Today's report not generated yet — try yesterday */
-                if (dateStr === today()) {
-                    var prev = shiftDateStr(dateStr, -1);
-                    return fetch(DATA_PATH + '/report-' + prev + '.json')
-                        .then(function (r2) { return r2.ok ? r2.json() : null; })
-                        .then(function (data) {
-                            if (data) cache[prev] = data;
-                            return null;
-                        });
-                }
-                return null;
-            })
+        return fetch(CONFIG.DATA_PATH + '/report-' + dateStr + '.json')
+            .then(function (r) { return r.ok ? r.json() : null; })
             .then(function (data) { if (data) cache[dateStr] = data; })
             .catch(function () {});
-    }
-
-    function shiftDateStr(dateStr, dir) {
-        var dt = new Date(dateStr + 'T00:00:00');
-        dt.setDate(dt.getDate() + dir);
-        var y = dt.getFullYear();
-        var m = String(dt.getMonth() + 1).padStart(2, '0');
-        var day = String(dt.getDate()).padStart(2, '0');
-        return y + '-' + m + '-' + day;
     }
 
     function render(dates) {
@@ -616,12 +642,16 @@
         }).join('');
     }
 
-    /* ── Date helpers ── */
+    /* ── Date helpers (using local timezone) ── */
     function today() {
         var d = new Date();
-        var y = d.getFullYear();
-        var m = String(d.getMonth() + 1).padStart(2, '0');
-        var day = String(d.getDate()).padStart(2, '0');
+        return localDateStr(d);
+    }
+
+    function localDateStr(dt) {
+        var y   = dt.getFullYear();
+        var m   = String(dt.getMonth() + 1).padStart(2, '0');
+        var day = String(dt.getDate()).padStart(2, '0');
         return y + '-' + m + '-' + day;
     }
 
@@ -652,13 +682,6 @@
         if (period === 'week')  dt.setDate(dt.getDate() + dir * 7);
         if (period === 'month') dt.setMonth(dt.getMonth() + dir);
         return localDateStr(dt);
-    }
-
-    function localDateStr(dt) {
-        var y = dt.getFullYear();
-        var m = String(dt.getMonth() + 1).padStart(2, '0');
-        var day = String(dt.getDate()).padStart(2, '0');
-        return y + '-' + m + '-' + day;
     }
 
     function datesInRange(start, end) {
