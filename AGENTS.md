@@ -74,3 +74,15 @@ ssh clickforcharity
 - `deploy.sh` — handles deployment with permissions and git push
 - `site/api/` — all PHP API endpoints
 - `AGENTS.md` — this file (agent guide)
+
+---
+
+## Changelog — AI Agent Reminder
+
+After completing **significant work** on this project, update the public changelog.
+
+- **File**: `site/changelog.html` — prepend a new `<li>` inside the `<!-- EMBED:changelog -->` block
+- **Instructions**: `CHANGELOG-INSTRUCTIONS.md` — full format, categories, and rules
+- **Format**: `<li><strong>YYYY-MM-DD</strong> · <strong>ClickForCharity</strong> — <span class="feature">Category</span> One-line plain-English summary.</li>`
+- **When**: new features, bug fixes with user impact, task/ad system changes, deployment changes
+- **Skip**: typos, refactors, style tweaks, WIP
