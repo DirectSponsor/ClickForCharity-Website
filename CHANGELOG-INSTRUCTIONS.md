@@ -52,6 +52,10 @@ Prepend a new entry **at the top** of the `<!-- EMBED:changelog -->` block:
 4. Use today's date in `YYYY-MM-DD` format
 5. Keep the entry to a single line
 6. Write for non-technical readers (what changed, not how)
+7. **Deploy** — run the deploy script so the live site is updated:
+   ```bash
+   bash /home/andy/work/projects/clickforcharity.net/deploy.sh
+   ```
 
 ### Example Entry
 
@@ -85,6 +89,7 @@ Or just use plain text if you prefer.
 3. **Never remove old entries** — keep the full history
 4. **One line only** — keep it concise
 5. **Non-technical language** — write for users, not developers
+6. **Pagination** — if the list exceeds 50 entries, paginate (show 50 per page, most recent first). Not needed yet but worth implementing before the page gets unwieldy.
 
 ---
 
@@ -107,6 +112,10 @@ The `<!-- EMBED:changelog -->` / `<!-- /EMBED:changelog -->` comment tags exist 
 - `https://clickforcharity.net/changelog.html` — ClickForCharity
 
 **To add more sites:** just ensure their `changelog.html` uses the same `<!-- EMBED:changelog -->` block and `<strong>YYYY-MM-DD</strong> · <strong>SiteName</strong>` entry format.
+
+**Meta-changelog design notes (for when this gets built):**
+- Navigation: show link buttons at the top of the page (one per site) rather than linking the site name inline on every entry — fewer links, less visual noise
+- Pagination: show 50 entries per page to avoid loading a huge list on a single page
 
 ---
 

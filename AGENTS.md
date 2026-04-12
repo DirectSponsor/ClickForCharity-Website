@@ -86,3 +86,4 @@ After completing **significant work** on this project, update the public changel
 - **Format**: `<li><strong>YYYY-MM-DD</strong> · <strong>ClickForCharity</strong> — <span class="feature">Category</span> One-line plain-English summary.</li>`
 - **When**: new features, bug fixes with user impact, task/ad system changes, deployment changes
 - **Skip**: typos, refactors, style tweaks, WIP
+- **Then deploy**: `bash /home/andy/work/projects/clickforcharity.net/deploy.sh`
