@@ -118,10 +118,22 @@ function credit_logged_in($userId, $coins) {
     zerads_log("  auth_server: {$status}");
 }
 
+function cleanup_old_anon_files() {
+    if (!is_dir(ANON_DIR)) return;
+    $cutoff = time() - (7 * 24 * 60 * 60); // 7 days
+    foreach (glob(ANON_DIR . '/anon_*.txt') as $file) {
+        if (filemtime($file) < $cutoff) {
+            @unlink($file);
+        }
+    }
+}
+
 function credit_anon($userId, $coins) {
     if (!is_dir(ANON_DIR)) {
         mkdir(ANON_DIR, 0750, true);
     }
+
+    cleanup_old_anon_files();
 
     $file = ANON_DIR . '/' . $userId . '.txt';
 
