@@ -100,6 +100,21 @@
             </header>
 
             <section class="task-list-container">
+                <h2>Sponsored Ads <small style="font-size:0.65em;font-weight:normal;color:#666;">(via ZerAds)</small></h2>
+                <div class="task-item" id="zerads-task">
+                    <div class="info">
+                        <h4>View Ads on ZerAds <span class="task-timer" id="zerads-status"></span></h4>
+                        <p class="task-instructions">Click the button to open the ZerAds ad viewer. Watch the ad for the required time, then return here — your coins will appear automatically.</p>
+                        <p class="task-meta" id="zerads-reward-text">Reward: 5 coins per ad</p>
+                    </div>
+                    <div class="actions">
+                        <a id="zerads-link" href="#" target="_blank" rel="noopener" class="btn-visit">View Ads</a>
+                    </div>
+                </div>
+                <div id="zerads-notice" style="display:none;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:6px;padding:10px 14px;margin-top:8px;font-size:0.9em;"></div>
+            </section>
+
+            <section class="task-list-container" style="margin-top:1.5rem;">
                 <h2>Available Tasks</h2>
                 <div id="task-list" class="task-list">
                     <!-- Ads will be dynamically inserted here by JavaScript -->
@@ -113,6 +128,74 @@
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
     <script src="js/app.js"></script>
+    <script>
+    (function () {
+        var ZERADS_REF = '11110';
+        var ZERADS_BASE = 'https://zerads.com/ptc.php';
+
+        function getOrCreateAnonId() {
+            var key = 'zerads_anon_id';
+            var id = localStorage.getItem(key);
+            if (!id) {
+                var arr = new Uint8Array(6);
+                crypto.getRandomValues(arr);
+                id = 'anon_' + Array.from(arr).map(function (b) {
+                    return b.toString(16).padStart(2, '0');
+                }).join('');
+                localStorage.setItem(key, id);
+            }
+            return id;
+        }
+
+        function getZeradsUserId() {
+            if (window.UnifiedBalance && window.UnifiedBalance.isLoggedIn) {
+                var combined = window.UnifiedBalance.getCombinedUserIdFromToken();
+                if (combined && combined !== 'guest') return combined;
+            }
+            return getOrCreateAnonId();
+        }
+
+        function buildZeradsUrl(userId) {
+            return ZERADS_BASE + '?ref=' + ZERADS_REF + '&user=' + encodeURIComponent(userId);
+        }
+
+        function showNotice(msg) {
+            var el = document.getElementById('zerads-notice');
+            if (!el) return;
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        async function checkAnonCredits(anonId) {
+            try {
+                var resp = await fetch('/api/get-anon-zerads.php?id=' + encodeURIComponent(anonId));
+                var data = await resp.json();
+                if (data.coins > 0 && window.UnifiedBalance) {
+                    await window.UnifiedBalance.addGuestBalance(data.coins, 'zerads_ptc', 'ZerAds ad view');
+                    showNotice('+ ' + data.coins + ' tokens added from ZerAds!');
+                }
+            } catch (e) {
+                // Silent fail — not critical
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var userId = getZeradsUserId();
+            var link = document.getElementById('zerads-link');
+            if (link) {
+                link.href = buildZeradsUrl(userId);
+            }
+
+            // Poll for pending anon credits once on focus-return
+            if (userId.indexOf('anon_') === 0) {
+                window.addEventListener('focus', function onFocus() {
+                    window.removeEventListener('focus', onFocus);
+                    checkAnonCredits(userId);
+                });
+            }
+        });
+    }());
+    </script>
     <!-- include start footer.incl -->
     <footer class="footer-meta" style="text-align:center;padding:1rem 0 280px 0;font-size:0.9rem;border-top:1px solid #e0e0e0;margin-top:2rem;">
         <div style="display:inline-block;margin:0 1rem 0.5rem 0;">

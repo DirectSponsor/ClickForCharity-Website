@@ -36,6 +36,20 @@ This file documents important system information for AI agents working on ClickF
   - Updated via `build.sh` to maintain consistency across pages
 - **Build Script**: `/home/andy/work/projects/clickforcharity.net/build.sh`
 
+## Monitoring
+
+The PTC page is monitored by an automated checker in a **separate repo**:
+
+- **Local path**: `~/work/monitors/`
+- **Script**: `check_links.py` — uses Playwright (headless Chromium) to load `ptc.html`, waits for `#task-list a.btn-visit` to render, then checks 2 random task links
+- **Workflow**: `.github/workflows/check_links.yml` — runs daily at 9 AM UTC via GitHub Actions
+- **Alerts**: Telegram bot (credentials in GitHub Secrets: `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`)
+- **Selector**: `#task-list a.btn-visit` — if this selector doesn't match, the script alerts that tasks failed to render
+
+**Important for debugging**: If the checker reports tasks not rendering, the issue is likely in the script/selector rather than the page itself. The script looks specifically for `a.btn-visit` inside `#task-list` — check that the PTC page still uses those exact IDs/classes before making page changes.
+
+**Excluded domains** (paid rotation links, skipped by checker): `rotate5url.com`, `rotate4all`
+
 ## Important Rules
 
 1. **Data Protection**: User data in `/var/clickforcharity-data/` must never be exposed or accidentally committed
