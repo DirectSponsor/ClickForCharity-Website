@@ -104,6 +104,8 @@ The callback writes pending coins to a flat file:
 ```
 When the user returns to `ptc.html` after viewing an ad, the page focuses and `get-anon-zerads.php` is called. It reads the file, returns the coin count, and deletes the file. The frontend then adds those coins to the guest balance in localStorage.
 
+**Anon file expiry:** Files older than 7 days are automatically deleted by `zeradsptc.php` whenever a new anonymous callback comes in. No cron job needed. If an anonymous user never returns to claim their coins within 7 days, the pending balance is forfeited.
+
 ## Logging
 
 All callbacks are logged to:
