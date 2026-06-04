@@ -2,7 +2,7 @@
     // Configuration
     const STORAGE_KEY_TIMER = 'clickforcharity_floating_closed_ts';
     const STORAGE_KEY_ROTATION = 'clickforcharity_floating_rotation_index';
-    const HIDE_DURATION = 10 * 60 * 1000; // 10 minutes
+    const HIDE_DURATION = 60 * 60 * 1000; // 1 hour
     const ADS_API = '/api/sponsor-list.php?type=floating';
 
     async function loadAds() {
@@ -47,21 +47,29 @@
             contentContainer.innerHTML = adContent;
         }
 
-        // Show Ad
-        adContainer.style.display = 'block';
+        const showAd = () => {
+            adContainer.style.display = 'block';
 
-        // Dynamic Padding
-        const updatePadding = () => {
-            const height = adContainer.offsetHeight;
-            const footer = document.querySelector('footer');
-            if (footer && height > 0) {
-                footer.style.paddingBottom = (height + 30) + 'px';
-            }
+            // Dynamic Padding
+            const updatePadding = () => {
+                const height = adContainer.offsetHeight;
+                const footer = document.querySelector('footer');
+                if (footer && height > 0) {
+                    footer.style.paddingBottom = (height + 30) + 'px';
+                }
+            };
+
+            requestAnimationFrame(updatePadding);
+            setTimeout(updatePadding, 500);
+            setTimeout(updatePadding, 2000);
         };
 
-        requestAnimationFrame(updatePadding);
-        setTimeout(updatePadding, 500);
-        setTimeout(updatePadding, 2000);
+        // Delay on mobile so content is visible on first load
+        if (window.innerWidth <= 768) {
+            setTimeout(showAd, 20000);
+        } else {
+            showAd();
+        }
     }
 
     window.closeFloatingAd = function () {
