@@ -426,6 +426,7 @@
                 if (response.ok && result.success) {
                     editFeedback.textContent = '✓ Saved!';
                     editFeedback.style.color = '#27ae60';
+                    submitButton.disabled = false;
                     setTimeout(() => {
                         closeEditModal();
                         loadTasks(); // Refresh the task list
