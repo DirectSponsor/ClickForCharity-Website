@@ -1883,7 +1883,7 @@ body {
 
 .banner-ad-close {
     position: absolute;
-    top: -10px;
+    bottom: -10px;
     right: -10px;
     width: 22px;
     height: 22px;
