@@ -78,7 +78,7 @@ ssh clickforcharity
 |------|---------|
 | `/home/andy/work/projects/clickforcharity.net/site/` | Web root (HTML, PHP, assets) |
 | `/home/andy/work/projects/clickforcharity.net/site/api/` | PHP API endpoints |
-| `/home/andy/work/projects/clickforcharity.net/site/includes/` | Reusable HTML includes |
+| `/home/andy/work/projects/clickforcharity.net/includes/` | Reusable HTML includes (source for build.sh, NOT inside site/) |
 | `/home/andy/work/projects/clickforcharity.net/docs/` | Documentation |
 | `/var/clickforcharity-data/` | Live user data (not in repo) |
 

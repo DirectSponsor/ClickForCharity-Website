@@ -1874,10 +1874,42 @@ body {
     margin-bottom: 0.75rem;
 }
 
+#ad-banner-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 0 0.75rem 0;
+}
+
+.banner-ad-close {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 22px;
+    height: 22px;
+    background: #fff;
+    border: none;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    color: #333;
+    font-size: 15px;
+    line-height: 22px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 10;
+    padding: 0;
+    transition: transform 0.2s, color 0.2s;
+}
+
+.banner-ad-close:hover {
+    color: #e74c3c;
+    transform: scale(1.1);
+}
+
 #ad-banner {
     display: block;
     width: fit-content;
-    margin: 0 0 0.75rem 0;
+    margin: 0;
     /* Left-aligned with bottom spacing */
     background: white;
     padding: 1px;

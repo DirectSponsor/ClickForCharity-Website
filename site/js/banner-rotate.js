@@ -7,6 +7,8 @@
 
     const DESKTOP_BREAKPOINT = 768;
     const ADS_API = '/api/sponsor-list.php?type=desktop';
+    const STORAGE_KEY_DISMISSED = 'clickforcharity_banner_closed_ts';
+    const HIDE_DURATION = 60 * 60 * 1000; // 1 hour
 
     let currentAds = [];
     let currentSize = null;
@@ -59,8 +61,16 @@
 
     // Display the current ad
     async function displayAd() {
+        const wrap = document.getElementById('ad-banner-wrap');
         const container = document.getElementById('ad-banner');
         if (!container) return;
+
+        // Check if dismissed
+        const closedTs = localStorage.getItem(STORAGE_KEY_DISMISSED);
+        if (closedTs && (Date.now() - parseInt(closedTs, 10)) < HIDE_DURATION) {
+            if (wrap) wrap.style.display = 'none';
+            return;
+        }
 
         const ads = await loadAds();
         if (ads.length === 0) {
@@ -99,6 +109,12 @@
             container.innerHTML = adHtml;
         }
     }
+
+    window.closeBannerAd = function () {
+        const wrap = document.getElementById('ad-banner-wrap');
+        if (wrap) wrap.style.display = 'none';
+        localStorage.setItem(STORAGE_KEY_DISMISSED, Date.now().toString());
+    };
 
     // Initialize on DOM load
     document.addEventListener('DOMContentLoaded', function () {

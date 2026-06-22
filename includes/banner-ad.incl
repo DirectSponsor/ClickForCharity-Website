@@ -1,2 +1,5 @@
-<div id="ad-banner" style="margin:0 0 0.3em 0;"></div>
+<div id="ad-banner-wrap">
+<button class="banner-ad-close" onclick="closeBannerAd()" title="Hide ads for 1 hour">×</button>
+<div id="ad-banner"></div>
+</div>
 <script src="js/banner-rotate.js"></script>
