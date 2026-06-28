@@ -1,5 +1,17 @@
+/* ================================================
+   VARIABLES & RESET
+   ================================================ */
 :root {
     box-sizing: border-box;
+    --primary-bg:   #f0f2f5;
+    --sidebar-bg:   #ffffff;
+    --text-color:   #333;
+    --text-light:   #777;
+    --border-color: #e0e0e0;
+    --accent-color: #007bff;
+    --accent-hover: #0056b3;
+    --task-bg:      #ffffff;
+    --task-done-bg: #f9f9f9;
 }
 
 *,
@@ -8,18 +20,9 @@
     box-sizing: inherit;
 }
 
-:root {
-    --primary-bg: #f0f2f5;
-    --sidebar-bg: #ffffff;
-    --text-color: #333;
-    --text-light: #777;
-    --border-color: #e0e0e0;
-    --accent-color: #007bff;
-    --accent-hover: #0056b3;
-    --task-bg: #ffffff;
-    --task-done-bg: #f9f9f9;
-}
-
+/* ================================================
+   BASE
+   ================================================ */
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     margin: 0;
@@ -28,6 +31,47 @@ body {
     font-size: 14px;
 }
 
+/* ================================================
+   LAYOUT
+   ================================================ */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 100vh;
+}
+
+.sidebar {
+    width: 220px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex: 0 0 220px;
+    min-width: 180px;
+}
+
+.main-content {
+    flex: 1 1 360px;
+    min-width: 0;
+    width: 100%;
+    padding: 0 40px 20px 40px;
+}
+
+.main-content.landing {
+    background-image: url('../images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--text-color);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ================================================
+   NAVIGATION & SIDEBAR COMPONENTS
+   ================================================ */
 .menu-toggle {
     display: none;
     align-items: center;
@@ -46,23 +90,6 @@ body {
 
 .menu-overlay {
     display: none;
-}
-
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    min-height: 100vh;
-}
-
-.sidebar {
-    width: 220px;
-    background-color: var(--sidebar-bg);
-    border-right: 1px solid var(--border-color);
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    flex: 0 0 220px;
-    min-width: 180px;
 }
 
 .sidebar .logo {
@@ -119,7 +146,6 @@ body {
     margin: 0;
 }
 
-/* Login Button */
 .btn-login {
     width: 100%;
     padding: 10px 15px;
@@ -141,7 +167,6 @@ body {
     background: var(--accent-hover);
 }
 
-/* User Menu */
 .user-menu {
     width: 100%;
 }
@@ -194,7 +219,6 @@ body {
     transition: transform 0.2s;
 }
 
-/* User Dropdown (pops upward) */
 .user-dropdown {
     position: absolute;
     bottom: 100%;
@@ -229,29 +253,9 @@ body {
     background: #f5f5f5;
 }
 
-
-.main-content {
-    flex: 1 1 360px;
-    min-width: 0;
-    width: 100%;
-    padding: 0 40px 20px 40px;
-    /* No top padding - ad sits at very top */
-}
-
-.main-content.landing {
-    /* Background image without gradient overlay */
-    background-image: url('../images/hero-bg.jpg');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    color: var(--text-color);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 0 40px 20px 40px;
-    /* No top padding - ad sits at very top */
-}
-
+/* ================================================
+   LANDING PAGE
+   ================================================ */
 .landing .hero {
     max-width: 540px;
     background: rgba(255, 255, 255, 0.9);
@@ -297,35 +301,6 @@ body {
     flex-wrap: wrap;
 }
 
-.btn {
-    display: inline-block;
-    padding: 10px 18px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.btn.primary {
-    background-color: var(--accent-color);
-    color: #ffffff;
-}
-
-.btn.primary:hover,
-.btn.primary:focus {
-    background-color: var(--accent-hover);
-}
-
-.btn.secondary {
-    background-color: transparent;
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
-}
-
-.btn.secondary:hover,
-.btn.secondary:focus {
-    background-color: rgba(0, 123, 255, 0.08);
-}
-
 .landing .highlights {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -353,6 +328,243 @@ body {
     color: #004a99;
 }
 
+/* ================================================
+   BUTTONS
+   ================================================ */
+/* Base — used with modifier classes in admin-tasks form */
+.btn {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+}
+
+/* Primary blue — both .btn.primary and standalone .btn-primary */
+.btn.primary,
+.btn-primary {
+    background-color: var(--accent-color);
+    color: white;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn.primary:hover,
+.btn.primary:focus,
+.btn-primary:hover,
+.btn-primary:focus {
+    background-color: var(--accent-hover);
+    color: white;
+}
+
+/* Outline secondary — used in admin-tasks form */
+.btn.secondary {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+}
+
+.btn.secondary:hover,
+.btn.secondary:focus {
+    background-color: rgba(0, 123, 255, 0.08);
+}
+
+/* Filled gray — used in admin dashboard "View Live" links */
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+    color: white;
+}
+
+/* Disabled */
+.btn-disabled {
+    background: #ccc;
+    color: #666;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: not-allowed;
+    display: inline-block;
+}
+
+/* Admin delete */
+.btn-delete-admin {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.btn-delete-admin:hover {
+    background-color: #c0392b;
+}
+
+/* Task action buttons — shared base */
+.btn-visit,
+.btn-complete,
+.btn-skip,
+.btn-unskip,
+.btn-skip-compact {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-visit {
+    background-color: var(--accent-color);
+    color: white;
+}
+
+.btn-visit:hover:not(:disabled) {
+    background-color: var(--accent-hover);
+    color: white;
+}
+
+.btn-visit:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-complete {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-complete:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+.btn-complete:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
+
+.btn-skip,
+.btn-skip-compact {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-skip:hover,
+.btn-skip-compact:hover {
+    background-color: #5a6268;
+}
+
+.btn-unskip {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-unskip:hover {
+    background-color: #138496;
+}
+
+/* ================================================
+   BADGES
+   ================================================ */
+.platform-badge,
+.login-badge,
+.completed-badge,
+.expiry-badge,
+.reward-badge {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 600;
+}
+
+/* Blue platform chip on task cards */
+.platform-badge {
+    background-color: #e7f3ff;
+    color: #004085;
+    text-transform: capitalize;
+    margin-right: 6px;
+}
+
+/* Yellow warning chip on login-required tasks */
+.login-badge {
+    background-color: #fff3cd;
+    color: #856404;
+    margin-right: 6px;
+}
+
+/* Green "25 coins" chip on task cards */
+.reward-badge {
+    background-color: #d4edda;
+    color: #155724;
+    margin-left: 6px;
+}
+
+/* Yellow override for the platform-section heading badge */
+.platform-section .reward-badge {
+    font-size: 13px;
+    background-color: #ffc107;
+    color: #000;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin-left: 0;
+}
+
+/* Green "Completed" chip on task cards */
+.completed-badge {
+    background-color: #28a745;
+    color: white;
+    margin-left: 6px;
+}
+
+/* Grey "X days left" chip on task cards */
+.expiry-badge {
+    background-color: #f0f0f0;
+    color: #555;
+    margin-left: 6px;
+}
+
+/* Green "Rewarded" pip on platform checkbox */
+.rewarded-badge {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: #28a745;
+    color: white;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+}
+
+/* ================================================
+   DASHBOARD & PTC TASK ITEMS  (ptc.html / app.js)
+   ================================================ */
 .dashboard-header {
     display: flex;
     justify-content: space-between;
@@ -370,6 +582,12 @@ body {
     margin-bottom: 20px;
 }
 
+.task-list-container .empty-state {
+    color: var(--text-light);
+    font-size: 13px;
+    text-align: center;
+}
+
 .task-item {
     background-color: var(--task-bg);
     border: 1px solid var(--border-color);
@@ -385,6 +603,11 @@ body {
 .task-item.done {
     background-color: var(--task-done-bg);
     opacity: 0.7;
+}
+
+.task-item.viewing {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
 }
 
 .task-item .info {
@@ -420,11 +643,6 @@ body {
     color: var(--accent-color);
 }
 
-.task-item.viewing {
-    border-color: var(--accent-color);
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.15);
-}
-
 .task-item.viewing .task-status {
     color: var(--accent-hover);
 }
@@ -433,177 +651,7 @@ body {
     color: #368038;
 }
 
-.task-list-container .empty-state {
-    color: var(--text-light);
-    font-size: 13px;
-    text-align: center;
-}
-
-.admin-form {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 15px 45px rgba(30, 52, 74, 0.12);
-    max-width: 640px;
-}
-
-.admin-form h1 {
-    margin-top: 0;
-    margin-bottom: 10px;
-}
-
-.admin-form p.description {
-    color: var(--text-light);
-    font-size: 13px;
-    margin-top: 0;
-}
-
-.admin-form .field {
-    margin-bottom: 20px;
-}
-
-.admin-form label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 6px;
-}
-
-.admin-form input,
-.admin-form textarea {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    font-size: 14px;
-    font-family: inherit;
-    resize: vertical;
-}
-
-.admin-form textarea {
-    min-height: 120px;
-}
-
-.admin-form .section-nav {
-    font-size: 14px;
-    margin: 10px 0 30px 0;
-}
-
-.admin-form .section-nav a {
-    color: var(--accent-color);
-    text-decoration: none;
-}
-
-.admin-form .section-nav a:hover {
-    text-decoration: underline;
-}
-
-.task-management-list {
-    margin-top: 20px;
-}
-
-.admin-task-item {
-    background: #ffffff;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    margin-bottom: 16px;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
-}
-
-.admin-task-info {
-    flex: 1;
-}
-
-.admin-task-info h3 {
-    margin: 0 0 8px 0;
-    font-size: 18px;
-    color: var(--text-color);
-}
-
-.admin-task-meta {
-    font-size: 13px;
-    color: #666;
-    margin: 4px 0;
-}
-
-.admin-task-instructions {
-    margin: 8px 0;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.admin-task-url {
-    margin: 4px 0 0 0;
-    font-size: 13px;
-}
-
-.admin-task-url a {
-    color: var(--accent-color);
-    word-break: break-all;
-}
-
-.admin-task-actions {
-    flex-shrink: 0;
-}
-
-.btn-delete-admin {
-    background-color: #e74c3c;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.btn-delete-admin:hover {
-    background-color: #c0392b;
-}
-
-.loading-state,
-.empty-state,
-.error-state {
-    padding: 20px;
-    text-align: center;
-    color: #666;
-    font-style: italic;
-}
-
-.error-state {
-    color: #c0392b;
-}
-
-.admin-form .form-actions {
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    flex-wrap: wrap;
-}
-
-.admin-form .form-actions .btn.secondary[hidden] {
-    display: none;
-}
-
-.admin-form .output-area {
-    margin-top: 24px;
-    background: var(--task-done-bg);
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    padding: 16px;
-    font-family: 'Courier New', monospace;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 13px;
-}
-
-.admin-form .output-area.empty {
-    color: var(--text-light);
-}
-
+/* PTC task buttons (scoped — different layout from task card buttons) */
 .task-item .actions button,
 .task-item .actions a.btn-visit {
     display: inline-block;
@@ -619,7 +667,7 @@ body {
 
 .task-item .actions .btn-visit {
     background-color: var(--accent-color);
-    color: #ffffff;
+    color: white;
 }
 
 .task-item .actions .btn-visit:hover {
@@ -628,7 +676,7 @@ body {
 
 .task-item .actions .btn-delete {
     background-color: #e74c3c;
-    color: #ffffff;
+    color: white;
     font-size: 12px;
     padding: 6px 10px;
 }
@@ -648,181 +696,9 @@ body {
     background-color: #ccc;
     cursor: not-allowed;
     pointer-events: none;
-    /* Disable clicks on viewed links */
 }
 
-@media (max-width: 640px) {
-    body {
-        font-size: 15px;
-    }
-
-    .menu-toggle {
-        display: inline-flex;
-    }
-
-    .container {
-        flex-direction: column;
-    }
-
-    .sidebar {
-        position: fixed;
-        inset: 0;
-        width: 78vw;
-        max-width: 320px;
-        transform: translateX(-100%);
-        transition: transform 0.25s ease;
-        box-shadow: 15px 0 35px rgba(0, 0, 0, 0.25);
-        z-index: 3;
-    }
-
-    body.menu-open .sidebar {
-        transform: translateX(0);
-    }
-
-    body.menu-open .menu-overlay {
-        display: block;
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.35);
-        z-index: 2;
-    }
-
-    .main-content {
-        padding: 0 20px 20px 20px;
-        /* No top padding on mobile either */
-    }
-
-    .main-content.landing {
-        /* Mobile: no gradient needed */
-        background-position: center;
-        padding: 0 20px 15px 20px;
-        /* No top padding on mobile either */
-        gap: 15px;
-    }
-
-    .landing .hero h1 {
-        font-size: 26px;
-        flex-wrap: wrap;
-    }
-
-    .landing .hero h1 .btc-symbol {
-        font-size: 30px;
-    }
-
-    .task-item {
-        padding: 16px;
-    }
-
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-    }
-
-    .task-item .actions {
-        width: 100%;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-}
-
-/* Coming Soon Sections */
-.coming-soon-section {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.coming-soon-content {
-    background: var(--task-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 30px;
-}
-
-.coming-soon-content h2 {
-    margin-top: 0;
-    color: var(--accent-color);
-    font-size: 28px;
-}
-
-.coming-soon-content>p {
-    font-size: 16px;
-    color: var(--text-light);
-    margin-bottom: 30px;
-}
-
-.feature-preview,
-.meanwhile,
-.notify-box {
-    margin: 25px 0;
-    padding: 20px;
-    background: var(--primary-bg);
-    border-radius: 6px;
-}
-
-.feature-preview h3,
-.meanwhile h3 {
-    margin-top: 0;
-    font-size: 18px;
-    color: var(--text-color);
-}
-
-.feature-preview ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 15px 0 0 0;
-}
-
-.feature-preview li {
-    padding: 8px 0;
-    font-size: 15px;
-}
-
-.meanwhile p {
-    margin: 10px 0 0 0;
-    font-size: 15px;
-}
-
-.notify-box {
-    background: #e3f2fd;
-    border-left: 4px solid var(--accent-color);
-    text-align: center;
-}
-
-.notify-box p {
-    margin: 8px 0;
-    font-size: 15px;
-}
-
-.inline-link {
-    color: var(--accent-color);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.inline-link:hover {
-    text-decoration: underline;
-}
-
-@media (max-width: 640px) {
-    .coming-soon-content {
-        padding: 20px;
-    }
-
-    .coming-soon-content h2 {
-        font-size: 24px;
-    }
-
-    .feature-preview,
-    .meanwhile,
-    .notify-box {
-        padding: 15px;
-    }
-}
-
-/* PTC Task Animation */
+/* PTC task animation */
 .task-item.moving-to-bottom {
     transition: transform 0.5s ease-in-out, opacity 0.3s ease-in-out;
 }
@@ -837,651 +713,9 @@ body {
     cursor: not-allowed;
 }
 
-/* Simple Tasks Styles */
-.simple-task {
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.simple-task:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.task-content {
-    width: 100%;
-    padding: 0;
-    /* Remove padding from this wrapper div */
-}
-
-.task-header {
-    padding: 0;
-    /* Match PTC page .info div */
-}
-
-.task-short-description {
-    font-size: 13px;
-    color: var(--text-color);
-    margin: 5px 0 !important;
-    line-height: 1.4;
-}
-
-.task-details {
-    border-top: 1px solid var(--border-color);
-    padding: 0;
-    /* Match PTC page .actions div */
-    background-color: #fafafa;
-    transition: all 0.3s ease;
-}
-
-.task-details.expanded {
-    background-color: #f8f9fa;
-}
-
-.task-instructions pre {
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    padding: 0.5em;
-    margin: 8px 0;
-    font-size: 13px;
-    line-height: 1.4;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: inherit;
-}
-
-.task-actions {
-    margin-top: 0.5em;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.complete-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: auto;
-}
-
-.complete-section .task-status {
-    font-weight: bold;
-    font-size: 14px;
-    color: #28a745;
-    margin-top: 5px;
-    text-align: center;
-}
-
-.task-actions .btn-visit {
-    display: inline-block;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    text-decoration: none;
-    text-align: center;
-    background-color: var(--accent-color);
-    color: #ffffff;
-    margin-left: auto;
-    /* Push to the right */
-}
-
-.task-actions .btn-visit:hover {
-    background-color: var(--accent-hover);
-}
-
-.task-actions .btn-visit:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-.btn-skip {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-skip:hover {
-    background-color: #5a6268;
-}
-
-.btn-complete {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-complete:hover {
-    background-color: #218838;
-}
-
-.btn-complete:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-}
-
-/* Admin Dashboard Styles */
-.admin-dashboard {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.admin-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 24px;
-    margin: 32px 0;
-}
-
-.admin-card {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 24px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.admin-card:hover:not(.disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.admin-card.disabled {
-    opacity: 0.6;
-    background: #f8f9fa;
-}
-
-.admin-card h3 {
-    margin: 0 0 12px 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.admin-card p {
-    margin: 0 0 20px 0;
-    color: #666;
-    line-height: 1.5;
-}
-
-.admin-card-actions {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
-
-.btn-primary {
-    background: #007bff;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-}
-
-.btn-primary:hover {
-    background: #0056b3;
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    transition: background-color 0.2s ease;
-}
-
-.btn-secondary:hover {
-    background: #545b62;
-}
-
-.btn-disabled {
-    background: #ccc;
-    color: #666;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: not-allowed;
-}
-
-.admin-quick-stats {
-    background: #f8f9fa;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 24px;
-    margin-top: 32px;
-}
-
-.admin-quick-stats h3 {
-    margin: 0 0 20px 0;
-    font-size: 18px;
-    color: #333;
-}
-
-.stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 20px;
-}
-
-.stat-item {
-    text-align: center;
-}
-
-.stat-number {
-    display: block;
-    font-size: 24px;
-    font-weight: bold;
-    color: #007bff;
-    margin-bottom: 4px;
-}
-
-.stat-label {
-    font-size: 14px;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-/* Mobile responsive for admin dashboard */
-@media (max-width: 768px) {
-    .admin-dashboard {
-        padding: 16px;
-    }
-
-    .admin-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        margin: 24px 0;
-    }
-
-    .admin-card {
-        padding: 20px;
-    }
-
-    .admin-card-actions {
-        flex-direction: column;
-    }
-
-    .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 16px;
-    }
-}
-
-@media (max-width: 600px) {
-    .simple-task {
-        margin-bottom: 12px;
-    }
-
-    .task-header {
-        padding: 16px;
-    }
-
-    .task-details {
-        padding: 16px;
-    }
-
-    .task-actions {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .task-actions .btn-visit,
-    .task-actions .btn-skip,
-    .task-actions .btn-complete {
-        width: 100%;
-        padding: 12px 16px;
-        font-size: 14px;
-        min-height: 44px;
-        /* Ensure adequate touch target size */
-    }
-
-    .task-instructions pre {
-        font-size: 14px;
-        padding: 14px;
-    }
-}
-
-/* Skipped Tasks Styles */
-.skipped-task {
-    cursor: pointer;
-    transition: all 0.3s ease;
-    opacity: 0.8;
-}
-
-.skipped-task:hover {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    opacity: 1;
-}
-
-.btn-unskip {
-    background-color: #17a2b8;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-unskip:hover {
-    background-color: #138496;
-}
-
-.skipped-task .task-status {
-    font-style: italic;
-    color: var(--text-light);
-    font-size: 13px;
-    margin-top: 8px;
-}
-
-/* Mobile responsive styles for skipped tasks */
-@media (max-width: 600px) {
-    .skipped-task {
-        margin-bottom: 12px;
-    }
-
-    .skipped-task .task-header {
-        padding: 16px;
-    }
-
-    .skipped-task .task-details {
-        padding: 16px;
-    }
-
-    .skipped-task .task-actions {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .skipped-task .task-actions .btn-visit,
-    .skipped-task .task-actions .btn-unskip {
-        width: 100%;
-        padding: 12px 16px;
-        font-size: 14px;
-        min-height: 44px;
-        /* Ensure adequate touch target size */
-    }
-
-    .skipped-task .task-instructions pre {
-        font-size: 14px;
-        padding: 14px;
-    }
-}
-
-/* Platform Membership Manager Styles */
-.platforms-notice {
-    background-color: #e7f3ff;
-    border-left: 4px solid var(--accent-color);
-    padding: 12px 16px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-}
-
-.platforms-notice p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.platforms-notice a {
-    color: var(--accent-color);
-    text-decoration: underline;
-    font-weight: 500;
-}
-
-.platforms-notice a:hover {
-    color: var(--accent-hover);
-}
-
-.platforms-intro {
-    background-color: #f8f9fa;
-    border-left: 4px solid var(--accent-color);
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    border-radius: 4px;
-}
-
-.platforms-intro p {
-    margin: 8px 0;
-    line-height: 1.5;
-}
-
-.platforms-intro p:first-child {
-    margin-top: 0;
-}
-
-.platforms-intro p:last-child {
-    margin-bottom: 0;
-}
-
-.reward-notification {
-    padding: 16px 20px;
-    margin-bottom: 20px;
-    border-radius: 6px;
-    font-size: 15px;
-    line-height: 1.5;
-}
-
-.reward-notification.success {
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-    color: #155724;
-}
-
-.reward-notification.error {
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-    color: #721c24;
-}
-
-.reward-animation {
-    font-size: 16px;
-    animation: slideDown 0.3s ease-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.platform-section {
-    margin-bottom: 32px;
-}
-
-.platform-section h2 {
-    font-size: 20px;
-    margin-bottom: 8px;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-.reward-badge {
-    font-size: 13px;
-    background-color: #ffc107;
-    color: #000;
-    padding: 4px 10px;
-    border-radius: 12px;
-    font-weight: 600;
-}
-
-.section-description {
-    color: var(--text-light);
-    font-size: 14px;
-    margin-bottom: 16px;
-}
-
-.platform-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 12px;
-}
-
-.platform-checkbox {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background-color: var(--task-bg);
-    border: 2px solid var(--border-color);
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    position: relative;
-}
-
-.platform-checkbox:hover {
-    border-color: var(--accent-color);
-    background-color: #f8f9fa;
-}
-
-.platform-checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.platform-checkbox .platform-name {
-    flex: 1;
-    font-size: 14px;
-    font-weight: 500;
-}
-
-.platform-checkbox .coin-icon {
-    font-size: 18px;
-    opacity: 0.7;
-}
-
-.platform-checkbox.rewarded {
-    border-color: #ffc107;
-}
-
-.platform-checkbox.already-rewarded {
-    background-color: #f0f8ff;
-    border-color: #28a745;
-}
-
-.platform-checkbox.already-rewarded .coin-icon {
-    opacity: 0.3;
-}
-
-.rewarded-badge {
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    background-color: #28a745;
-    color: white;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-weight: 500;
-}
-
-.join-link {
-    font-size: 12px;
-    color: var(--accent-color);
-    text-decoration: none;
-    margin-left: 6px;
-    font-weight: 500;
-}
-
-.join-link:hover {
-    text-decoration: underline;
-}
-
-.save-section {
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border-color);
-    text-align: center;
-}
-
-.save-section .btn-primary {
-    padding: 14px 32px;
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.save-hint {
-    margin-top: 12px;
-    color: var(--text-light);
-    font-size: 13px;
-}
-
-.login-prompt {
-    text-align: center;
-    padding: 48px 24px;
-    background-color: var(--task-bg);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-
-.login-prompt h2 {
-    margin-top: 0;
-    margin-bottom: 16px;
-    color: var(--text-color);
-}
-
-.login-prompt p {
-    margin-bottom: 24px;
-    color: var(--text-light);
-}
-
-@media (max-width: 600px) {
-    .platform-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .platform-checkbox {
-        padding: 14px 16px;
-        min-height: 48px;
-    }
-
-    .platforms-intro {
-        padding: 14px 16px;
-    }
-
-    .save-section .btn-primary {
-        width: 100%;
-        padding: 16px;
-        min-height: 48px;
-    }
-}
-
-/* Complex Tasks Styles */
+/* ================================================
+   TASK CARDS  (tasks.html / tasks.js)
+   ================================================ */
 .task-tabs {
     display: flex;
     gap: 8px;
@@ -1572,28 +806,6 @@ body {
     color: #999;
 }
 
-.completed-badge {
-    display: inline-block;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    background-color: #28a745;
-    color: white;
-    font-weight: 600;
-    margin-left: 6px;
-}
-
-.expiry-badge {
-    display: inline-block;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    background-color: #f0f0f0;
-    color: #555;
-    font-weight: 600;
-    margin-left: 6px;
-}
-
 .task-compact {
     padding: 14px 16px;
     cursor: pointer;
@@ -1624,59 +836,11 @@ body {
     margin-bottom: 6px;
 }
 
-.login-badge,
-.platform-badge {
-    display: inline-block;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    margin-right: 6px;
-    font-weight: 500;
-}
-
-.login-badge {
-    background-color: #fff3cd;
-    color: #856404;
-}
-
-.platform-badge {
-    background-color: #e7f3ff;
-    color: #004085;
-    text-transform: capitalize;
-}
-
 .task-meta {
     display: flex;
     gap: 8px;
     align-items: center;
     margin-top: 6px;
-}
-
-.reward-badge {
-    display: inline-block;
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 10px;
-    background-color: #d4edda;
-    color: #155724;
-    font-weight: 600;
-}
-
-.btn-skip-compact {
-    padding: 8px 16px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 500;
-    transition: background-color 0.2s ease;
-    flex-shrink: 0;
-}
-
-.btn-skip-compact:hover {
-    background-color: #5a6268;
 }
 
 .task-expanded {
@@ -1710,13 +874,15 @@ body {
 
 .task-instructions pre {
     background-color: #f8f9fa;
-    padding: 12px;
+    border: 1px solid #e9ecef;
     border-radius: 4px;
-    font-family: inherit;
+    padding: 12px;
+    margin: 8px 0;
     font-size: 13px;
-    line-height: 1.6;
+    line-height: 1.5;
     white-space: pre-wrap;
-    margin: 0;
+    word-wrap: break-word;
+    font-family: inherit;
     color: var(--text-color);
 }
 
@@ -1726,55 +892,6 @@ body {
     align-items: center;
     margin-top: 16px;
     flex-wrap: wrap;
-}
-
-.btn-visit,
-.btn-complete,
-.btn-skip {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
-    transition: all 0.2s ease;
-}
-
-.btn-visit {
-    background-color: var(--accent-color);
-    color: white;
-}
-
-.btn-visit:hover:not(:disabled) {
-    background-color: var(--accent-hover);
-}
-
-.btn-visit:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.btn-complete {
-    background-color: #28a745;
-    color: white;
-}
-
-.btn-complete:hover:not(:disabled) {
-    background-color: #218838;
-}
-
-.btn-complete:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-.btn-skip {
-    background-color: #6c757d;
-    color: white;
-}
-
-.btn-skip:hover {
-    background-color: #5a6268;
 }
 
 .task-timer {
@@ -1791,17 +908,6 @@ body {
 .timer-value {
     font-weight: 700;
     color: #856404;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 48px 24px;
-    color: var(--text-light);
-}
-
-.empty-state p {
-    margin: 0;
-    font-size: 15px;
 }
 
 .task-notification {
@@ -1824,58 +930,619 @@ body {
     color: #721c24;
 }
 
-@media (max-width: 600px) {
-    .task-tabs {
-        flex-direction: column;
-        gap: 0;
-        border-bottom: none;
-    }
-
-    .tab-button {
-        border-bottom: 1px solid var(--border-color);
-        border-left: 3px solid transparent;
-        padding: 14px 16px;
-        text-align: left;
-        bottom: 0;
-    }
-
-    .tab-button.active {
-        border-left-color: var(--accent-color);
-        border-bottom-color: var(--border-color);
-    }
-
-    .task-compact {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .btn-skip-compact {
-        width: 100%;
-        padding: 10px 16px;
-        min-height: 44px;
-    }
-
-    .task-actions {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .btn-visit,
-    .btn-complete,
-    .btn-skip {
-        width: 100%;
-        padding: 12px 16px;
-        min-height: 44px;
-    }
-
-    .task-timer {
-        width: 100%;
-        text-align: center;
-    }
+/* ================================================
+   SIMPLE TASKS  (simple-tasks.js)
+   ================================================ */
+.simple-task {
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-/* ========== AD SLOTS ========== */
+.simple-task:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
 
+.task-content {
+    width: 100%;
+    padding: 0;
+}
+
+.task-header {
+    padding: 0;
+}
+
+.task-short-description {
+    font-size: 13px;
+    color: var(--text-color);
+    margin: 5px 0 !important;
+    line-height: 1.4;
+}
+
+.task-details {
+    border-top: 1px solid var(--border-color);
+    padding: 0;
+    background-color: #fafafa;
+    transition: all 0.3s ease;
+}
+
+.task-details.expanded {
+    background-color: #f8f9fa;
+}
+
+.task-status {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-top: 8px;
+}
+
+/* ================================================
+   SKIPPED TASKS
+   ================================================ */
+.skipped-task {
+    cursor: pointer;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+}
+
+.skipped-task:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    opacity: 1;
+}
+
+.skipped-task .task-status {
+    font-style: italic;
+}
+
+/* ================================================
+   UTILITY
+   ================================================ */
+.inline-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.inline-link:hover {
+    text-decoration: underline;
+}
+
+.loading-state,
+.empty-state,
+.error-state {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+.empty-state {
+    padding: 48px 24px;
+    color: var(--text-light);
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 15px;
+}
+
+.error-state {
+    color: #c0392b;
+}
+
+/* ================================================
+   ADMIN — FORMS  (admin-tasks.html etc.)
+   ================================================ */
+.admin-form {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 15px 45px rgba(30, 52, 74, 0.12);
+    max-width: 640px;
+}
+
+.admin-form h1 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.admin-form p.description {
+    color: var(--text-light);
+    font-size: 13px;
+    margin-top: 0;
+}
+
+.admin-form .field {
+    margin-bottom: 20px;
+}
+
+.admin-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: vertical;
+}
+
+.admin-form textarea {
+    min-height: 120px;
+}
+
+.admin-form .section-nav {
+    font-size: 14px;
+    margin: 10px 0 30px 0;
+}
+
+.admin-form .section-nav a {
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.admin-form .section-nav a:hover {
+    text-decoration: underline;
+}
+
+.admin-form .form-actions {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.admin-form .form-actions .btn.secondary[hidden] {
+    display: none;
+}
+
+.admin-form .output-area {
+    margin-top: 24px;
+    background: var(--task-done-bg);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    font-family: 'Courier New', monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 13px;
+}
+
+.admin-form .output-area.empty {
+    color: var(--text-light);
+}
+
+/* ================================================
+   ADMIN — TASK LIST  (admin-tasks.html)
+   ================================================ */
+.task-management-list {
+    margin-top: 20px;
+}
+
+.admin-task-item {
+    background: var(--task-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.admin-task-info {
+    flex: 1;
+}
+
+.admin-task-info h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+.admin-task-meta {
+    font-size: 13px;
+    color: #666;
+    margin: 4px 0;
+}
+
+.admin-task-instructions {
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.admin-task-url {
+    margin: 4px 0 0 0;
+    font-size: 13px;
+}
+
+.admin-task-url a {
+    color: var(--accent-color);
+    word-break: break-all;
+}
+
+.admin-task-actions {
+    flex-shrink: 0;
+}
+
+/* ================================================
+   ADMIN — DASHBOARD  (admin.html)
+   ================================================ */
+.admin-dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin: 32px 0;
+}
+
+.admin-card {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-card:hover:not(.disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-card.disabled {
+    opacity: 0.6;
+    background: #f8f9fa;
+}
+
+.admin-card h3 {
+    margin: 0 0 12px 0;
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+.admin-card p {
+    margin: 0 0 20px 0;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.admin-card-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-quick-stats {
+    background: #f8f9fa;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-top: 32px;
+}
+
+.admin-quick-stats h3 {
+    margin: 0 0 20px 0;
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    display: block;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--accent-color);
+    margin-bottom: 4px;
+}
+
+.stat-label {
+    font-size: 14px;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ================================================
+   PLATFORM MEMBERSHIP  (my-platforms.html)
+   ================================================ */
+.platforms-notice {
+    background-color: #e7f3ff;
+    border-left: 4px solid var(--accent-color);
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.platforms-notice p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.platforms-notice a {
+    color: var(--accent-color);
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.platforms-notice a:hover {
+    color: var(--accent-hover);
+}
+
+.platforms-intro {
+    background-color: #f8f9fa;
+    border-left: 4px solid var(--accent-color);
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border-radius: 4px;
+}
+
+.platforms-intro p {
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.platforms-intro p:first-child { margin-top: 0; }
+.platforms-intro p:last-child  { margin-bottom: 0; }
+
+.platform-section {
+    margin-bottom: 32px;
+}
+
+.platform-section h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-description {
+    color: var(--text-light);
+    font-size: 14px;
+    margin-bottom: 16px;
+}
+
+.platform-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+}
+
+.platform-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    background-color: var(--task-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.platform-checkbox:hover {
+    border-color: var(--accent-color);
+    background-color: #f8f9fa;
+}
+
+.platform-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.platform-checkbox .platform-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.platform-checkbox .coin-icon {
+    font-size: 18px;
+    opacity: 0.7;
+}
+
+.platform-checkbox.rewarded {
+    border-color: #ffc107;
+}
+
+.platform-checkbox.already-rewarded {
+    background-color: #f0f8ff;
+    border-color: #28a745;
+}
+
+.platform-checkbox.already-rewarded .coin-icon {
+    opacity: 0.3;
+}
+
+.join-link {
+    font-size: 12px;
+    color: var(--accent-color);
+    text-decoration: none;
+    margin-left: 6px;
+    font-weight: 500;
+}
+
+.join-link:hover {
+    text-decoration: underline;
+}
+
+.save-section {
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.save-section .btn-primary {
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.save-hint {
+    margin-top: 12px;
+    color: var(--text-light);
+    font-size: 13px;
+}
+
+.login-prompt {
+    text-align: center;
+    padding: 48px 24px;
+    background-color: var(--task-bg);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.login-prompt h2 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: var(--text-color);
+}
+
+.login-prompt p {
+    margin-bottom: 24px;
+    color: var(--text-light);
+}
+
+/* ================================================
+   NOTIFICATIONS & ANIMATIONS
+   ================================================ */
+.reward-notification {
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.reward-notification.success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.reward-notification.error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+.reward-animation {
+    font-size: 16px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInUp {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+}
+
+/* ================================================
+   COMING SOON SECTIONS
+   ================================================ */
+.coming-soon-section {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.coming-soon-content {
+    background: var(--task-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.coming-soon-content h2 {
+    margin-top: 0;
+    color: var(--accent-color);
+    font-size: 28px;
+}
+
+.coming-soon-content > p {
+    font-size: 16px;
+    color: var(--text-light);
+    margin-bottom: 30px;
+}
+
+.feature-preview,
+.meanwhile,
+.notify-box {
+    margin: 25px 0;
+    padding: 20px;
+    background: var(--primary-bg);
+    border-radius: 6px;
+}
+
+.feature-preview h3,
+.meanwhile h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: var(--text-color);
+}
+
+.feature-preview ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 15px 0 0 0;
+}
+
+.feature-preview li {
+    padding: 8px 0;
+    font-size: 15px;
+}
+
+.meanwhile p {
+    margin: 10px 0 0 0;
+    font-size: 15px;
+}
+
+.notify-box {
+    background: #e3f2fd;
+    border-left: 4px solid var(--accent-color);
+    text-align: center;
+}
+
+.notify-box p {
+    margin: 8px 0;
+    font-size: 15px;
+}
+
+/* ================================================
+   AD SLOTS
+   ================================================ */
 .ad-slot-container {
     margin: 0.5rem 0;
     text-align: center;
@@ -1888,6 +1555,7 @@ body {
 #ad-banner-wrap {
     position: relative;
     display: inline-block;
+    width: fit-content;
     max-width: 100%;
     margin: 0 0 0.75rem 0;
 }
@@ -1902,7 +1570,7 @@ body {
     border: none;
     border-radius: 50%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    color: #333;
+    color: var(--text-color);
     font-size: 15px;
     line-height: 22px;
     text-align: center;
@@ -1920,20 +1588,15 @@ body {
 #ad-banner {
     display: block;
     width: fit-content;
+    max-width: 100%;
     margin: 0;
-    /* Left-aligned with bottom spacing */
     background: white;
     padding: 1px;
-    /* Thinner border to match user preference */
     border: 1px solid #ddd;
     border-radius: 8px;
-    /* Matching floating ad's radius */
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
-    /* Matching floating ad's shadow */
-    max-width: 100%;
     box-sizing: border-box;
     line-height: 0;
-    /* Removes the descender gap at the bottom of images */
 }
 
 #ad-banner img,
@@ -1941,7 +1604,6 @@ body {
     display: block;
     max-width: 100%;
     border-radius: 7px;
-    /* Slab-matching radius (-1px for the 1px padding) */
 }
 
 .content-banner {
@@ -1961,32 +1623,6 @@ body {
     border-radius: 4px;
 }
 
-/* Responsive ad behavior */
-@media (max-width: 768px) {
-    #ad-header-desktop {
-        display: none !important;
-    }
-
-    #ad-header-mobile {
-        display: block !important;
-    }
-
-    .ad-slot-container {
-        margin: 0.5rem 0;
-    }
-}
-
-@media (min-width: 769px) {
-    #ad-header-desktop {
-        display: block !important;
-    }
-
-    #ad-header-mobile {
-        display: none !important;
-    }
-}
-
-/* Floating Ad Styles */
 .floating-ad-container {
     position: fixed;
     bottom: 20px;
@@ -1996,20 +1632,7 @@ body {
     height: auto;
     z-index: 1000;
     display: none;
-    /* Hidden by default, shown by JS */
     animation: slideInUp 0.5s ease-out;
-}
-
-@keyframes slideInUp {
-    from {
-        transform: translateY(100%);
-        opacity: 0;
-    }
-
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
 }
 
 .floating-ad-close {
@@ -2021,7 +1644,7 @@ body {
     background: #fff;
     border-radius: 50%;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    color: #333;
+    color: var(--text-color);
     font-size: 18px;
     line-height: 26px;
     text-align: center;
@@ -2046,4 +1669,95 @@ body {
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     border: 1px solid #ddd;
+}
+
+/* ================================================
+   RESPONSIVE — ≤ 640px  (consolidated)
+   ================================================ */
+@media (max-width: 640px) {
+    body { font-size: 15px; }
+
+    /* Layout */
+    .menu-toggle { display: inline-flex; }
+    .container { flex-direction: column; }
+
+    .sidebar {
+        position: fixed;
+        inset: 0;
+        width: 78vw;
+        max-width: 320px;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 15px 0 35px rgba(0, 0, 0, 0.25);
+        z-index: 3;
+    }
+
+    body.menu-open .sidebar { transform: translateX(0); }
+
+    body.menu-open .menu-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        z-index: 2;
+    }
+
+    .main-content { padding: 0 20px 20px 20px; }
+    .main-content.landing { background-position: center; padding: 0 20px 15px 20px; gap: 15px; }
+
+    /* Landing */
+    .landing .hero h1 { font-size: 26px; flex-wrap: wrap; }
+    .landing .hero h1 .btc-symbol { font-size: 30px; }
+
+    /* PTC task items */
+    .task-item { padding: 16px; }
+    .dashboard-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .task-item .actions { width: 100%; justify-content: flex-start; flex-wrap: wrap; gap: 8px; }
+
+    /* Task cards (tasks.html) */
+    .task-tabs { flex-direction: column; gap: 0; border-bottom: none; }
+    .tab-button { border-bottom: 1px solid var(--border-color); border-left: 3px solid transparent; padding: 14px 16px; text-align: left; bottom: 0; }
+    .tab-button.active { border-left-color: var(--accent-color); border-bottom-color: var(--border-color); }
+    .task-compact { flex-direction: column; align-items: flex-start; }
+    .task-actions { flex-direction: column; width: 100%; }
+    .btn-visit, .btn-complete, .btn-skip { width: 100%; padding: 12px 16px; min-height: 44px; }
+    .btn-skip-compact { width: 100%; padding: 10px 16px; min-height: 44px; }
+    .task-timer { width: 100%; text-align: center; }
+    .task-instructions pre { font-size: 14px; padding: 14px; }
+
+    /* Simple & skipped tasks */
+    .simple-task, .skipped-task { margin-bottom: 12px; }
+    .task-header, .task-details { padding: 16px; }
+    .skipped-task .task-actions .btn-visit,
+    .skipped-task .task-actions .btn-unskip { width: 100%; padding: 12px 16px; font-size: 14px; min-height: 44px; }
+
+    /* Platform membership */
+    .platform-grid { grid-template-columns: 1fr; }
+    .platform-checkbox { padding: 14px 16px; min-height: 48px; }
+    .platforms-intro { padding: 14px 16px; }
+    .save-section .btn-primary { width: 100%; padding: 16px; min-height: 48px; }
+
+    /* Coming soon */
+    .coming-soon-content { padding: 20px; }
+    .coming-soon-content h2 { font-size: 24px; }
+    .feature-preview, .meanwhile, .notify-box { padding: 15px; }
+}
+
+/* ================================================
+   RESPONSIVE — ≤ 768px  (admin + ads)
+   ================================================ */
+@media (max-width: 768px) {
+    .admin-dashboard { padding: 16px; }
+    .admin-grid { grid-template-columns: 1fr; gap: 16px; margin: 24px 0; }
+    .admin-card { padding: 20px; }
+    .admin-card-actions { flex-direction: column; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+
+    #ad-header-desktop { display: none !important; }
+    #ad-header-mobile  { display: block !important; }
+}
+
+@media (min-width: 769px) {
+    #ad-header-desktop { display: block !important; }
+    #ad-header-mobile  { display: none !important; }
 }
