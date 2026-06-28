@@ -525,7 +525,9 @@ body {
     margin-left: 6px;
 }
 
-/* Yellow override for the platform-section heading badge */
+/* NOTE: .reward-badge is green globally (task cards, tasks.js).
+   .platform-section .reward-badge overrides it to yellow (my-platforms.html heading).
+   Both are intentional — do not merge into a single global rule. */
 .platform-section .reward-badge {
     font-size: 13px;
     background-color: #ffc107;
