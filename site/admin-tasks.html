@@ -114,9 +114,10 @@
                         </label>
                     </div>
                     <div class="field">
-                        <label for="task-expiry">Expiry Date (optional)</label>
-                        <input type="date" id="task-expiry" name="expiryDate">
-                        <small>Leave blank for no expiry. Task will be hidden after this date.</small>
+                        <label for="task-days">Days to show (optional)</label>
+                        <input type="number" id="task-days" name="daysActive" min="1" max="3650" placeholder="e.g. 30">
+                        <small id="expiry-hint">Leave blank for no expiry. Task hides after this many days from today.</small>
+                        <input type="hidden" id="task-expiry" name="expiryDate">
                     </div>
                     <div class="form-actions">
                         <button type="submit" class="btn primary">Save Task</button>
@@ -173,7 +174,13 @@
                 const platform = formData.get('platform');
                 const repeatable = false; // All tasks are one-time by default
                 const enabled = document.getElementById('task-enabled').checked;
-                const expiryDate = formData.get('expiryDate') || null;
+                const daysActive = formData.get('daysActive');
+                let expiryDate = null;
+                if (daysActive && parseInt(daysActive) > 0) {
+                    const d = new Date();
+                    d.setDate(d.getDate() + parseInt(daysActive));
+                    expiryDate = d.toISOString().slice(0, 10);
+                }
 
                 if (!title || !shortDescription || !instructions || !url || !duration || !reward || !category || !platform) {
                     feedbackEl.textContent = 'Please fill all fields.';
@@ -234,8 +241,21 @@
                 }
             });
 
+            document.getElementById('task-days').addEventListener('input', function() {
+                const hint = document.getElementById('expiry-hint');
+                const days = parseInt(this.value);
+                if (days > 0) {
+                    const d = new Date();
+                    d.setDate(d.getDate() + days);
+                    hint.textContent = 'Expires: ' + d.toISOString().slice(0, 10);
+                } else {
+                    hint.textContent = 'Leave blank for no expiry. Task hides after this many days from today.';
+                }
+            });
+
             newTaskBtn.addEventListener('click', () => {
                 form.reset();
+                document.getElementById('expiry-hint').textContent = 'Leave blank for no expiry. Task hides after this many days from today.';
                 Array.from(form.elements).forEach(el => el.disabled = false);
                 submitButton.textContent = 'Save Task';
                 submitButton.style.backgroundColor = '';
@@ -271,7 +291,7 @@
                                     <strong>Platform:</strong> ${task.platform} | 
                                     <strong>Timer:</strong> ${task.duration}s | 
                                     <strong>Reward:</strong> ${task.reward} | 
-                                    <strong>Repeatable:</strong> ${task.repeatable ? 'Yes' : 'No'}
+                                    <strong>Repeatable:</strong> ${task.repeatable ? 'Yes' : 'No'}${task.expiryDate ? ' | <strong>Expires:</strong> ' + task.expiryDate : ''}
                                 </p>
                                 <p class="admin-task-short-desc">${task.shortDescription}</p>
                                 <p class="admin-task-instructions">${task.instructions}</p>

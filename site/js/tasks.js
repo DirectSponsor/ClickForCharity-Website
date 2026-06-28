@@ -115,6 +115,16 @@
         });
     }
 
+    function expiryBadge(expiryDate) {
+        if (!expiryDate) return '';
+        const msLeft = new Date(expiryDate + 'T23:59:59') - Date.now();
+        const daysLeft = Math.ceil(msLeft / 86400000);
+        if (daysLeft <= 0) return '';
+        const label = daysLeft === 1 ? '1 day left' : daysLeft + ' days left';
+        const urgent = daysLeft <= 3 ? ' style="color:#c0392b;"' : (daysLeft <= 7 ? ' style="color:#e67e22;"' : '');
+        return `<span class="expiry-badge"${urgent}>${label}</span>`;
+    }
+
     function createTaskCard(task) {
         const isExpanded = expandedTaskId === task.id;
         const timerState = taskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
@@ -131,6 +141,7 @@
                         <div class="task-meta">
                             <span class="platform-badge">${task.platform}</span>
                             <span class="reward-badge">${task.reward} coins</span>
+                            ${expiryBadge(task.expiryDate)}
                             ${isRecentlyCompleted ? '<span class="completed-badge">✓ Completed</span>' : ''}
                         </div>
                     </div>
@@ -368,6 +379,8 @@
         }
     }
 
+    function expiryBadgeGuest(expiryDate) { return expiryBadge(expiryDate); }
+
     function createGuestTaskCard(task) {
         const isExpanded = guestExpandedTaskId === task.id;
         const timerState = guestTaskTimers[task.id] || { running: false, timeLeft: task.duration, completed: false };
@@ -381,6 +394,7 @@
                     <div class="task-meta">
                         <span class="platform-badge">${task.platform}</span>
                         <span class="reward-badge">${task.reward} coins</span>
+                        ${expiryBadgeGuest(task.expiryDate)}
                     </div>
                 </div>
             </div>
