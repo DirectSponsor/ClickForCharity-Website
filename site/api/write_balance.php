@@ -43,11 +43,14 @@ if (!preg_match('/^\d+-[a-zA-Z0-9_-]+$/', $userId)) {
 // Forward to centralized auth server
 $authServerUrl = 'https://auth.directsponsor.org/api/update_balance.php';
 
+$secret = trim(@file_get_contents('/etc/ds-balance-secret') ?: '');
+
 $postData = json_encode([
     'user_id' => $userId,
     'amount' => $amount,
     'source' => $source,
-    'server_id' => $serverId
+    'server_id' => $serverId,
+    'secret' => $secret
 ]);
 
 $ch = curl_init($authServerUrl);
