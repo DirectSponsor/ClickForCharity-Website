@@ -30,6 +30,12 @@ This file documents important system information for AI agents working on ClickF
 - **Banner Ads**: Rotated via `api/get-ads.php`, managed via admin interface (`admin-ads.html`)
 - **User Balance**: Tracked via `api/get_balance.php`
 
+### Balance Update Security
+- `site/api/write_balance.php` proxies coin awards to the auth server and must include a shared secret
+- Secret lives at `/etc/ds-balance-secret` on both ES1 and ES3 (auth server) — **must match**
+- If this file is missing on ES1, all coin awards silently fail with `Forbidden`
+- See `docs/BALANCE_SECRET.md` for full details and setup instructions
+
 ### Content Management
 - **Include System**: Uses HTML comments for auto-included content
   - Format: `<!-- include file.html -->` and `<!-- end include file.html -->`
