@@ -4,27 +4,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://clickforcharity.net/surveys.html">
+    <link rel="canonical" href="https://clickforcharity.net/donations.html">
     <!-- Open Graph Meta Tags -->
-    <meta property="og:url" content="https://clickforcharity.net/surveys.html">
+    <meta property="og:url" content="https://clickforcharity.net/donations.html">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta property="og:description"
-        content="Do simple tasks to help people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="og:title" content="Donations Made – Click for Charity">
+    <meta property="og:description" content="See where Click for Charity ad revenue goes — real donations to real people.">
     <meta property="og:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta property="twitter:domain" content="clickforcharity.net">
-    <meta property="twitter:url" content="https://clickforcharity.net/surveys.html">
-    <meta name="twitter:title" content="Click for Charity – No Money Needed, just your clicks!">
-    <meta name="twitter:description"
-        content="Do simple tasks to help real people change their lives and live in abundance. No middlemen; 100% of site revenue goes to the recipients.">
+    <meta property="twitter:url" content="https://clickforcharity.net/donations.html">
+    <meta name="twitter:title" content="Donations Made – Click for Charity">
+    <meta name="twitter:description" content="See where Click for Charity ad revenue goes — real donations to real people.">
     <meta name="twitter:image" content="https://clickforcharity.net/images/cover1400x500.jpeg">
-
-    <title>Surveys – Click for Charity</title>
-    <meta name="description"
-        content="Earn tokens by completing surveys and support charities. Coming soon to Click for Charity.">
+    <title>Donations Made – Click for Charity</title>
+    <meta name="description" content="See where Click for Charity ad revenue goes — real donations to real people.">
     <link rel="stylesheet" href="css/style.css">
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicons/favicon.ico">
@@ -54,7 +50,7 @@
                     <li ><a href="ptc.html">Surf Ads</a></li>
                     <li ><a href="tasks.html">Tasks</a></li>
                     <li ><a href="skipped-tasks.html">Skipped Tasks</a></li>
-                    <li class="active"><a href="surveys.html">Surveys</a></li>
+                    <li ><a href="surveys.html">Surveys</a></li>
                     <li ><a href="offers.html">Offers</a></li>
                     <li ><a href="donations.html">Donations</a></li>
                     <li class="admin-only"><a href="admin.html">Admin</a></li>
@@ -100,43 +96,72 @@
 <script src="js/banner-rotate.js"></script>
             <!-- include end banner-ad.incl -->
             <header class="dashboard-header">
-                <h1>Surveys</h1>
-                <div class="user-stats">
-                    <span>Balance: <span id="user-balance">0</span> <span id="user-balance-label">tokens</span></span>
-                </div>
+                <h1>⚡ Donations Made</h1>
             </header>
 
-            <section class="coming-soon-section">
-                <div class="coming-soon-content">
-                    <h2>📋 Surveys Coming Soon</h2>
-                    <p>We're building a survey system that lets you earn tokens while sharing your opinions.</p>
+            <section class="card" style="margin-bottom: 1.5rem;">
+                <p>Ad revenue and task earnings collected by Click for Charity are donated directly to real verified recipients on <a href="https://directsponsor.net/" target="_blank" rel="noopener">DirectSponsor.net</a>. Every donation is made in Bitcoin over the Lightning Network — fast, borderless, and with no middlemen.</p>
+            </section>
 
-                    <div class="feature-preview">
-                        <h3>What to Expect:</h3>
-                        <ul>
-                            <li>✅ Quick surveys (2-10 minutes)</li>
-                            <li>✅ Higher token rewards than surf ads</li>
-                            <li>✅ Help real organizations with market research</li>
-                            <li>✅ Mobile-friendly interface</li>
-                            <li>✅ Track your survey completion history</li>
-                        </ul>
-                    </div>
+            <section class="card" id="donations-section">
+                <h2>Recent Donations</h2>
+                <div id="donations-loading" style="color: #666; font-style: italic;">Loading donations…</div>
+                <ul id="donations-list" style="list-style: none; padding: 0; margin: 0; display: none;"></ul>
+                <p id="donations-error" style="display: none; color: #999;">Could not load donations right now. Check back soon.</p>
+            </section>
 
-                    <div class="meanwhile">
-                        <h3>In the Meanwhile:</h3>
-                        <p>Try our <a href="ptc.html" class="inline-link">Surf Ads</a> to start earning tokens today!
-                        </p>
-                    </div>
-
-                    <div class="notify-box">
-                        <p><strong>Want to know when surveys launch?</strong></p>
-                        <p>Follow updates at <a href="https://directsponsor.net/" target="_blank" rel="noopener"
-                                class="inline-link">DirectSponsor.net</a></p>
-                    </div>
-                </div>
+            <section class="card" style="margin-top: 1.5rem; border-left: 4px solid #f0ad4e; background: #fffdf5;">
+                <h2>🗳️ Coming Soon: Coin Voting</h2>
+                <p>We're working on a system that lets <em>you</em> have a say in where donations go. Your earned coins will act as votes — the more you earn, the more influence you have over which projects receive funds.</p>
+                <p style="margin-top: 0.75rem;">For now, the <strong>clickforcharity</strong> account on DirectSponsor handles all donations centrally. As the platform grows, we'll hand that power to the community.</p>
             </section>
         </main>
     </div>
+
+    <script>
+    (function () {
+        var API = 'https://directsponsor.net/api/simple-profile.php?action=public_profile&username=clickforcharity&include_donations=1';
+
+        fetch(API)
+            .then(function (r) { return r.json(); })
+            .then(function (data) {
+                document.getElementById('donations-loading').style.display = 'none';
+                if (!data.success || !data.donations || !data.donations.length) {
+                    document.getElementById('donations-error').style.display = 'block';
+                    return;
+                }
+                var list = document.getElementById('donations-list');
+                data.donations.forEach(function (d) {
+                    var li = document.createElement('li');
+                    li.style.cssText = 'padding: 0.75rem 0; border-bottom: 1px solid #eee;';
+                    var date = d.timestamp ? d.timestamp.split(' ')[0] : '';
+                    var sats = parseInt(d.amount_sats).toLocaleString();
+                    var recipient = d.recipient
+                        ? '<a href="https://directsponsor.net/fundraiser.html?project=' + encodeURIComponent(d.project_id) + '&user=' + encodeURIComponent(d.recipient) + '" target="_blank" rel="noopener">' + escHtml(d.recipient) + ' — project #' + escHtml(d.project_id) + '</a>'
+                        : 'project #' + escHtml(d.project_id);
+                    var msg = d.donor_message
+                        ? '<br><span style="font-size:0.9em;color:#666;font-style:italic;">' + escHtml(d.donor_message) + '</span>'
+                        : '';
+                    li.innerHTML = '<strong>⚡ ' + sats + ' sats</strong> → ' + recipient
+                        + (date ? ' <span style="color:#999;font-size:0.85em;">(' + escHtml(date) + ')</span>' : '')
+                        + msg;
+                    list.appendChild(li);
+                });
+                list.style.display = 'block';
+            })
+            .catch(function () {
+                document.getElementById('donations-loading').style.display = 'none';
+                document.getElementById('donations-error').style.display = 'block';
+            });
+
+        function escHtml(s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+    })();
+    </script>
+
     <script src="js/unified-balance.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/nav.js"></script>
@@ -165,5 +190,6 @@
 </div>
 <script src="js/floating-ad.js"></script>
     <!-- include end footer.incl -->
-</body>
 
+</body>
+</html>

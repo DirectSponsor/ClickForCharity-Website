@@ -72,6 +72,7 @@ process_file() {
     output="${output//#ACTIVE_SKIPPED_TASKS#/}"
     output="${output//#ACTIVE_SURVEYS#/}"
     output="${output//#ACTIVE_OFFERS#/}"
+    output="${output//#ACTIVE_DONATIONS#/}"
     output="${output//#ACTIVE_PROFILE#/}"
     output="${output//#ACTIVE_BALANCE_SYNC_HELP#/}"
     output="${output//#ACTIVE_ADVERTISE#/}"
@@ -95,6 +96,9 @@ process_file() {
             ;;
         "offers")
             output="${output//\<li \><a href=\"offers.html\">/<li class=\"active\"><a href=\"offers.html\">}"
+            ;;
+        "donations")
+            output="${output//\<li #ACTIVE_DONATIONS#\><a href=\"donations.html\">/<li class=\"active\"><a href=\"donations.html\">}"
             ;;
         "profile")
             output="${output//\<li \><a href=\"profile.html\">/<li class=\"active\"><a href=\"profile.html\">}"
