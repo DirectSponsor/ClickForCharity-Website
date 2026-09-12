@@ -45,6 +45,13 @@
         const contentContainer = adContainer.querySelector('.floating-ad-content');
         if (contentContainer) {
             contentContainer.innerHTML = adContent;
+            // Re-execute any <script> tags — browsers silently skip scripts set via innerHTML
+            contentContainer.querySelectorAll('script').forEach(oldScript => {
+                const newScript = document.createElement('script');
+                [...oldScript.attributes].forEach(a => newScript.setAttribute(a.name, a.value));
+                newScript.textContent = oldScript.textContent;
+                oldScript.replaceWith(newScript);
+            });
         }
 
         const showAd = () => {

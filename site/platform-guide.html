@@ -79,6 +79,13 @@
         </aside>
         <!-- include end sidebar.incl -->
         <main class="main-content" data-menu-target>
+            <!-- include start banner-ad.incl -->
+<div id="ad-banner-wrap">
+<button class="banner-ad-close" onclick="closeBannerAd()" title="Hide ads for 1 hour">×</button>
+<div id="ad-banner"></div>
+</div>
+<script src="js/banner-rotate.js"></script>
+            <!-- include end banner-ad.incl -->
 
             <section class="content-section">
                 <h1>Platform Usage Guide</h1>
@@ -211,6 +218,7 @@
 
 <div id="floating-ad" class="floating-ad-container">
     <div class="floating-ad-close" onclick="closeFloatingAd()" title="Close Ad">×</div>
+    <a href="advertise.html" class="floating-ad-sponsor-link" title="Advertise here">Advertise</a>
     <div class="floating-ad-content"></div>
 </div>
 <script src="js/floating-ad.js"></script>
