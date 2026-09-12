@@ -10,22 +10,21 @@
 
 ## When to Update
 
-Update the changelog when you complete **significant work** such as:
+**One simple test: would a user visiting the site notice or care?**
 
 ✅ **DO UPDATE for:**
-- New features or UI changes
-- Bug fixes with user-visible impact
-- Task/ad system changes
-- Auth or role management changes
-- Config or deployment changes
-- Breaking changes (flag clearly)
+- New pages or features they can use
+- Bug fixes they would have noticed
+- UI changes they can see
+- Task/ad system behaviour changes
+- Something that was broken and now works
 
 ❌ **SKIP for:**
-- Typo fixes
-- Minor code refactors
+- Typo fixes, style tweaks, code refactors
 - Work-in-progress
-- Style tweaks
-- Internal optimizations with no user impact
+- Security hardening, server config, deploy script changes
+- Internal API changes with no visible effect
+- Anything a user would never see or feel
 
 ---
 
@@ -46,13 +45,12 @@ Prepend a new entry **at the top** of the `<!-- EMBED:changelog -->` block:
 
 ### Step-by-Step
 
-1. Open `/home/andy/work/projects/clickforcharity.net/site/changelog.html`
-2. Find the `<!-- EMBED:changelog -->` block
-3. Add your entry **inside the `<ul>` block, at the very top** (before existing entries)
-4. Use today's date in `YYYY-MM-DD` format
-5. Keep the entry to a single line
-6. Write for non-technical readers (what changed, not how)
-7. **Deploy** — run the deploy script so the live site is updated:
+1. From the repo root, run:
+   ```bash
+   ./add-changelog.sh "Category" "One-line description for non-technical readers."
+   ```
+   This auto-inserts today's date and the correctly-formatted entry.
+2. **Deploy** so the live site is updated:
    ```bash
    bash /home/andy/work/projects/clickforcharity.net/deploy.sh
    ```
@@ -75,8 +73,6 @@ Use these categories to label entries for clarity:
 - `<span class="feature">Auth</span>` — Authentication or role changes
 - `<span class="feature">Bug Fix</span>` — Bug fixes
 - `<span class="feature">Performance</span>` — Performance improvements
-- `<span class="feature">Security</span>` — Security updates
-- `<span class="feature">Deployment</span>` — Deployment/ops changes
 
 Or just use plain text if you prefer.
 
@@ -121,8 +117,23 @@ The `<!-- EMBED:changelog -->` / `<!-- /EMBED:changelog -->` comment tags exist 
 
 ## AI Agent Reminder
 
-After you complete significant work, **please update the changelog**. It helps the user track what's been done and makes the project more maintainable. It only takes 30 seconds!
+After completing significant work, run from the repo root:
 
-The format is simple, and examples are above. Just prepend one line to the top of the changelog list.
+```bash
+./add-changelog.sh "Category" "One-line description for non-technical readers."
+```
 
-✨ **Thank you!**
+Then deploy:
+```bash
+bash /home/andy/work/projects/clickforcharity.net/deploy.sh
+```
+
+**Ask yourself**: would a user visiting the site notice or care about this change? If yes, log it. If no, skip it.
+
+Common categories: `Feature`, `Bug Fix`, `UI`, `Task System`, `Ad System`
+
+---
+
+## Footer Link
+
+Once the changelog system is running across all sites, a link to `changelog.html` will be added to the site footer.

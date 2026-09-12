@@ -58,34 +58,6 @@ foreach ($files as $file) {
     ];
 }
 
-// Pad remaining slots with fallback banners from the fallback folder
-$totalPaidSlots = array_sum(array_column($meta, 'slots'));
-$remainingSlots = max(0, 10 - $totalPaidSlots);
-
-if ($remainingSlots > 0) {
-    $fallbackDirs = [
-        'desktop'  => __DIR__ . '/../../data/fallback-desktop',
-        'floating' => __DIR__ . '/../../data/fallback-floating',
-    ];
-    $fallbackDir = $fallbackDirs[$position] ?? null;
-
-    if ($fallbackDir && is_dir($fallbackDir)) {
-        $fallbackFiles = glob($fallbackDir . '/*.html');
-        $fallbacks = [];
-        foreach ($fallbackFiles as $f) {
-            $html = trim(file_get_contents($f));
-            if (!empty($html)) $fallbacks[] = $html;
-        }
-
-        if (!empty($fallbacks)) {
-            // Pick randomly to fill remaining slots
-            for ($i = 0; $i < $remainingSlots; $i++) {
-                $rotation[] = $fallbacks[array_rand($fallbacks)];
-            }
-        }
-    }
-}
-
 echo json_encode([
     'success' => true,
     'ads'     => $rotation,

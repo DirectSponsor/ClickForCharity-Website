@@ -99,11 +99,17 @@ ssh clickforcharity
 
 ## Changelog — AI Agent Reminder
 
-After completing **significant work** on this project, update the public changelog.
+After completing **significant work** on this project, run from the repo root:
 
-- **File**: `site/changelog.html` — prepend a new `<li>` inside the `<!-- EMBED:changelog -->` block
-- **Instructions**: `CHANGELOG-INSTRUCTIONS.md` — full format, categories, and rules
-- **Format**: `<li><strong>YYYY-MM-DD</strong> · <strong>ClickForCharity</strong> — <span class="feature">Category</span> One-line plain-English summary.</li>`
-- **When**: new features, bug fixes with user impact, task/ad system changes, deployment changes
-- **Skip**: typos, refactors, style tweaks, WIP
-- **Then deploy**: `bash /home/andy/work/projects/clickforcharity.net/deploy.sh`
+```bash
+./add-changelog.sh "Category" "One-line description for non-technical readers."
+```
+
+Then deploy:
+```bash
+bash /home/andy/work/projects/clickforcharity.net/deploy.sh
+```
+
+**What counts as significant**: new features, bug fixes with user impact, task/ad system changes, deployment changes. Skip typos, refactors, style tweaks, WIP.
+
+Common categories: `Feature`, `Bug Fix`, `Security`, `UI`, `Ad System`, `API`, `Deployment`

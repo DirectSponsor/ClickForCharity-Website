@@ -169,11 +169,6 @@ deploy_files() {
         --progress \
         "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/"
 
-    log "Syncing fallback ad folders..."
-    rsync -avz --delete \
-        "$LOCAL_PATH/data/fallback-desktop/" "$REMOTE_HOST:/var/www/clickforcharity.net/data/fallback-desktop/"
-    rsync -avz --delete \
-        "$LOCAL_PATH/data/fallback-floating/" "$REMOTE_HOST:/var/www/clickforcharity.net/data/fallback-floating/"
     
     success "Files deployed successfully"
 }
@@ -199,6 +194,15 @@ main() {
     echo "Remote: $REMOTE_HOST:$REMOTE_PATH"
     echo ""
     
+    # Warn if changelog hasn't been updated since last commit
+    if git diff --quiet HEAD -- site/changelog.html 2>/dev/null; then
+        echo ""
+        echo "⚠️  site/changelog.html hasn't changed since the last commit."
+        echo "   If you made significant changes, run first: ./add-changelog.sh \"Category\" \"Description\""
+        echo "   (deploying anyway — this is just a reminder)"
+        echo ""
+    fi
+
     # Ask for confirmation
     read -p "Continue with deployment? (y/N): " -n 1 -r
     echo
