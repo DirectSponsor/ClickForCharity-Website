@@ -2,9 +2,15 @@
 
 ## 🔴 URGENT: Exposed Google API Key
 
-**Key Found:** `AIzaSyA65lEHUEizIsNtlbNo-l2K18dT680nsaM`
+**Key Found:** `<redacted — a Google browser API key from a saved third-party page; see note below>`
 
 **Location:** Git history (commits 9004478 and a636f38)
+
+> **2026-10-22 note:** the key came from `coinpayu/.../analytics.js`, a saved copy of a
+> third-party page — a Google *browser* key (Analytics/Firebase type), public by design and
+> not ours to revoke. The real mistake was this file quoting the value, which kept it
+> flagged by GitHub secret scanning. Value removed; the steps below are kept as a general
+> guide. Never write key values into docs — name the location instead.
 
 ### Immediate Action Required
 
