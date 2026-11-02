@@ -11,7 +11,7 @@ This file documents important system information for AI agents working on ClickF
 - **Data Directory**: `/var/clickforcharity-data/` (user data, separate from site code — never commit or expose)
 - **Web Root (local)**: `/home/andy/work/projects/clickforcharity.net/site/`
 - **Web Root (server)**: `/var/www/clickforcharity.net/public_html/`
-- **Server**: ES1 (`clickforcharity` SSH alias, 89.116.173.103)
+- **Server**: es1 (`clickforcharity` SSH alias, 89.116.173.103)
 
 ## Part of the DirectSponsor Ecosystem
 
@@ -32,8 +32,8 @@ This file documents important system information for AI agents working on ClickF
 
 ### Balance Update Security
 - `site/api/write_balance.php` proxies coin awards to the auth server and must include a shared secret
-- Secret lives at `/etc/ds-balance-secret` on both ES1 and ES3 (auth server) — **must match**
-- If this file is missing on ES1, all coin awards silently fail with `Forbidden`
+- Secret lives at `/etc/ds-balance-secret` on both es1 and es3 (auth server) — **must match**
+- If this file is missing on es1, all coin awards silently fail with `Forbidden`
 - See `docs/BALANCE_SECRET.md` for full details and setup instructions
 
 ### Content Management
