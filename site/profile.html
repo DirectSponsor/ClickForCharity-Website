@@ -80,7 +80,6 @@
                     <!-- Dropdown Menu (pops upward) -->
                     <div id="user-dropdown" class="user-dropdown" style="display: none;">
                         <a href="profile.html" class="dropdown-item">👤 Profile</a>
-                        <a href="#" onclick="window.location.href='https://auth.directsponsor.org/delete-account.php?return_url='+encodeURIComponent(window.location.href); return false;" class="dropdown-item">🗑️ Delete account</a>
                         <a href="#" onclick="window.auth.logout(); return false;" class="dropdown-item">🚪 Logout</a>
                     </div>
                 </div>
@@ -136,7 +135,22 @@
                     </div>
                 </div>
             </section>
+
+            <section class="coming-soon-section member-only" id="delete-account-section" style="display: none;">
+                <div class="coming-soon-content">
+                    <h3>🗑️ Delete Account</h3>
+                    <p>Schedule your account data for deletion. Nothing is deleted straight away — you'll get an email and have 7 days to cancel.</p>
+                    <button type="button" class="btn btn-secondary" onclick="confirmAccountDeletion()">Delete my account…</button>
+                </div>
+            </section>
         </main>
+    <script>
+    function confirmAccountDeletion() {
+        if (confirm('Schedule your account for deletion?\n\nNothing is deleted immediately — you have 7 days to cancel on the next page if you change your mind.')) {
+            window.location.href = 'https://auth.directsponsor.org/delete-account.php?return_url=' + encodeURIComponent(window.location.href);
+        }
+    }
+    </script>
     </div>
     <script src="js/unified-balance.js"></script>
     <script src="js/auth.js"></script>
