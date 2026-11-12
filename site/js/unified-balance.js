@@ -164,67 +164,6 @@ class UnifiedBalanceSystem {
         console.log('⏱️ Flush triggers setup: timer (120s), blur, beforeunload');
     }
     
-    // ========== MANUAL SYNC ==========
-    
-    async syncBalance() {
-        if (!this.isLoggedIn) {
-            this.showSyncMessage('⚠️ Please log in to sync balance', 3000);
-            return;
-        }
-        if (this.isSyncing) return;
-        this.isSyncing = true;
-        try {
-            this.updateSyncButton('syncing');
-            await this.flushNetChange('manual-sync');
-            this.showSyncMessage('⏳ Syncing balance and user data...');
-            
-            // Wait 10 seconds only for user data sync (Syncthing), not balance
-            await new Promise(resolve => setTimeout(resolve, 10000));
-            
-            await this.getBalance();
-            this.updateBalanceDisplaysSync();
-            this.showSyncMessage('✅ Balance and user data synced!', 2000);
-            this.updateSyncButton('success');
-            setTimeout(() => this.updateSyncButton('normal'), 2000);
-            console.log('✅ Manual sync completed');
-        } catch (error) {
-            console.error('❌ Sync error:', error);
-            this.showSyncMessage('❌ Sync failed. Please try again.', 3000);
-            this.updateSyncButton('normal');
-        } finally {
-            this.isSyncing = false;
-        }
-    }
-    
-    updateSyncButton(state) {
-        const btn = document.getElementById('sync-balance-btn');
-        if (!btn) return;
-        switch(state) {
-            case 'syncing':
-                btn.innerHTML = '⏳ Syncing...';
-                btn.disabled = true;
-                break;
-            case 'success':
-                btn.innerHTML = '✅ Synced!';
-                btn.disabled = true;
-                break;
-            default:
-                btn.innerHTML = '🔄 Sync <span class="sync-help">(?)</span>';
-                btn.disabled = false;
-        }
-    }
-    
-    showSyncMessage(message, duration = null) {
-        const existing = document.getElementById('sync-message');
-        if (existing) existing.remove();
-        const div = document.createElement('div');
-        div.id = 'sync-message';
-        div.textContent = message;
-        div.style.cssText = 'position:fixed;top:70px;right:20px;background:#4CAF50;color:white;padding:12px 20px;border-radius:4px;box-shadow:0 2px 5px rgba(0,0,0,0.3);z-index:10001;font-size:14px;';
-        document.body.appendChild(div);
-        if (duration) setTimeout(() => { if (div.parentNode) div.remove(); }, duration);
-    }
-    
     setupCrossSiteSync() {
         // Reload balance when user focuses this tab or switches to it
         window.addEventListener('focus', async () => {
@@ -247,25 +186,6 @@ class UnifiedBalanceSystem {
                 this.updateBalanceDisplaysSync();
             }
         });
-    }
-    
-    async syncNow() {
-        const banner = document.getElementById('cross-site-sync-banner');
-        if (banner) {
-            banner.innerHTML = '<div>⏳ Syncing user data... waiting 10 seconds for file propagation</div>';
-        }
-        
-        // Wait 10 seconds for Syncthing (user data only, not balance)
-        await new Promise(resolve => setTimeout(resolve, 10000));
-        
-        // Reload balance from auth server and user data from files
-        await this.getBalance();
-        this.updateBalanceDisplaysSync();
-        
-        if (banner) {
-            banner.innerHTML = '<div>✅ User data synced!</div>';
-            setTimeout(() => banner.remove(), 2000);
-        }
     }
     
     

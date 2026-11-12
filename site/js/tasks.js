@@ -258,7 +258,7 @@
                 }
 
                 if (window.unifiedBalance) {
-                    window.unifiedBalance.syncBalance();
+                    window.updateBalanceDisplays();
                 }
 
                 await loadTasks();

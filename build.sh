@@ -103,9 +103,6 @@ process_file() {
         "profile")
             output="${output//\<li \><a href=\"profile.html\">/<li class=\"active\"><a href=\"profile.html\">}"
             ;;
-        "balance-sync-help")
-            # No active nav item for help page
-            ;;
         "advertise")
             output="${output//\<li #ACTIVE_ADVERTISE#\><a href=\"advertise.html\">/<li class=\"active\"><a href=\"advertise.html\">}"
             ;;

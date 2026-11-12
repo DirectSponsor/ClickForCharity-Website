@@ -124,7 +124,7 @@
                     showRewardNotification(data.reward, data.rewardedPlatformNames);
                     
                     if (window.unifiedBalance) {
-                        window.unifiedBalance.syncBalance();
+                        window.updateBalanceDisplays();
                     }
                 } else {
                     showSuccessNotification('Platforms saved successfully!');
