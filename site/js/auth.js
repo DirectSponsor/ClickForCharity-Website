@@ -101,8 +101,8 @@ class AuthSystem {
 
     handleAuthCallback() {
         // Check URL for JWT token from DirectSponsor auth
-        const urlParams = new URLSearchParams(window.location.search);
-        const jwtToken = urlParams.get('jwt');
+        const hashParams = new URLSearchParams(window.location.hash.slice(1));
+        const jwtToken = hashParams.get('jwt');
 
         if (jwtToken) {
             // Decode JWT to get user info
