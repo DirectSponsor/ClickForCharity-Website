@@ -11,6 +11,27 @@ REMOTE_PATH="/var/www/clickforcharity.net/public_html"
 LOCAL_PATH="$(pwd)"
 BACKUP_DIR="$HOME/backups/clickforcharity-deploys"
 
+# Non-interactive mode: -y / --auto / DEPLOY_AUTO=1 answers all prompts yes
+# (agent/CI use). Humans still get the prompts.
+AUTO_MODE=false
+for arg in "$@"; do
+    case "$arg" in -y|--auto|auto) AUTO_MODE=true ;; esac
+done
+[[ "${DEPLOY_AUTO:-0}" == "1" ]] && AUTO_MODE=true
+
+# Prompt helper — AUTO_MODE returns true without reading stdin.
+# All remote commands get </dev/null so they can't consume piped stdin.
+confirm() {
+    local prompt="$1"
+    if $AUTO_MODE; then
+        echo "$prompt y (auto)"
+        return 0
+    fi
+    read -rp "$prompt" -n 1
+    echo
+    [[ $REPLY =~ ^[Yy]$ ]]
+}
+
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -47,8 +68,12 @@ auto_commit_changes() {
         
         # Ask for custom commit message
         echo ""
-        read -p "Enter commit message (or press Enter for auto-generated): " -r custom_msg
-        echo ""
+        if $AUTO_MODE; then
+            custom_msg=""
+        else
+            read -p "Enter commit message (or press Enter for auto-generated): " -r custom_msg
+            echo ""
+        fi
         
         # Add all changes including deletions
         git add -A
@@ -87,7 +112,7 @@ pre_deploy_checks() {
     fi
     
     # Check server connectivity
-    if ! ssh "$REMOTE_HOST" "echo 'Connection test'" >/dev/null 2>&1; then
+    if ! ssh "$REMOTE_HOST" </dev/null "echo 'Connection test'" >/dev/null 2>&1; then
         error "Cannot connect to $REMOTE_HOST"
     fi
     
@@ -136,15 +161,13 @@ preview_deletions() {
         --exclude='Thumbs.db' \
         --exclude='site/' \
         --exclude='data/analytics/' \
-        "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/" 2>/dev/null | grep '^\*deleting' || true)
+        "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/" </dev/null 2>/dev/null | grep '^\*deleting' || true)
     
     if [[ -n "$deletions" ]]; then
         warning "⚠️  The following files will be DELETED from the server:"
         echo "$deletions" | sed 's/^\*deleting   /  - /'
         echo ""
-        read -rp "Continue with these deletions? (y/N): " -n 1
-        echo
-        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        if ! confirm "Continue with these deletions? (y/N): "; then
             error "Deployment cancelled to prevent deletions."
         fi
     else
@@ -167,7 +190,7 @@ deploy_files() {
         --exclude='site/' \
         --exclude='data/analytics/' \
         --progress \
-        "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/"
+        "$LOCAL_PATH/site/" "$REMOTE_HOST:$REMOTE_PATH/" </dev/null
 
     
     success "Files deployed successfully"
@@ -177,7 +200,7 @@ deploy_files() {
 fix_permissions() {
     log "Fixing file permissions on remote server..."
     
-    ssh "$REMOTE_HOST" "
+    ssh "$REMOTE_HOST" </dev/null "
         sudo chown -R www-data:www-data '$REMOTE_PATH'
         find '$REMOTE_PATH' -type d -exec chmod 755 {} \;
         find '$REMOTE_PATH' -type f -exec chmod 644 {} \;
@@ -204,9 +227,7 @@ main() {
     fi
 
     # Ask for confirmation
-    read -p "Continue with deployment? (y/N): " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+    if ! confirm "Continue with deployment? (y/N): "; then
         log "Deployment cancelled"
         exit 0
     fi

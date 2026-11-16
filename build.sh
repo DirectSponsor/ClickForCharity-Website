@@ -122,8 +122,8 @@ main() {
     # Process all HTML files in site/ directory
     cd site
     for file in *.html; do
-        # Skip admin pages and sitemap
-        if [[ "$file" == admin*.html ]] || [[ "$file" == "sitemap.html" ]]; then
+        # Skip admin pages
+        if [[ "$file" == admin*.html ]]; then
             continue
         fi
         
