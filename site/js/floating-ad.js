@@ -45,6 +45,12 @@
         const contentContainer = adContainer.querySelector('.floating-ad-content');
         if (contentContainer) {
             contentContainer.innerHTML = adContent;
+            // Adbytes' show_ads.js sets window.adbytes_ads_loading on its first
+            // (footer) run and never rescans — clear it so the re-executed copy
+            // below still renders units injected after page load
+            if (contentContainer.querySelector('.adbit-display-ad, .adbytes-display-ad')) {
+                delete window.adbytes_ads_loading;
+            }
             // Re-execute any <script> tags — browsers silently skip scripts set via innerHTML
             contentContainer.querySelectorAll('script').forEach(oldScript => {
                 const newScript = document.createElement('script');
