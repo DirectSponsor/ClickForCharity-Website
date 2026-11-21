@@ -8,12 +8,14 @@
     async function loadAds() {
         try {
             const response = await fetch(`${ADS_API}&t=${Date.now()}`);
-            if (!response.ok) return [];
+            if (!response.ok) return { ads: [], labels: [] };
             const data = await response.json();
-            return (data.success && data.ads) ? data.ads : [];
+            return (data.success && data.ads)
+                ? { ads: data.ads, labels: data.labels || [] }
+                : { ads: [], labels: [] };
         } catch (e) {
             console.error('Failed to load floating ads', e);
-            return [];
+            return { ads: [], labels: [] };
         }
     }
 
@@ -30,7 +32,7 @@
             }
         }
 
-        const ads = await loadAds();
+        const { ads, labels } = await loadAds();
         if (ads.length === 0) return;
 
         // Rotation Logic
@@ -40,6 +42,9 @@
         localStorage.setItem(STORAGE_KEY_ROTATION, nextIndex.toString());
 
         const adContent = ads[currentIndex];
+
+        // Hover tooltip identifies which ad is in the slot (e.g. when it renders blank)
+        adContainer.title = labels[currentIndex] || 'sponsored ad';
 
         // Inject Ad Content
         const contentContainer = adContainer.querySelector('.floating-ad-content');

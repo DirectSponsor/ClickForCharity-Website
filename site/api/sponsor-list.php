@@ -19,6 +19,7 @@ if (!is_dir($adsDir)) {
 
 $files = array_reverse(glob($adsDir . '/*.json'));
 $rotation = [];
+$labels = [];
 $meta = [];
 $now = time();
 
@@ -40,8 +41,13 @@ foreach ($files as $file) {
 
     // Only add to rotation if not paused
     if (!$paused) {
+        $label = '#' . $ad['id'];
+        if (!empty($ad['advertiser'])) {
+            $label .= ' — ' . $ad['advertiser'];
+        }
         for ($i = 0; $i < $slots; $i++) {
             $rotation[] = $ad['html'];
+            $labels[] = $label;
         }
     }
 
@@ -61,5 +67,6 @@ foreach ($files as $file) {
 echo json_encode([
     'success' => true,
     'ads'     => $rotation,
+    'labels'  => $labels,
     'meta'    => $meta,
 ]);

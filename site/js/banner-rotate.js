@@ -11,6 +11,7 @@
     const HIDE_DURATION = 60 * 60 * 1000; // 1 hour
 
     let currentAds = [];
+    let currentLabels = [];
     let currentSize = null;
 
     // Load ads from API
@@ -29,6 +30,7 @@
             const data = await response.json();
             if (data.success && data.ads) {
                 currentAds = data.ads;
+                currentLabels = data.labels || [];
             }
             return currentAds;
         } catch (error) {
@@ -80,6 +82,9 @@
 
         const index = getNextAdIndex(ads.length);
         const adHtml = ads[index];
+
+        // Hover tooltip identifies which ad is in the slot (e.g. when it renders blank)
+        if (wrap) wrap.title = currentLabels[index] || 'sponsored ad';
 
         // Clear container
         container.innerHTML = '';
