@@ -116,14 +116,13 @@ The rotation updates immediately on next page load.
 
 ## Adding House/Fallback Ads
 
-1. Drop the image into `site/top/` or `site/float/`
-2. Create a `.html` file in `data/fallback-desktop/` or `data/fallback-floating/`:
+The old fallback-folder system (`data/fallback-*/`) was removed 2026-09-12 — house ads are now just normal managed entries in the admin interface. To add one: drop the image into `site/top/` or `site/float/`, then create an ad in admin with HTML like:
 
 ```html
-<a href="https://destination-url.com" target="_blank" rel="noopener"><img src="top/your-image.png" style="max-width:100%;height:auto;" alt="Description"></a>
+<a href="https://destination-url.com" target="_blank" rel="noopener"><img src="float/your-image.png" style="max-width:100%;height:auto;" alt="Description"></a>
 ```
 
-No code changes needed. The file is picked up automatically.
+**TODO (Andy, ~2026-11-17):** Making a 300×250 "advertise here" banner via ChatGPT — allowance resets tomorrow, finish then. Upload it to adbytes as their fallback creative, so the adbytes unit always has content. After that, any empty ad slot is on our end, not theirs.
 
 ---
 
